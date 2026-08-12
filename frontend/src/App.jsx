@@ -88,3 +88,41 @@ function PlaceholderPage({ title }) {
     </div>
   );
 }
+/* ── Under-construction placeholder ───────────────────────── */
+function PlaceholderPage({ title }) {
+  return (
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      background: 'linear-gradient(135deg, var(--primary), var(--primary-mid))',
+      padding: '24px',
+    }}>
+      <div style={{
+        background: 'var(--white)', borderRadius: 20,
+        padding: '48px 40px', textAlign: 'center',
+        maxWidth: 360, width: '100%',
+        boxShadow: 'var(--shadow-lg)',
+      }}>
+        <div style={{
+          fontSize: 40, marginBottom: 16,
+          width: 72, height: 72, borderRadius: 18,
+          background: 'var(--accent-soft)', border: '2px solid var(--accent-border)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          margin: '0 auto 20px',
+        }}>🚧</div>
+        <h1 style={{ fontSize: 18, fontWeight: 800, color: 'var(--text-main)', marginBottom: 8 }}>
+          {title}
+        </h1>
+        <p style={{ fontSize: 13.5, color: 'var(--text-sub)', marginBottom: 28 }}>
+          This page is under construction.
+        </p>
+        <a href="/login" style={{
+          display: 'inline-block', padding: '11px 24px',
+          background: 'var(--primary)', color: '#fff',
+          borderRadius: 12, fontSize: 13, fontWeight: 600,
+          textDecoration: 'none',
+        }}>← Back to Login</a>
+      </div>
+    </div>
+  );
+}
