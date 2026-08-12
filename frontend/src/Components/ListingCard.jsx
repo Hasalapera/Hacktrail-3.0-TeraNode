@@ -1,5 +1,5 @@
 
-import { Heart, Play, Star, Video } from "lucide-react";
+import { Heart, Play, Star, Video, MapPin } from "lucide-react";
 
 // Badge styling per variant — "pro" mirrors the brand-green "Vetted Pro"
 // pill, "topRated" mirrors the amber "Top Rated ♦♦♦" merit pill.

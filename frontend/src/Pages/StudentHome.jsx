@@ -280,6 +280,14 @@ export default function StudentHome() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+  const [activeCategory, setActiveCategory] = useState("job");
+  const [activeFilter, setActiveFilter] = useState("All");
+
+  const handleCategoryChange = (cat) => {
+    setActiveCategory(cat);
+    setActiveFilter("All");
+  };
+
   const handleLogout = () => {
     logout();
     navigate('/login');

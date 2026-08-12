@@ -124,72 +124,8 @@ export default function RetailJobPublisher() {
         </p>
 
         <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[380px_1fr]">
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col gap-4 rounded-xl border border-border p-5 shadow-sm"
-          >
-            <FormField label="Business name">
-              <input
-                type="text"
-                required
-                value={form.businessName}
-                onChange={handleChange("businessName")}
-                placeholder="e.g. Odel Fashion"
-                className="rounded-lg border border-border px-3 py-2 text-sm font-normal text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
-              />
-            </FormField>
-
-            <FormField label="Job title">
-              <input
-                type="text"
-                required
-                value={form.title}
-                onChange={handleChange("title")}
-                placeholder="e.g. Weekend Sales Associate"
-                className="rounded-lg border border-border px-3 py-2 text-sm font-normal text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
-              />
-            </FormField>
-
-            <FormField label="Employment type">
-              <select
-                value={form.employmentType}
-                onChange={handleChange("employmentType")}
-                className="rounded-lg border border-border px-3 py-2 text-sm font-normal text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
-              >
-                {EMPLOYMENT_TYPES.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-            </FormField>
-
-            <FormField label="Hourly rate (Rs.)">
-              <input
-                type="number"
-                min="0"
-                required
-                value={form.hourlyRate}
-                onChange={handleChange("hourlyRate")}
-                placeholder="e.g. 1500"
-                className="rounded-lg border border-border px-3 py-2 text-sm font-normal text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
-              />
-            </FormField>
-
-            <FormField label="Description">
-              <textarea
-                rows={4}
-                value={form.description}
-                onChange={handleChange("description")}
-                placeholder="Shift hours, responsibilities, requirements..."
-                className="rounded-lg border border-border px-3 py-2 text-sm font-normal text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
-              />
-            </FormField>
-
-            <button
-              type="submit"
-              className="mt-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-white transition hover:bg-primary-mid"
-            >
+          <div className="rounded-2xl shadow-sm border border-slate-200 overflow-hidden bg-white">
+            <div className="px-6 py-5" style={{ background: "linear-gradient(135deg, #0B4D2E 0%, #166534 100%)" }}>
               <div className="flex items-center gap-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ background: "rgba(74,222,128,0.15)" }}>
                   <PlusCircle className="h-5 w-5" style={{ color: "#4ADE80" }} />

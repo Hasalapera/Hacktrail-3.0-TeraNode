@@ -332,71 +332,99 @@ export default function Login() {
   /* Change Password View                                                     */
   /* ------------------------------------------------------------------------ */
 
-      {/* ── Left Brand Panel ─────────────────────────────── */}
-      <div className="relative flex w-full flex-shrink-0 flex-col justify-between overflow-hidden bg-gradient-to-br from-primary to-primary-mid p-11 md:w-[420px] max-md:min-h-0 max-md:p-9">
-        <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-white/[0.04]" />
-        <div className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-accent-dark/[0.06]" />
+  if (changePw) {
+    return (
+      <div className="min-h-screen bg-slate-50 lg:flex">
+        <BrandPanel />
 
-        <div className="relative">
-          <div className="mb-12">
-            <Logo iconClassName="h-11 w-11" textClassName="text-xl" variant="light" />
-          </div>
-
-            {/* Header */}
+        {/* ── Right Content Panel ────────────────────────────── */}
+        <div className="flex flex-1 items-center justify-center p-6 sm:p-12">
+          <div className="w-full max-w-[400px]">
             <div className="mb-8">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0D1F4C]/5 text-[#0D1F4C]">
-                <svg
-                  width="22"
-                  height="22"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <rect x="3" y="11" width="18" height="10" rx="2" />
-                  <path d="M7 11V7a5 5 0 0110 0v4" />
-                </svg>
-              </div>
-
-              <h1 className="text-3xl font-extrabold tracking-[-0.03em] text-slate-900">
+              <h1 className="mb-1 text-2xl font-extrabold tracking-tight text-text-main">
                 Set a new password
               </h1>
-
-              <p className="mt-2 max-w-md text-sm leading-6 text-slate-500">
-                Welcome! You are logging in with an auto-generated password
-                for the first time.
+              <p className="text-sm text-text-sub">
+                Welcome! You are logging in with an auto-generated password for the first time.
               </p>
             </div>
 
-          <div className="flex flex-col gap-4">
-            {FEATURES.map(([title, sub]) => (
-              <div key={title} className="flex items-start gap-3">
-                <div className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-dark" />
-                <div>
-                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
-                    University Index Number
-                  </label>
+            {changePwError && (
+              <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-600">
+                {changePwError}
+              </div>
+            )}
 
+            <form onSubmit={handleChangePassword} className="flex flex-col gap-5">
+              <div>
+                <label className="mb-1.5 block text-[13px] font-semibold tracking-wide text-text-sub">
+                  University Index Number
+                </label>
+                <input
+                  type="text"
+                  value={changePw.university_id}
+                  disabled
+                  className="w-full cursor-not-allowed rounded-[14px] border border-border bg-slate-100 px-4 py-3 text-sm text-slate-500 outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1.5 block text-[13px] font-semibold tracking-wide text-text-sub">
+                  New Password
+                </label>
+                <div className="relative">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                      <path d="M7 11V7a5 5 0 0110 0v4" />
+                    </svg>
+                  </div>
                   <input
-                    className="w-full cursor-not-allowed rounded-xl border border-slate-200 bg-slate-100 px-4 py-3.5 text-sm font-medium text-slate-500 outline-none"
-                    type="text"
-                    value={changePw.university_id}
-                    disabled
+                    type={showPass ? 'text' : 'password'}
+                    value={newPassword}
+                    onChange={(e) => { setNewPassword(e.target.value); setChangePwError(''); }}
+                    className="w-full rounded-[14px] border border-border bg-white px-4 py-3 pl-11 text-sm text-text-main outline-none transition focus:border-primary-mid focus:ring-[3px] focus:ring-primary-mid/10"
                   />
                 </div>
+              </div>
 
-        <div className="relative inline-flex items-center gap-2 self-start rounded-lg border border-white/10 bg-white/[0.07] px-3.5 py-2.5">
-          <div className="flex">
-            {['bg-blue-500', 'bg-emerald-500', 'bg-amber-500'].map((c, i) => (
-              <div
-                key={c}
-                className={`h-6 w-6 rounded-full border-2 border-primary ${c} ${i > 0 ? '-ml-2' : ''}`}
-              />
-            ))}
+              <div>
+                <label className="mb-1.5 block text-[13px] font-semibold tracking-wide text-text-sub">
+                  Confirm Password
+                </label>
+                <div className="relative">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                      <path d="M7 11V7a5 5 0 0110 0v4" />
+                    </svg>
+                  </div>
+                  <input
+                    type={showPass ? 'text' : 'password'}
+                    value={confirmPassword}
+                    onChange={(e) => { setConfirmPassword(e.target.value); setChangePwError(''); }}
+                    className="w-full rounded-[14px] border border-border bg-white px-4 py-3 pl-11 text-sm text-text-main outline-none transition focus:border-primary-mid focus:ring-[3px] focus:ring-primary-mid/10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPass(!showPass)}
+                    className="absolute inset-y-0 right-0 flex items-center pr-4 text-xs font-bold uppercase tracking-wider text-text-muted hover:text-text-main"
+                  >
+                    {showPass ? 'Hide' : 'Show'}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={changingPw}
+                className="mt-2 w-full rounded-[14px] bg-primary py-3.5 text-[15px] font-bold tracking-wide text-white transition hover:bg-primary-mid active:scale-[0.98] disabled:opacity-70"
+              >
+                {changingPw ? 'Updating...' : 'Update & Login'}
+              </button>
+            </form>
           </div>
-        </main>
+        </div>
       </div>
     );
   }
@@ -409,6 +437,8 @@ export default function Login() {
     <div className="min-h-screen bg-slate-50 lg:flex">
       <BrandPanel />
 
+      <main className="flex flex-1 items-center justify-center p-6 sm:p-12">
+        <div className="w-full max-w-[400px]">
           <div className="mb-8">
             <h1 className="mb-1 text-2xl font-extrabold tracking-tight text-text-main">
               Sign in

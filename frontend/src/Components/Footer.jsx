@@ -80,8 +80,8 @@ export default function Footer() {
             {["Terms", "Privacy", "Cookies"].map(item => (
               <a
 
-                key={social.label}
-                href={social.href}
+                key={item}
+                href="#"
                 className="text-xs text-white/55 transition hover:text-accent"
 
               >

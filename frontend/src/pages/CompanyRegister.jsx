@@ -207,7 +207,7 @@ export default function CompanyRegister() {
               {INDUSTRIES.map((ind) => (
                 <option key={ind} value={ind}>{ind}</option>
               ))}
-            </FormSelect>
+            </select>
           </div>
 
           {/* HR Contact Name & Phone — 2 col */}

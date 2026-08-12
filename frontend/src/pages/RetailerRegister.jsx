@@ -140,6 +140,8 @@ export default function RetailerRegister() {
       <div className="fixed -bottom-24 -left-24 w-72 h-72 rounded-full pointer-events-none"
            style={{ background: 'rgba(34,197,94,0.05)' }} />
 
+      <div className="relative w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden" style={{ background: '#ffffff' }}>
+
         {/* ── Header — Green accent for retailer ── */}
         <div className="px-8 pt-7 pb-6 relative overflow-hidden bg-gradient-to-br from-accent-dark to-primary-light">
 
@@ -206,7 +208,7 @@ export default function RetailerRegister() {
               {SRI_LANKA_CITIES.map((city) => (
                 <option key={city} value={city}>{city}</option>
               ))}
-            </FormSelect>
+            </select>
           </div>
 
           {/* Owner Name & Mobile — grid */}
