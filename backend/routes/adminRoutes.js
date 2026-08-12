@@ -1,3 +1,4 @@
+
 // Admin routes - student onboarding API eka (protected)
 const express = require('express');
 const { addSingleStudent, bulkAddStudents } = require('../controllers/adminController');

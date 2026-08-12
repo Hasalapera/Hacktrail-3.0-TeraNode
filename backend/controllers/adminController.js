@@ -13,6 +13,7 @@ const generatePassword = () => {
   return password;
 };
 
+
 // Students la email ekak nathi nisa placeholder email eka hadanna
 // (User.email NOT NULL nisa) - university_id eka unique nisa email eka da unique
 const buildStudentEmail = (universityId) => {

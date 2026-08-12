@@ -1,4 +1,8 @@
-// 'import' wenuwata 'require' pawichchi kirima
+// ============================================================
+// UniLift Backend — server.js
+// PERN Stack | Phase 1: In-Memory Auth & Onboarding API
+// ============================================================
+
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
@@ -6,17 +10,25 @@ const { sequelize } = require('./models'); // Sequelize instance eka models wali
 const authRoutes = require('./routes/authRoutes'); // Auth routes import kirima
 const adminRoutes = require('./routes/adminRoutes'); // Admin routes import kirima
 
-// .env file eke thiyena variables load karanna
 dotenv.config();
 
-const app = express();
+const app  = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware setup
+// ── Middleware ────────────────────────────────────────────────
 app.use(cors());
 app.use(express.json());
 
-// Moolika API Route eka
+// ── Routes ───────────────────────────────────────────────────
+const adminRoutes   = require('./routes/adminRoutes');
+const authRoutes    = require('./routes/authRoutes');
+const studentRoutes = require('./routes/studentRoutes');
+
+app.use('/admin',   adminRoutes);
+app.use('/auth',    authRoutes);
+app.use('/student', studentRoutes);
+
+// ── Health Check ─────────────────────────────────────────────
 app.get('/', (req, res) => {
   res.send('Hacktrail API is running perfectly! 🚀 (Using CommonJS & Supabase DB)');
 });
