@@ -1,10 +1,7 @@
-function App() {
+import StudentHome from "./Pages/StudentHome.jsx";
 
-  return (
-    <>
-    <h1 className='mt-8 bg-slate-300 text-green-600'>Hola Mundo</h1>
-    </>
-  )
+function App() {
+  return <StudentHome />;
 }
 
 export default App
