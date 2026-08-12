@@ -20,6 +20,11 @@ const Message = sequelize.define('Message', {
     type: DataTypes.UUID,
     allowNull: false,
     // Associations in models/index.js define the reference
+  },
+  jobId: {
+    type: DataTypes.UUID,
+    allowNull: false,
+    // Associations in models/index.js define the reference
   }
 });
 

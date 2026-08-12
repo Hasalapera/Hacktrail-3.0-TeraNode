@@ -19,6 +19,9 @@ Message.belongsTo(User, { foreignKey: 'senderId', as: 'sender' });
 User.hasMany(Message, { foreignKey: 'receiverId', as: 'receivedMessages' });
 Message.belongsTo(User, { foreignKey: 'receiverId', as: 'receiver' });
 
+Job.hasMany(Message, { foreignKey: 'jobId', as: 'messages' });
+Message.belongsTo(Job, { foreignKey: 'jobId', as: 'job' });
+
 module.exports = {
   sequelize,
   User,

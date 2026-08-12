@@ -1,6 +1,48 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import api from '../api/axiosInstance';
 
 export default function Register() {
+  const navigate = useNavigate();
+  const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleChange = (e) => {
+    setError('');
+    setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!form.name.trim() || !form.email.trim() || !form.password) {
+      setError('All fields are required.');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    try {
+      // Note: me endpoint eken EMPLOYER role users la witharai hadanna puluwan
+      // (Students la admin keneku add karanna one)
+      await api.post('/auth/register', {
+        name: form.name,
+        email: form.email,
+        password: form.password,
+        role: 'EMPLOYER',
+      });
+
+      // Registration success - login page ekata success message eka samaga redirect karanna
+      navigate('/login', {
+        state: { message: 'Account created successfully. Please sign in.' },
+      });
+    } catch (err) {
+      setError(err.response?.data?.message || 'Registration failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-surface">
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
@@ -14,6 +56,7 @@ export default function Register() {
               className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-light"
             />
           </div>
+
           <div>
             <label className="block text-text-sub text-sm font-semibold mb-2">Email</label>
             <input
@@ -22,6 +65,7 @@ export default function Register() {
               className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-light"
             />
           </div>
+
           <div>
             <label className="block text-text-sub text-sm font-semibold mb-2">Password</label>
             <input
