@@ -1,4 +1,4 @@
-import { MessageCircle, UserCircle2 } from "lucide-react";
+import { UserCircle2 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
 // Header: logo + site name, category tabs (Retail Job/Company/Freelancer), profile icon
@@ -33,24 +33,13 @@ export default function Header({ categories, activeCategory, onSelectCategory })
         })}
       </nav>
 
-      <div className="flex items-center gap-4">
-        {/* Placeholder entry point for the upcoming messenger service */}
-        <button
-          type="button"
-          aria-label="Messages"
-          className="relative text-gray-600 hover:text-gray-900"
-        >
-          <MessageCircle className="h-7 w-7" />
-        </button>
-
-        <button
-          type="button"
-          aria-label="Profile"
-          className="text-gray-600 hover:text-gray-900"
-        >
-          <UserCircle2 className="h-8 w-8" />
-        </button>
-      </div>
+      <button
+        type="button"
+        aria-label="Profile"
+        className="text-gray-600 hover:text-gray-900"
+      >
+        <UserCircle2 className="h-8 w-8" />
+      </button>
     </header>
   );
 }
