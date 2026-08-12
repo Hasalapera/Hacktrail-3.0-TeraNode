@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Header from "../Components/Header";
+import ListingCard from "../Components/ListingCard";
 import Footer from "../Components/Footer";
 
 /**
@@ -49,22 +50,7 @@ function FilterBar({ filters, activeFilter, onSelect }) {
   );
 }
 
-// ---------------------------------------------------------------------------
-// ListingCard: single result row (a job, an internship, a freelance gig...)
-// ---------------------------------------------------------------------------
-function ListingCard({ title, type }) {
-  return (
-    <button
-      type="button"
-      className="flex w-full items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3 text-left shadow-sm transition hover:border-indigo-400 hover:shadow-md"
-    >
-      <span className="text-sm font-medium text-gray-800">{title}</span>
-      <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-500">
-        {type}
-      </span>
-    </button>
-  );
-}
+// ListingCard now lives in its own file: ../Components/ListingCard.jsx (imported above)
 
 // ---------------------------------------------------------------------------
 // ResultsList: listings for the active category, narrowed by activeFilter
@@ -84,9 +70,9 @@ function ResultsList({ listings, activeFilter }) {
   }
 
   return (
-    <div className="flex flex-col gap-2 px-6 py-4">
+    <div className="grid grid-cols-1 gap-4 px-6 py-4 sm:grid-cols-2 lg:grid-cols-3">
       {filtered.map((listing) => (
-        <ListingCard key={listing.title} title={listing.title} type={listing.type} />
+        <ListingCard key={listing.title} listing={listing} />
       ))}
     </div>
   );
@@ -105,19 +91,104 @@ const FILTERS_BY_CATEGORY = {
   freelancer: ["Graphic Design", "Video Editing", "Typing"],
 };
 
-// Sample listings per category. Swap for real data once the backend/API
-// is wired up — shape stays { title, type } where `type` matches a filter.
+// Sample listings per category. Swap for real data once the backend/API is
+// wired up — shape stays { title, type, seller, isAd, badge, rating, reviews,
+// price, image } where `type` matches a filter and `image` is a Tailwind
+// gradient class standing in for a real thumbnail URL.
 const LISTINGS_BY_CATEGORY = {
-  job: [{ title: "Junior Web Developer", type: "Full-time" }],
+  job: [
+    {
+      title: "Junior Web Developer needed for a growing fintech startup",
+      type: "Full-time",
+      seller: "Nimal Perera",
+      isAd: true,
+      badge: "Vetted Pro",
+      rating: 5.0,
+      reviews: "1k+",
+      price: 290,
+      image: "bg-gradient-to-br from-slate-700 via-slate-500 to-emerald-600",
+    },
+    {
+      title: "Remote React Native developer for a food delivery app",
+      type: "Full-time",
+      seller: "Ishara Fernando",
+      isAd: false,
+      badge: "Vetted Pro",
+      rating: 4.9,
+      reviews: "820",
+      price: 450,
+      image: "bg-gradient-to-br from-indigo-700 via-indigo-500 to-sky-500",
+    },
+  ],
   company: [
-    { title: "Software Engineering Intern", type: "Intern" },
-    { title: "Marketing Intern", type: "Intern" },
-    { title: "Campus App Redesign", type: "Project" },
+    {
+      title: "Software Engineering Intern — 6 month placement",
+      type: "Intern",
+      seller: "TeraNode Labs",
+      isAd: true,
+      badge: "Vetted Pro",
+      rating: 4.8,
+      reviews: "312",
+      price: 0,
+      image: "bg-gradient-to-br from-purple-700 via-fuchsia-500 to-pink-500",
+    },
+    {
+      title: "Marketing Intern for a campus ambassador program",
+      type: "Intern",
+      seller: "BrightWave Co.",
+      isAd: false,
+      badge: "",
+      rating: 4.6,
+      reviews: "97",
+      price: 0,
+      image: "bg-gradient-to-br from-amber-600 via-orange-500 to-rose-500",
+    },
+    {
+      title: "Campus App Redesign — short-term project",
+      type: "Project",
+      seller: "PixelForge Studio",
+      isAd: false,
+      badge: "Vetted Pro",
+      rating: 4.9,
+      reviews: "540",
+      price: 350,
+      image: "bg-gradient-to-br from-cyan-700 via-teal-500 to-lime-500",
+    },
   ],
   freelancer: [
-    { title: "Logo & Brand Kit", type: "Graphic Design" },
-    { title: "Event Highlight Reel", type: "Video Editing" },
-    { title: "Lecture Notes Transcription", type: "Typing" },
+    {
+      title: "I will design a handcrafted 3d style logo with a premium finish",
+      type: "Graphic Design",
+      seller: "Kassou",
+      isAd: true,
+      badge: "Vetted Pro",
+      rating: 5.0,
+      reviews: "1k+",
+      price: 290,
+      image: "bg-gradient-to-br from-stone-700 via-stone-500 to-green-600",
+    },
+    {
+      title: "I will edit a punchy highlight reel for your next event",
+      type: "Video Editing",
+      seller: "Ravindu Silva",
+      isAd: false,
+      badge: "Vetted Pro",
+      rating: 4.9,
+      reviews: "634",
+      price: 120,
+      image: "bg-gradient-to-br from-red-700 via-rose-500 to-orange-400",
+    },
+    {
+      title: "I will transcribe your lecture notes accurately and fast",
+      type: "Typing",
+      seller: "Anusha Jayasuriya",
+      isAd: false,
+      badge: "",
+      rating: 4.7,
+      reviews: "215",
+      price: 25,
+      image: "bg-gradient-to-br from-blue-700 via-blue-500 to-indigo-400",
+    },
   ],
 };
 
@@ -131,7 +202,7 @@ export default function StudentHome() {
   }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-4xl flex-col bg-white">
+    <div className="mx-auto flex min-h-screen max-w-6xl flex-col bg-white">
       <Header
         categories={["job", "company", "freelancer"]}
         activeCategory={activeCategory}

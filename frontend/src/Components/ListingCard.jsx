@@ -1,0 +1,63 @@
+import { Heart, Play, Star } from "lucide-react";
+
+// ---------------------------------------------------------------------------
+// ListingCard: Fiverr-style gig card — thumbnail, seller row, title, rating,
+// starting price. `image` is a CSS gradient so the card renders with no
+// network dependency; swap for a real thumbnail URL once wired to an API.
+// ---------------------------------------------------------------------------
+export default function ListingCard({ listing }) {
+  const { title, seller, isAd, badge, rating, reviews, price, image } = listing;
+
+  return (
+    <button
+      type="button"
+      className="flex w-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white text-left shadow-sm transition hover:border-indigo-400 hover:shadow-md"
+    >
+      <div className={`relative aspect-video w-full ${image}`}>
+        <span className="absolute right-2 top-2 rounded-full bg-black/30 p-1.5 text-white backdrop-blur-sm">
+          <Heart className="h-4 w-4" />
+        </span>
+        <span className="absolute bottom-2 left-2 rounded-full bg-black/30 p-1.5 text-white backdrop-blur-sm">
+          <Play className="h-3 w-3 fill-current" />
+        </span>
+        <span className="absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1">
+          {[0, 1, 2, 3].map((dot) => (
+            <span
+              key={dot}
+              className={`h-1.5 w-1.5 rounded-full ${dot === 0 ? "bg-white" : "bg-white/50"}`}
+            />
+          ))}
+        </span>
+      </div>
+
+      <div className="flex flex-col gap-1.5 px-3 py-3">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-indigo-100 text-xs font-semibold text-indigo-700">
+              {seller.charAt(0)}
+            </span>
+            <span className="text-sm font-medium text-gray-900">{seller}</span>
+            {isAd && <span className="text-xs text-gray-400">Ad</span>}
+          </div>
+          {badge && (
+            <span className="whitespace-nowrap rounded bg-indigo-50 px-1.5 py-0.5 text-xs font-medium text-indigo-600">
+              {badge}
+            </span>
+          )}
+        </div>
+
+        <p className="line-clamp-2 text-sm text-gray-700">{title}</p>
+
+        <div className="flex items-center gap-1 text-sm">
+          <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
+          <span className="font-semibold text-gray-900">{rating.toFixed(1)}</span>
+          <span className="text-gray-400">({reviews})</span>
+        </div>
+
+        <p className="text-sm text-gray-500">
+          From <span className="font-semibold text-gray-900">${price}</span>
+        </p>
+      </div>
+    </button>
+  );
+}
