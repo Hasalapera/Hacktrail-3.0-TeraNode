@@ -1,1 +1,32 @@
 @import "tailwindcss";
+
+/* ── UniLift Brand Tokens ── */
+@theme {
+  --color-navy:        #0f2557;
+  --color-navy-light:  #1a3a7c;
+  --color-navy-dark:   #091840;
+  --color-accent:      #f5c518;
+  --color-accent-dark: #d4a800;
+  --color-surface:     #f8faff;
+}
+
+/* ── Base ── */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--color-surface);
+  color: #1e293b;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Smooth transitions globally ── */
+button, a, input, select {
+  transition: all 0.2s ease;
+}
+
+/* ── Custom scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
