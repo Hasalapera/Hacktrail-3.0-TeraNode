@@ -99,6 +99,8 @@ export default function RetailerRegister() {
       <div className="relative w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden"
            style={{ background: '#ffffff' }}>
 
+      <div className="relative w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden" style={{ background: '#ffffff' }}>
+
         {/* ── Header — Green accent for retailer ── */}
         <div className="px-8 pt-7 pb-6 relative overflow-hidden bg-gradient-to-br from-accent-dark to-primary-light">
 
