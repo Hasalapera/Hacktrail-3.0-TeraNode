@@ -11,11 +11,17 @@ import CompanyRegister  from './pages/CompanyRegister';
 import RetailerRegister from './pages/RetailerRegister';
 import NotFound         from './pages/NotFound';
 
+// ── Student & Publisher pages (Rasara branch) ──────────────
+import StudentHome         from './pages/StudentHome';
+import RetailJobPublisher  from './pages/RetailJobPublisher';
+import CompanyJobPublisher from './pages/CompanyJobPublisher';
+import FreelancerClient    from './pages/FreelancerClient';
+
 export default function App() {
   return (
     <Routes>
       {/* Default redirect */}
-      <Route path="/"  element={<Navigate to="/login" replace />} />
+      <Route path="/"  element={<Navigate to="/student/home" replace />} />
 
       {/* ── Auth routes ── */}
       <Route path="/login"              element={<Login />} />
@@ -24,12 +30,12 @@ export default function App() {
       <Route path="/register/retailer"  element={<RetailerRegister />} />
 
       {/* ── Student routes (Rasara branch — add here as built) ── */}
-      {/* <Route path="/student/home"       element={<StudentHome />} /> */}
-      {/* <Route path="/student/freelance"  element={<FreelancerClient />} /> */}
+      <Route path="/student/home"       element={<StudentHome />} />
+      <Route path="/student/freelance"  element={<FreelancerClient />} />
 
       {/* ── Publisher routes (Rasara branch — add here as built) ── */}
-      {/* <Route path="/retail/jobs"        element={<RetailJobPublisher />} /> */}
-      {/* <Route path="/company/jobs"       element={<CompanyJobPublisher />} /> */}
+      <Route path="/retail/jobs"        element={<RetailJobPublisher />} />
+      <Route path="/company/jobs"       element={<CompanyJobPublisher />} />
 
       {/* ── Placeholder routes (unlock as pages are built) ── */}
       <Route path="/change-password"    element={<PlaceholderPage title="Change Password" />} />
@@ -48,7 +54,7 @@ function PlaceholderPage({ title }) {
     <div style={{
       minHeight: '100vh',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      background: 'linear-gradient(135deg, var(--primary), var(--primary-mid))',
+      background: 'linear-gradient(135deg, var(--navy), var(--navy-mid))',
       padding: '24px',
     }}>
       <div style={{
@@ -60,7 +66,7 @@ function PlaceholderPage({ title }) {
         <div style={{
           fontSize: 40, marginBottom: 16,
           width: 72, height: 72, borderRadius: 18,
-          background: 'var(--accent-soft)', border: '2px solid var(--accent-border)',
+          background: 'var(--accent-soft)', border: '2px solid var(--border)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           margin: '0 auto 20px',
         }}>🚧</div>
@@ -70,12 +76,12 @@ function PlaceholderPage({ title }) {
         <p style={{ fontSize: 13.5, color: 'var(--text-sub)', marginBottom: 28 }}>
           This page is under construction.
         </p>
-        <a href="/login" style={{
+        <a href="/student/home" style={{
           display: 'inline-block', padding: '11px 24px',
-          background: 'var(--primary)', color: '#fff',
+          background: 'var(--navy)', color: '#fff',
           borderRadius: 12, fontSize: 13, fontWeight: 600,
           textDecoration: 'none',
-        }}>← Back to Login</a>
+        }}>← Back to Home</a>
       </div>
     </div>
   );
