@@ -20,7 +20,7 @@ export default function DashboardLayout({ activeTab, onTabChange, children }) {
   };
 
   return (
-    <div className="dashboard-shell">
+    <div className="flex min-h-screen bg-slate-50">
       <Sidebar
         activeTab={activeTab}
         onTabChange={onTabChange}
@@ -28,25 +28,29 @@ export default function DashboardLayout({ activeTab, onTabChange, children }) {
         onLogout={handleLogout}
       />
 
-      <main className="dashboard-main">
-        <header className="dashboard-header">
+      <main className="min-w-0 flex-1 p-4 sm:p-6 lg:p-8">
+        <header className="mb-6 flex items-start justify-between gap-4">
           <div>
-            <span className="dashboard-kicker">Admin Dashboard</span>
-            <h1>{activeLabel}</h1>
-            <p>Welcome back, {user?.name || 'Admin'}. Keep the platform clean, verified, and moving.</p>
+            <span className="mb-1 block text-xs font-bold uppercase tracking-wider text-[#1A3268]">Admin Dashboard</span>
+            <h1 className="mb-1 text-3xl font-extrabold tracking-tight text-gray-900">{activeLabel}</h1>
+            <p className="hidden text-sm text-gray-500 md:block">Welcome back, {user?.name || 'Admin'}. Keep the platform clean, verified, and moving.</p>
           </div>
-          <button type="button" className="dashboard-mobile-logout" onClick={handleLogout}>
+          <button type="button" className="inline-flex items-center justify-center gap-2 rounded-full bg-[#0D1F4C] px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-[#1A3268] lg:hidden" onClick={handleLogout}>
             <DashboardIcon name="logout" />
             <span>Logout</span>
           </button>
         </header>
 
-        <div className="dashboard-mobile-tabs" role="tablist" aria-label="Admin dashboard tabs">
+        <div className="mb-4 flex gap-2 overflow-x-auto pb-2 lg:hidden" role="tablist" aria-label="Admin dashboard tabs">
           {DASHBOARD_TABS.map(tab => (
             <button
               key={tab.id}
               type="button"
-              className={activeTab === tab.id ? 'active' : ''}
+              className={`inline-flex flex-shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 text-xs font-bold transition-colors ${
+                activeTab === tab.id
+                  ? 'border-[#0D1F4C] bg-[#0D1F4C] text-white'
+                  : 'border-slate-200 bg-white text-gray-600 hover:bg-slate-100'
+              }`}
               onClick={() => onTabChange(tab.id)}
             >
               <DashboardIcon name={tab.icon} />

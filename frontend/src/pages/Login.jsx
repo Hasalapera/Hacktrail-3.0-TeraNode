@@ -4,83 +4,186 @@ import api from '../api/axiosInstance';
 import { useAuth } from './context/authContext';
 
 const ROLES = [
-  { id: 'student',  label: 'Student',  hint: 'Sign in with your university index number' },
-  { id: 'company',  label: 'Company',  hint: 'Corporate HR or recruiter access' },
-  { id: 'retailer', label: 'Retailer', hint: 'Local business owner access' },
+  {
+    id: 'student',
+    label: 'Student',
+    hint: 'Sign in with your university index number',
+  },
+  {
+    id: 'company',
+    label: 'Company',
+    hint: 'Corporate HR or recruiter access',
+  },
+  {
+    id: 'retailer',
+    label: 'Retailer',
+    hint: 'Local business owner access',
+  },
 ];
 
 const EyeIcon = ({ open }) => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    {open
-      ? <><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></>
-      : <><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></>
-    }
+  <svg
+    width="19"
+    height="19"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    {open ? (
+      <>
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+        <circle cx="12" cy="12" r="3" />
+      </>
+    ) : (
+      <>
+        <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94" />
+        <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19" />
+        <line x1="1" y1="1" x2="23" y2="23" />
+      </>
+    )}
   </svg>
 );
 
-// Left brand panel eka - login & change-password views dekama use karanna
+/* -------------------------------------------------------------------------- */
+/* Brand Panel                                                               */
+/* -------------------------------------------------------------------------- */
+
 const BrandPanel = () => (
-  <div className="auth-brand">
-    <div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 48 }}>
-        <div style={{
-          width: 40, height: 40, borderRadius: 10,
-          background: 'var(--accent)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontWeight: 800, fontSize: 18, color: 'var(--navy)', flexShrink: 0,
-        }}>U</div>
-        <span style={{ color: '#fff', fontWeight: 700, fontSize: 20, letterSpacing: '-0.02em' }}>
-          UniLift
-        </span>
+  <aside className="relative hidden min-h-screen w-[440px] shrink-0 overflow-hidden bg-gradient-to-br from-[#071633] via-[#0D1F4C] to-[#19376F] text-white lg:flex lg:flex-col lg:justify-between">
+    {/* Decorative shapes */}
+    <div className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full border border-white/10 bg-white/[0.03]" />
+    <div className="pointer-events-none absolute -bottom-28 -left-28 h-80 w-80 rounded-full border border-[#F5C518]/10 bg-[#F5C518]/[0.04]" />
+
+    <div className="pointer-events-none absolute right-20 top-1/3 h-32 w-32 rounded-full bg-[#F5C518]/5 blur-3xl" />
+    <div className="pointer-events-none absolute bottom-1/4 left-10 h-24 w-24 rounded-full bg-blue-400/10 blur-3xl" />
+
+    {/* Top content */}
+    <div className="relative z-10 px-12 pt-12">
+      {/* Logo */}
+      <div className="mb-20 flex items-center gap-3">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F5C518] text-xl font-black text-[#0D1F4C] shadow-lg shadow-black/10">
+          U
+        </div>
+
+        <div>
+          <div className="text-xl font-extrabold tracking-tight">UniLift</div>
+          <div className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/40">
+            Opportunities
+          </div>
+        </div>
       </div>
 
-      <h2 style={{ color: '#fff', fontSize: 28, fontWeight: 800, lineHeight: 1.25, marginBottom: 16, letterSpacing: '-0.03em' }}>
-        Your gateway to<br />real opportunities.
-      </h2>
-      <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 14, lineHeight: 1.7, marginBottom: 40 }}>
-        Connecting Sri Lankan university students with companies, retailers, and freelance clients — all in one place.
-      </p>
+      {/* Main heading */}
+      <div className="max-w-[330px]">
+        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#F5C518]" />
+          <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/60">
+            Built for Sri Lankan students
+          </span>
+        </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <h2 className="text-[38px] font-extrabold leading-[1.08] tracking-[-0.04em] text-white">
+          Your gateway to
+          <span className="block text-[#F5C518]">
+            real opportunities.
+          </span>
+        </h2>
+
+        <p className="mt-5 max-w-[320px] text-sm leading-7 text-white/55">
+          Connecting university students with companies, retailers, and
+          freelance clients — all in one place.
+        </p>
+      </div>
+
+      {/* Features */}
+      <div className="mt-12 space-y-5">
         {[
-          ['Internships & Corporate Projects', 'Match with top companies by skill & degree'],
-          ['Part-Time & Flexible Jobs',        'Find nearby gigs posted by local retailers'],
-          ['Freelance Marketplace',            'Earn from design, dev, video editing & more'],
-        ].map(([title, sub]) => (
-          <div key={title} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-            <div style={{
-              width: 6, height: 6, borderRadius: '50%',
-              background: 'var(--accent)', marginTop: 7, flexShrink: 0,
-            }} />
-            <div>
-              <div style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>{title}</div>
-              <div style={{ color: 'rgba(255,255,255,0.45)', fontSize: 12 }}>{sub}</div>
+          [
+            '01',
+            'Internships & Corporate Projects',
+            'Match with top companies by skill & degree',
+          ],
+          [
+            '02',
+            'Part-Time & Flexible Jobs',
+            'Find nearby opportunities posted by local retailers',
+          ],
+          [
+            '03',
+            'Freelance Marketplace',
+            'Earn from design, development, video editing & more',
+          ],
+        ].map(([number, title, sub]) => (
+          <div key={number} className="group flex items-start gap-4">
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-[10px] font-bold text-[#F5C518] transition-all duration-200 group-hover:border-[#F5C518]/30 group-hover:bg-[#F5C518]/10">
+              {number}
+            </div>
+
+            <div className="pt-0.5">
+              <div className="text-xs font-bold text-white/90">
+                {title}
+              </div>
+
+              <div className="mt-1 text-[11px] leading-5 text-white/40">
+                {sub}
+              </div>
             </div>
           </div>
         ))}
       </div>
     </div>
 
-    <div style={{
-      display: 'inline-flex', alignItems: 'center', gap: 8,
-      background: 'rgba(255,255,255,0.07)', borderRadius: 8,
-      padding: '10px 14px', border: '1px solid rgba(255,255,255,0.10)',
-    }}>
-      <div style={{ display: 'flex', gap: -6 }}>
-        {['#3B82F6','#10B981','#F59E0B'].map((c,i) => (
-          <div key={i} style={{
-            width: 24, height: 24, borderRadius: '50%',
-            background: c, border: '2px solid var(--navy)',
-            marginLeft: i > 0 ? -8 : 0,
-          }} />
-        ))}
+    {/* Bottom trust section */}
+    <div className="relative z-10 px-12 pb-10">
+      <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-3.5 backdrop-blur-sm">
+        <div className="flex -space-x-2">
+          {[
+            'bg-blue-500',
+            'bg-emerald-500',
+            'bg-amber-500',
+            'bg-purple-500',
+          ].map((color, index) => (
+            <div
+              key={index}
+              className={`flex h-7 w-7 items-center justify-center rounded-full border-2 border-[#102552] ${color} text-[9px] font-bold text-white`}
+            >
+              {['S', 'C', 'R', 'U'][index]}
+            </div>
+          ))}
+        </div>
+
+        <div className="text-right">
+          <div className="text-[10px] font-medium text-white/40">
+            Trusted by
+          </div>
+
+          <div className="text-xs font-bold text-white">
+            128,000+ students
+          </div>
+        </div>
       </div>
-      <span style={{ color: 'rgba(255,255,255,0.70)', fontSize: 12 }}>
-        Trusted by <strong style={{ color: '#fff' }}>128,000+</strong> students
-      </span>
+
+      <p className="mt-5 text-center text-[10px] text-white/25">
+        Empowering the next generation of professionals
+      </p>
     </div>
-  </div>
+  </aside>
 );
+
+/* -------------------------------------------------------------------------- */
+/* Input styles                                                               */
+/* -------------------------------------------------------------------------- */
+
+const inputClassName =
+  'w-full rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm text-slate-900 outline-none transition-all duration-200 placeholder:text-slate-400 hover:border-slate-300 focus:border-[#1A3268] focus:ring-4 focus:ring-[#1A3268]/10';
+
+/* -------------------------------------------------------------------------- */
+/* Login Component                                                            */
+/* -------------------------------------------------------------------------- */
 
 export default function Login() {
   const navigate = useNavigate();
@@ -90,30 +193,45 @@ export default function Login() {
   // Register eken redirect karama awa success message eka
   const successMessage = location.state?.message || '';
 
-  const [role, setRole]       = useState('student');
-  const [form, setForm]       = useState({ username: '', password: '' });
+  const [role, setRole] = useState('student');
+  const [form, setForm] = useState({
+    username: '',
+    password: '',
+  });
+
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError]     = useState('');
+  const [error, setError] = useState('');
 
   // Student first login - password change form state
-  const [changePw, setChangePw]     = useState(null); // { university_id, oldPassword }
+  const [changePw, setChangePw] = useState(null);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [changingPw, setChangingPw]  = useState(false);
+  const [changingPw, setChangingPw] = useState(false);
   const [changePwError, setChangePwError] = useState('');
 
-  const active = ROLES.find(r => r.id === role);
+  const active = ROLES.find((r) => r.id === role);
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     setError('');
-    setForm(p => ({ ...p, [e.target.name]: e.target.value }));
+
+    setForm((p) => ({
+      ...p,
+      [e.target.name]: e.target.value,
+    }));
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.username.trim() || !form.password) { setError('Both fields are required.'); return; }
-    setLoading(true); setError('');
+
+    if (!form.username.trim() || !form.password) {
+      setError('Both fields are required.');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+
     try {
       // Employers la email eken, students la university index number eken login wena nisa
       // dekama send karanawa - backend eke email OR university_id check wela
@@ -129,6 +247,7 @@ export default function Login() {
           university_id: res.data.university_id,
           oldPassword: form.password,
         });
+
         return;
       }
 
@@ -136,17 +255,36 @@ export default function Login() {
       login(res.data.token, res.data.user);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || 'Unable to connect. Make sure the backend server is running.');
-    } finally { setLoading(false); }
+      setError(
+        err.response?.data?.message ||
+          'Unable to connect. Make sure the backend server is running.'
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleChangePassword = async e => {
+  const handleChangePassword = async (e) => {
     e.preventDefault();
-    if (!newPassword || !confirmPassword) { setChangePwError('Both fields are required.'); return; }
-    if (newPassword.length < 6) { setChangePwError('Password must be at least 6 characters.'); return; }
-    if (newPassword !== confirmPassword) { setChangePwError('Passwords do not match.'); return; }
 
-    setChangingPw(true); setChangePwError('');
+    if (!newPassword || !confirmPassword) {
+      setChangePwError('Both fields are required.');
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setChangePwError('Password must be at least 6 characters.');
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setChangePwError('Passwords do not match.');
+      return;
+    }
+
+    setChangingPw(true);
+    setChangePwError('');
+
     try {
       const res = await api.post('/auth/change-first-password', {
         university_id: changePw.university_id,
@@ -158,182 +296,480 @@ export default function Login() {
       login(res.data.token, res.data.user);
       navigate('/dashboard');
     } catch (err) {
-      setChangePwError(err.response?.data?.message || 'Failed to change password. Please try again.');
-    } finally { setChangingPw(false); }
+      setChangePwError(
+        err.response?.data?.message ||
+          'Failed to change password. Please try again.'
+      );
+    } finally {
+      setChangingPw(false);
+    }
   };
 
-  // ── Change Password View (Student First Login) ─────────────
+  /* ------------------------------------------------------------------------ */
+  /* Change Password View                                                     */
+  /* ------------------------------------------------------------------------ */
+
   if (changePw) {
     return (
-      <div className="auth-shell">
+      <div className="min-h-screen bg-slate-50 lg:flex">
         <BrandPanel />
 
-        <div className="auth-form-panel">
-          <div className="auth-form-inner fade-up">
-            <div style={{ marginBottom: 32 }}>
-              <h1 style={{ fontSize: 24, fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em', marginBottom: 4 }}>
-                Set a New Password
+        <main className="flex min-h-screen flex-1 items-center justify-center px-5 py-10 sm:px-8 lg:px-12">
+          <div className="w-full max-w-[430px]">
+            {/* Mobile logo */}
+            <div className="mb-10 flex items-center gap-3 lg:hidden">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F5C518] text-lg font-black text-[#0D1F4C]">
+                U
+              </div>
+
+              <span className="text-xl font-extrabold tracking-tight text-[#0D1F4C]">
+                UniLift
+              </span>
+            </div>
+
+            {/* Header */}
+            <div className="mb-8">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0D1F4C]/5 text-[#0D1F4C]">
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <rect x="3" y="11" width="18" height="10" rx="2" />
+                  <path d="M7 11V7a5 5 0 0110 0v4" />
+                </svg>
+              </div>
+
+              <h1 className="text-3xl font-extrabold tracking-[-0.03em] text-slate-900">
+                Set a new password
               </h1>
-              <p style={{ fontSize: 14, color: 'var(--text-sub)' }}>
-                Welcome! You're logging in with an auto-generated password for the first time.
+
+              <p className="mt-2 max-w-md text-sm leading-6 text-slate-500">
+                Welcome! You are logging in with an auto-generated password
+                for the first time.
               </p>
             </div>
 
-            <form onSubmit={handleChangePassword} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-              <div>
-                <label className="field-label">University Index Number</label>
-                <input className="input-field" type="text" value={changePw.university_id}
-                  disabled style={{ background: 'var(--surface)', color: 'var(--text-muted)' }} />
-              </div>
+            {/* Form card */}
+            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+              <form
+                onSubmit={handleChangePassword}
+                className="flex flex-col gap-5"
+              >
+                {/* University ID */}
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                    University Index Number
+                  </label>
 
-              <div>
-                <label className="field-label">New Password</label>
-                <input className="input-field" type="password"
-                  value={newPassword} onChange={e => { setNewPassword(e.target.value); setChangePwError(''); }}
-                  placeholder="Enter a new password" autoComplete="new-password" />
-              </div>
+                  <input
+                    className="w-full cursor-not-allowed rounded-xl border border-slate-200 bg-slate-100 px-4 py-3.5 text-sm font-medium text-slate-500 outline-none"
+                    type="text"
+                    value={changePw.university_id}
+                    disabled
+                  />
+                </div>
 
-              <div>
-                <label className="field-label">Confirm New Password</label>
-                <input className="input-field" type="password"
-                  value={confirmPassword} onChange={e => { setConfirmPassword(e.target.value); setChangePwError(''); }}
-                  placeholder="Re-enter the new password" autoComplete="new-password" />
-              </div>
+                {/* New password */}
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                    New Password
+                  </label>
 
-              {changePwError && <div className="error-banner"><span>⚠</span>{changePwError}</div>}
+                  <input
+                    className={inputClassName}
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => {
+                      setNewPassword(e.target.value);
+                      setChangePwError('');
+                    }}
+                    placeholder="Enter a new password"
+                    autoComplete="new-password"
+                  />
 
-              <button className="btn-primary" type="submit" disabled={changingPw} style={{ marginTop: 4 }}>
-                {changingPw ? 'Saving…' : 'Change Password & Continue'}
-              </button>
-            </form>
+                  <p className="mt-2 text-[11px] text-slate-400">
+                    Use at least 6 characters.
+                  </p>
+                </div>
 
-            <p style={{ textAlign: 'center', fontSize: 12, color: 'var(--text-muted)', marginTop: 28 }}>
+                {/* Confirm password */}
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Confirm New Password
+                  </label>
+
+                  <input
+                    className={inputClassName}
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => {
+                      setConfirmPassword(e.target.value);
+                      setChangePwError('');
+                    }}
+                    placeholder="Re-enter the new password"
+                    autoComplete="new-password"
+                  />
+                </div>
+
+                {/* Error */}
+                {changePwError && (
+                  <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3.5 text-sm text-red-700">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100 text-xs font-bold">
+                      !
+                    </span>
+
+                    <span className="leading-5">{changePwError}</span>
+                  </div>
+                )}
+
+                {/* Submit */}
+                <button
+                  className="mt-1 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#1A3268] to-[#0D1F4C] py-3.5 text-sm font-bold text-white shadow-lg shadow-[#0D1F4C]/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#0D1F4C]/25 active:translate-y-0 disabled:cursor-not-allowed disabled:translate-y-0 disabled:opacity-60"
+                  type="submit"
+                  disabled={changingPw}
+                >
+                  {changingPw ? (
+                    <>
+                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      Change Password
+                      <svg
+                        width="17"
+                        height="17"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M5 12h14" />
+                        <path d="m12 5 7 7-7 7" />
+                      </svg>
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
+
+            <p className="mt-8 text-center text-[11px] text-slate-400">
               © 2025 UniLift · Empowering Sri Lankan Students
             </p>
           </div>
-        </div>
+        </main>
       </div>
     );
   }
 
-  // ── Standard Login View ─────────────────────────────────────
+  /* ------------------------------------------------------------------------ */
+  /* Standard Login View                                                      */
+  /* ------------------------------------------------------------------------ */
+
   return (
-    <div className="auth-shell">
+    <div className="min-h-screen bg-slate-50 lg:flex">
       <BrandPanel />
 
-      <div className="auth-form-panel">
-        <div className="auth-form-inner fade-up">
+      <main className="flex min-h-screen flex-1 items-center justify-center px-5 py-10 sm:px-8 lg:px-12">
+        <div className="w-full max-w-[430px]">
+          {/* Mobile logo */}
+          <div className="mb-10 flex items-center gap-3 lg:hidden">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F5C518] text-lg font-black text-[#0D1F4C]">
+              U
+            </div>
 
-          <div style={{ marginBottom: 32 }}>
-            <h1 style={{ fontSize: 24, fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em', marginBottom: 4 }}>
+            <span className="text-xl font-extrabold tracking-tight text-[#0D1F4C]">
+              UniLift
+            </span>
+          </div>
+
+          {/* Header */}
+          <div className="mb-7">
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0D1F4C]/5 text-[#0D1F4C]">
+              <svg
+                width="23"
+                height="23"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4" />
+                <polyline points="10 17 15 12 10 7" />
+                <line x1="15" y1="12" x2="3" y2="12" />
+              </svg>
+            </div>
+
+            <h1 className="text-3xl font-extrabold tracking-[-0.03em] text-slate-900">
               Sign in
             </h1>
-            <p style={{ fontSize: 14, color: 'var(--text-sub)' }}>{active.hint}</p>
+
+            <p className="mt-2 text-sm leading-6 text-slate-500">
+              {active.hint}
+            </p>
           </div>
 
           {/* Role Tabs */}
-          <div style={{
-            display: 'flex', background: 'var(--surface)',
-            borderRadius: 10, padding: 4, marginBottom: 28,
-            border: '1px solid var(--border)',
-          }}>
-            {ROLES.map(r => (
-              <button key={r.id} onClick={() => { setRole(r.id); setError(''); setForm({ username: '', password: '' }); }}
-                style={{
-                  flex: 1, padding: '8px 4px', border: 'none', borderRadius: 7, cursor: 'pointer',
-                  fontSize: 13, fontWeight: 600, fontFamily: 'inherit', transition: 'all 0.18s',
-                  background: role === r.id ? 'var(--white)' : 'transparent',
-                  color: role === r.id ? 'var(--navy)' : 'var(--text-muted)',
-                  boxShadow: role === r.id ? 'var(--shadow-sm)' : 'none',
-                }}>
+          <div className="mb-7 grid grid-cols-3 gap-1 rounded-2xl border border-slate-200 bg-slate-100 p-1.5">
+            {ROLES.map((r) => (
+              <button
+                key={r.id}
+                type="button"
+                onClick={() => {
+                  setRole(r.id);
+                  setError('');
+                  setForm({
+                    username: '',
+                    password: '',
+                  });
+                }}
+                className={`relative rounded-xl px-2 py-2.5 text-center text-xs font-bold transition-all duration-200 ${
+                  role === r.id
+                    ? 'bg-white text-[#0D1F4C] shadow-sm ring-1 ring-slate-200'
+                    : 'text-slate-500 hover:bg-white/60 hover:text-slate-800'
+                }`}
+              >
                 {r.label}
+
+                {role === r.id && (
+                  <span className="absolute bottom-1 left-1/2 h-0.5 w-5 -translate-x-1/2 rounded-full bg-[#F5C518]" />
+                )}
               </button>
             ))}
           </div>
 
-          {/* Success banner (register eken awa message eka) */}
+          {/* Success message */}
           {successMessage && (
-            <div style={{
-              display: 'flex', alignItems: 'center', gap: 8,
-              padding: '11px 14px', background: '#ECFDF5', border: '1px solid #A7F3D0',
-              borderRadius: 10, fontSize: 13, color: '#047857', marginBottom: 24,
-            }}>
-              <span>✓</span>{successMessage}
+            <div className="mb-6 flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3.5 text-sm text-emerald-700">
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold">
+                ✓
+              </span>
+
+              <span className="leading-5">{successMessage}</span>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-
+          {/* Login Form */}
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            {/* Username */}
             <div>
-              <label className="field-label">Email or University Index Number</label>
-              <input className="input-field" type="text" name="username"
-                value={form.username} onChange={handleChange}
-                placeholder={role === 'student' ? 'e.g. TG/2022/1357' : 'e.g. name@company.com'}
-                autoComplete="username" />
+              <label
+                htmlFor="username"
+                className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500"
+              >
+                Email or University Index Number
+              </label>
+
+              <div className="relative">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M20 21a8 8 0 00-16 0" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
+                </div>
+
+                <input
+                  id="username"
+                  className={`${inputClassName} pl-11`}
+                  type="text"
+                  name="username"
+                  value={form.username}
+                  onChange={handleChange}
+                  placeholder={
+                    role === 'student'
+                      ? 'e.g. TG/2022/1357'
+                      : 'e.g. name@company.com'
+                  }
+                  autoComplete="username"
+                />
+              </div>
             </div>
 
+            {/* Password */}
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                <label className="field-label" style={{ marginBottom: 0 }}>Password</label>
-                <a href="#" style={{ fontSize: 12, color: 'var(--navy-mid)', fontWeight: 500, textDecoration: 'none' }}
-                   onMouseEnter={e => e.target.style.textDecoration='underline'}
-                   onMouseLeave={e => e.target.style.textDecoration='none'}>
+              <div className="mb-2 flex items-center justify-between">
+                <label
+                  htmlFor="password"
+                  className="text-xs font-bold uppercase tracking-wider text-slate-500"
+                >
+                  Password
+                </label>
+
+                <a
+                  href="#"
+                  className="text-xs font-semibold text-[#1A3268] no-underline transition-colors hover:text-[#0D1F4C] hover:underline"
+                >
                   Forgot password?
                 </a>
               </div>
-              <div style={{ position: 'relative' }}>
-                <input className="input-field" type={showPass ? 'text' : 'password'}
-                  name="password" value={form.password} onChange={handleChange}
+
+              <div className="relative">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect
+                      x="3"
+                      y="11"
+                      width="18"
+                      height="10"
+                      rx="2"
+                    />
+                    <path d="M7 11V7a5 5 0 0110 0v4" />
+                  </svg>
+                </div>
+
+                <input
+                  id="password"
+                  className={`${inputClassName} pl-11 pr-12`}
+                  type={showPass ? 'text' : 'password'}
+                  name="password"
+                  value={form.password}
+                  onChange={handleChange}
                   placeholder="Enter your password"
-                  style={{ paddingRight: 44 }} autoComplete="current-password" />
-                <button type="button" onClick={() => setShowPass(p => !p)}
-                  style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)',
-                    background: 'none', border: 'none', cursor: 'pointer',
-                    color: 'var(--text-muted)', display: 'flex', alignItems: 'center', padding: 0 }}>
+                  autoComplete="current-password"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPass((p) => !p)}
+                  aria-label={
+                    showPass ? 'Hide password' : 'Show password'
+                  }
+                  className="absolute inset-y-0 right-0 flex items-center px-4 text-slate-400 transition-colors hover:text-[#1A3268]"
+                >
                   <EyeIcon open={showPass} />
                 </button>
               </div>
             </div>
 
-            {error && <div className="error-banner"><span>⚠</span>{error}</div>}
+            {/* Error */}
+            {error && (
+              <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3.5 text-sm text-red-700">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100 text-xs font-bold">
+                  !
+                </span>
 
-            <button className="btn-primary" type="submit" disabled={loading}
-              style={{ marginTop: 4 }}>
-              {loading ? 'Signing in…' : 'Sign in'}
+                <span className="leading-5">{error}</span>
+              </div>
+            )}
+
+            {/* Login Button */}
+            <button
+              className="mt-1 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#1A3268] to-[#0D1F4C] py-3.5 text-sm font-bold text-white shadow-lg shadow-[#0D1F4C]/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#0D1F4C]/25 active:translate-y-0 disabled:cursor-not-allowed disabled:translate-y-0 disabled:opacity-60"
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                  Signing in...
+                </>
+              ) : (
+                <>
+                  Sign in
+                  <svg
+                    width="17"
+                    height="17"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M5 12h14" />
+                    <path d="m12 5 7 7-7 7" />
+                  </svg>
+                </>
+              )}
             </button>
           </form>
 
-          <div className="divider" style={{ margin: '24px 0' }}>or</div>
+          {/* Divider */}
+          <div className="my-7 flex items-center gap-4">
+            <div className="h-px flex-1 bg-slate-200" />
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            <Link to="/register" style={{
-              display: 'block', textAlign: 'center', padding: '12px',
-              border: '1.5px solid var(--border)', borderRadius: 'var(--radius-lg)',
-              fontSize: 13, fontWeight: 600, color: 'var(--navy)',
-              textDecoration: 'none', transition: 'border-color 0.18s, background 0.18s',
-            }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor='var(--navy)'; e.currentTarget.style.background='var(--surface)'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor='var(--border)'; e.currentTarget.style.background='transparent'; }}>
-              Register a Company
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">
+              or
+            </span>
+
+            <div className="h-px flex-1 bg-slate-200" />
+          </div>
+
+          {/* Register options */}
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Link
+              to="/register"
+              className="group flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-left no-underline shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#1A3268]/30 hover:shadow-md"
+            >
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#0D1F4C]/5 text-lg transition-transform duration-200 group-hover:scale-105">
+                🏢
+              </span>
+
+              <span>
+                <span className="block text-xs font-bold text-slate-800">
+                  Register Company
+                </span>
+
+                <span className="mt-0.5 block text-[10px] text-slate-400">
+                  For employers
+                </span>
+              </span>
             </Link>
-            <Link to="/register" style={{
-              display: 'block', textAlign: 'center', padding: '12px',
-              border: '1.5px solid var(--accent)', borderRadius: 'var(--radius-lg)',
-              fontSize: 13, fontWeight: 600, color: 'var(--navy)',
-              textDecoration: 'none', background: 'var(--accent-soft)',
-              transition: 'filter 0.18s',
-            }}
-              onMouseEnter={e => e.currentTarget.style.filter='brightness(0.96)'}
-              onMouseLeave={e => e.currentTarget.style.filter='none'}>
-              Register a Local Shop
+
+            <Link
+              to="/register"
+              className="group flex items-center gap-3 rounded-xl border border-amber-200 bg-amber-50/70 px-4 py-3.5 text-left no-underline shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-amber-300 hover:bg-amber-50 hover:shadow-md"
+            >
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-lg transition-transform duration-200 group-hover:scale-105">
+                🏪
+              </span>
+
+              <span>
+                <span className="block text-xs font-bold text-amber-900">
+                  Register Local Shop
+                </span>
+
+                <span className="mt-0.5 block text-[10px] text-amber-700/60">
+                  For retailers
+                </span>
+              </span>
             </Link>
           </div>
 
-          <p style={{ textAlign: 'center', fontSize: 12, color: 'var(--text-muted)', marginTop: 28 }}>
+          {/* Footer */}
+          <p className="mt-9 text-center text-[11px] text-slate-400">
             © 2025 UniLift · Empowering Sri Lankan Students
           </p>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

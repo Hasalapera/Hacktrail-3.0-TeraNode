@@ -44,67 +44,67 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-1">Create an Employer Account</h2>
-        <p className="text-sm text-center text-gray-500 mb-6">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+      <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
+        <h2 className="mb-1 text-center text-2xl font-bold text-gray-800">Create an Employer Account</h2>
+        <p className="mb-6 text-center text-sm text-gray-500">
           Register your business to post jobs and hire students.
         </p>
 
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className="space-y-5" onSubmit={handleSubmit}>
           <div>
-            <label className="block text-gray-700 text-sm font-semibold mb-2">Full Name</label>
+            <label className="mb-1.5 block text-xs font-semibold tracking-wide text-gray-600">Full Name</label>
             <input
               type="text"
               name="name"
               value={form.name}
               onChange={handleChange}
               placeholder="Enter your full name"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-xl border-[1.5px] border-slate-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-[#1A3268] focus:shadow-[0_0_0_3px_rgba(26,50,104,0.1)]"
             />
           </div>
 
           <div>
-            <label className="block text-gray-700 text-sm font-semibold mb-2">Email</label>
+            <label className="mb-1.5 block text-xs font-semibold tracking-wide text-gray-600">Email</label>
             <input
               type="email"
               name="email"
               value={form.email}
               onChange={handleChange}
               placeholder="Enter your email"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-xl border-[1.5px] border-slate-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-[#1A3268] focus:shadow-[0_0_0_3px_rgba(26,50,104,0.1)]"
             />
           </div>
 
           <div>
-            <label className="block text-gray-700 text-sm font-semibold mb-2">Password</label>
+            <label className="mb-1.5 block text-xs font-semibold tracking-wide text-gray-600">Password</label>
             <input
               type="password"
               name="password"
               value={form.password}
               onChange={handleChange}
               placeholder="Create a password (min 6 characters)"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-xl border-[1.5px] border-slate-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-[#1A3268] focus:shadow-[0_0_0_3px_rgba(26,50,104,0.1)]"
             />
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3">
-              {error}
+            <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600">
+              <span>⚠</span>{error}
             </div>
           )}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full rounded-xl bg-[#0D1F4C] py-3.5 text-sm font-semibold tracking-wide text-white transition-all hover:bg-[#1A3268] hover:shadow-[0_4px_16px_rgba(13,31,76,0.25)] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none"
           >
             {loading ? 'Registering…' : 'Register'}
           </button>
         </form>
 
-        <p className="text-sm text-center text-gray-600 mt-4">
-          Already have an account? <Link to="/login" className="text-blue-600 hover:underline">Login here</Link>
+        <p className="mt-4 text-center text-sm text-gray-600">
+          Already have an account? <Link to="/login" className="font-semibold text-[#1A3268] hover:underline">Login here</Link>
         </p>
       </div>
     </div>
