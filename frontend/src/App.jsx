@@ -1,11 +1,13 @@
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import AdminRoute from './components/AdminRoute';
+import ProtectedRoute from './components/ProtectedRoute';
 import DashboardLayout from './layout/DashboardLayout';
 
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import AddUser from './pages/management/user/AddUser'; // The page with the form
+import StudentHome from './pages/StudentHome';
 import NotFound from './pages/NotFound';
 
 // AddUser පිටුව DashboardLayout එක ඇතුළේ render කිරීමට හදන wrapper component එක
@@ -32,6 +34,11 @@ export default function App() {
 
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+
+      {/* Protected Student Route */}
+      <Route element={<ProtectedRoute />}>
+        <Route path="/student-home" element={<StudentHome />} />
+      </Route>
 
       {/* Protected Admin Routes */}
       <Route element={<AdminRoute />}>

@@ -259,7 +259,15 @@ export default function Login() {
 
       // SCENARIO A: Standard login - token eka save karala dashboard ekata yanna
       login(res.data.token, res.data.user);
-      navigate('/dashboard');
+      
+      // Role-based redirect: STUDENT kenek nam student home ekata, anith ayata dashboard ekata
+      if (res.data.user.role === 'STUDENT') {
+        navigate('/student-home');
+      } else if (res.data.user.role === 'ADMIN' || res.data.user.role === 'EMPLOYER') {
+        navigate('/dashboard');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
       setError(
         err.response?.data?.message ||
@@ -301,7 +309,8 @@ export default function Login() {
 
       // Password eka change karala token eka labuna - login karala dashboard ekata yanna
       login(res.data.token, res.data.user);
-      navigate('/dashboard');
+      // Me flow eka student lata witharak nisa, student home ekata redirect karanna
+      navigate('/student-home');
     } catch (err) {
       setChangePwError(
         err.response?.data?.message ||
