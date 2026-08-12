@@ -7,6 +7,12 @@ const ROLES = [
   { id: 'retailer', label: 'Retailer', hint: 'Local business owner access' },
 ];
 
+const FEATURES = [
+  ['Internships & Corporate Projects', 'Match with top companies by skill & degree'],
+  ['Part-Time & Flexible Jobs',        'Find nearby gigs posted by local retailers'],
+  ['Freelance Marketplace',            'Earn from design, dev, video editing & more'],
+];
+
 const EyeIcon = ({ open }) => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     {open
@@ -52,176 +58,164 @@ export default function Login() {
   };
 
   return (
-    <div className="auth-shell">
+    <div className="flex min-h-screen items-stretch max-md:flex-col">
 
       {/* ── Left Brand Panel ─────────────────────────────── */}
-      <div className="auth-brand">
-        {/* Logo */}
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 48 }}>
-            <div style={{
-              width: 40, height: 40, borderRadius: 10,
-              background: 'var(--accent)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontWeight: 800, fontSize: 18, color: 'var(--navy)', flexShrink: 0,
-            }}>U</div>
-            <span style={{ color: '#fff', fontWeight: 700, fontSize: 20, letterSpacing: '-0.02em' }}>
-              UniLift
-            </span>
+      <div className="relative flex w-full flex-shrink-0 flex-col justify-between overflow-hidden bg-gradient-to-br from-[#0D1F4C] to-[#1A3268] p-11 md:w-[420px] max-md:min-h-0 max-md:p-9">
+        <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-white/[0.04]" />
+        <div className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-[#F5C518]/[0.06]" />
+
+        <div className="relative">
+          <div className="mb-12 flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-[#F5C518] text-lg font-extrabold text-[#0D1F4C]">
+              U
+            </div>
+            <span className="text-xl font-bold tracking-tight text-white">UniLift</span>
           </div>
 
-          <h2 style={{ color: '#fff', fontSize: 28, fontWeight: 800, lineHeight: 1.25, marginBottom: 16, letterSpacing: '-0.03em' }}>
+          <h2 className="mb-4 text-[28px] font-extrabold leading-tight tracking-tight text-white">
             Your gateway to<br />real opportunities.
           </h2>
-          <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 14, lineHeight: 1.7, marginBottom: 40 }}>
+          <p className="mb-10 text-sm leading-relaxed text-white/55">
             Connecting Sri Lankan university students with companies, retailers, and freelance clients — all in one place.
           </p>
 
-          {/* Feature list */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            {[
-              ['Internships & Corporate Projects', 'Match with top companies by skill & degree'],
-              ['Part-Time & Flexible Jobs',        'Find nearby gigs posted by local retailers'],
-              ['Freelance Marketplace',            'Earn from design, dev, video editing & more'],
-            ].map(([title, sub]) => (
-              <div key={title} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-                <div style={{
-                  width: 6, height: 6, borderRadius: '50%',
-                  background: 'var(--accent)', marginTop: 7, flexShrink: 0,
-                }} />
+          <div className="flex flex-col gap-4">
+            {FEATURES.map(([title, sub]) => (
+              <div key={title} className="flex items-start gap-3">
+                <div className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#F5C518]" />
                 <div>
-                  <div style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>{title}</div>
-                  <div style={{ color: 'rgba(255,255,255,0.45)', fontSize: 12 }}>{sub}</div>
+                  <div className="text-[13px] font-semibold text-white">{title}</div>
+                  <div className="text-xs text-white/45">{sub}</div>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Bottom badge */}
-        <div style={{
-          display: 'inline-flex', alignItems: 'center', gap: 8,
-          background: 'rgba(255,255,255,0.07)', borderRadius: 8,
-          padding: '10px 14px', border: '1px solid rgba(255,255,255,0.10)',
-        }}>
-          <div style={{ display: 'flex', gap: -6 }}>
-            {['#3B82F6','#10B981','#F59E0B'].map((c,i) => (
-              <div key={i} style={{
-                width: 24, height: 24, borderRadius: '50%',
-                background: c, border: '2px solid var(--navy)',
-                marginLeft: i > 0 ? -8 : 0,
-              }} />
+        <div className="relative inline-flex items-center gap-2 self-start rounded-lg border border-white/10 bg-white/[0.07] px-3.5 py-2.5">
+          <div className="flex">
+            {['bg-blue-500', 'bg-emerald-500', 'bg-amber-500'].map((c, i) => (
+              <div
+                key={c}
+                className={`h-6 w-6 rounded-full border-2 border-[#0D1F4C] ${c} ${i > 0 ? '-ml-2' : ''}`}
+              />
             ))}
           </div>
-          <span style={{ color: 'rgba(255,255,255,0.70)', fontSize: 12 }}>
-            Trusted by <strong style={{ color: '#fff' }}>128,000+</strong> students
+          <span className="text-xs text-white/70">
+            Trusted by <strong className="text-white">128,000+</strong> students
           </span>
         </div>
       </div>
 
       {/* ── Right Form Panel ─────────────────────────────── */}
-      <div className="auth-form-panel">
-        <div className="auth-form-inner fade-up">
+      <div className="flex flex-1 items-center justify-center overflow-y-auto bg-white p-12 max-md:p-9">
+        <div className="w-full max-w-[400px]">
 
-          {/* Heading */}
-          <div style={{ marginBottom: 32 }}>
-            <h1 style={{ fontSize: 24, fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em', marginBottom: 4 }}>
+          <div className="mb-8">
+            <h1 className="mb-1 text-2xl font-extrabold tracking-tight text-gray-900">
               Sign in
             </h1>
-            <p style={{ fontSize: 14, color: 'var(--text-sub)' }}>{active.hint}</p>
+            <p className="text-sm text-gray-500">{active.hint}</p>
           </div>
 
-          {/* Role Tabs */}
-          <div style={{
-            display: 'flex', background: 'var(--surface)',
-            borderRadius: 10, padding: 4, marginBottom: 28,
-            border: '1px solid var(--border)',
-          }}>
+          <div className="mb-7 flex rounded-[10px] border border-gray-200 bg-gray-50 p-1">
             {ROLES.map(r => (
-              <button key={r.id} onClick={() => { setRole(r.id); setError(''); setForm({ username: '', password: '' }); }}
-                style={{
-                  flex: 1, padding: '8px 4px', border: 'none', borderRadius: 7, cursor: 'pointer',
-                  fontSize: 13, fontWeight: 600, fontFamily: 'inherit', transition: 'all 0.18s',
-                  background: role === r.id ? 'var(--white)' : 'transparent',
-                  color: role === r.id ? 'var(--navy)' : 'var(--text-muted)',
-                  boxShadow: role === r.id ? 'var(--shadow-sm)' : 'none',
-                }}>
+              <button
+                key={r.id}
+                type="button"
+                onClick={() => { setRole(r.id); setError(''); setForm({ username: '', password: '' }); }}
+                className={`flex-1 rounded-[7px] px-1 py-2 text-[13px] font-semibold transition-all ${
+                  role === r.id
+                    ? 'bg-white text-[#0D1F4C] shadow-sm'
+                    : 'text-gray-400 hover:text-gray-600'
+                }`}
+              >
                 {r.label}
               </button>
             ))}
           </div>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-
+          <form onSubmit={handleSubmit} className="flex flex-col gap-[18px]">
             <div>
-              <label className="field-label">Username</label>
-              <input className="input-field" type="text" name="username"
-                value={form.username} onChange={handleChange}
+              <label className="mb-1.5 block text-[13px] font-semibold tracking-wide text-gray-500">
+                Username
+              </label>
+              <input
+                type="text"
+                name="username"
+                value={form.username}
+                onChange={handleChange}
                 placeholder={role === 'company' ? 'company_hr or email' : `${role}_username`}
-                autoComplete="username" />
+                autoComplete="username"
+                className="w-full rounded-[14px] border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#1A3268] focus:ring-[3px] focus:ring-[#1A3268]/10"
+              />
             </div>
 
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                <label className="field-label" style={{ marginBottom: 0 }}>Password</label>
-                <a href="#" style={{ fontSize: 12, color: 'var(--navy-mid)', fontWeight: 500, textDecoration: 'none' }}
-                   onMouseEnter={e => e.target.style.textDecoration='underline'}
-                   onMouseLeave={e => e.target.style.textDecoration='none'}>
+              <div className="mb-1.5 flex items-center justify-between">
+                <label className="text-[13px] font-semibold tracking-wide text-gray-500">Password</label>
+                <a href="#" className="text-xs font-medium text-[#1A3268] hover:underline">
                   Forgot password?
                 </a>
               </div>
-              <div style={{ position: 'relative' }}>
-                <input className="input-field" type={showPass ? 'text' : 'password'}
-                  name="password" value={form.password} onChange={handleChange}
+              <div className="relative">
+                <input
+                  type={showPass ? 'text' : 'password'}
+                  name="password"
+                  value={form.password}
+                  onChange={handleChange}
                   placeholder="Enter your password"
-                  style={{ paddingRight: 44 }} autoComplete="current-password" />
-                <button type="button" onClick={() => setShowPass(p => !p)}
-                  style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)',
-                    background: 'none', border: 'none', cursor: 'pointer',
-                    color: 'var(--text-muted)', display: 'flex', alignItems: 'center', padding: 0 }}>
+                  autoComplete="current-password"
+                  className="w-full rounded-[14px] border border-gray-200 bg-white py-3 pl-4 pr-11 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#1A3268] focus:ring-[3px] focus:ring-[#1A3268]/10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPass(p => !p)}
+                  className="absolute right-3.5 top-1/2 flex -translate-y-1/2 items-center text-gray-400 hover:text-gray-600"
+                >
                   <EyeIcon open={showPass} />
                 </button>
               </div>
             </div>
 
-            {error && <div className="error-banner"><span>⚠</span>{error}</div>}
+            {error && (
+              <div className="flex items-center gap-2 rounded-[10px] border border-red-200 bg-red-50 px-3.5 py-2.5 text-[13px] text-red-600">
+                <span>⚠</span>{error}
+              </div>
+            )}
 
-            <button className="btn-primary" type="submit" disabled={loading}
-              style={{ marginTop: 4 }}>
+            <button
+              type="submit"
+              disabled={loading}
+              className="mt-1 w-full rounded-[14px] bg-[#0D1F4C] py-3.5 text-sm font-semibold tracking-wide text-white transition hover:bg-[#1A3268] hover:shadow-[0_4px_16px_rgba(13,31,76,0.25)] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-55 disabled:shadow-none disabled:active:scale-100"
+            >
               {loading ? 'Signing in…' : 'Sign in'}
             </button>
           </form>
 
-          {/* Divider */}
-          <div className="divider" style={{ margin: '24px 0' }}>or</div>
+          <div className="my-6 flex items-center gap-3 text-xs text-gray-400">
+            <span className="h-px flex-1 bg-gray-200" />
+            or
+            <span className="h-px flex-1 bg-gray-200" />
+          </div>
 
-          {/* Register links */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            <Link to="/register/company" style={{
-              display: 'block', textAlign: 'center', padding: '12px',
-              border: '1.5px solid var(--border)', borderRadius: 'var(--radius-lg)',
-              fontSize: 13, fontWeight: 600, color: 'var(--navy)',
-              textDecoration: 'none', transition: 'border-color 0.18s, background 0.18s',
-            }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor='var(--navy)'; e.currentTarget.style.background='var(--surface)'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor='var(--border)'; e.currentTarget.style.background='transparent'; }}>
+          <div className="flex flex-col gap-2.5">
+            <Link
+              to="/register/company"
+              className="block rounded-[14px] border-[1.5px] border-gray-200 px-3 py-3 text-center text-[13px] font-semibold text-[#0D1F4C] transition hover:border-[#0D1F4C] hover:bg-gray-50"
+            >
               Register a Company
             </Link>
-            <Link to="/register/retailer" style={{
-              display: 'block', textAlign: 'center', padding: '12px',
-              border: '1.5px solid var(--accent)', borderRadius: 'var(--radius-lg)',
-              fontSize: 13, fontWeight: 600, color: 'var(--navy)',
-              textDecoration: 'none', background: 'var(--accent-soft)',
-              transition: 'filter 0.18s',
-            }}
-              onMouseEnter={e => e.currentTarget.style.filter='brightness(0.96)'}
-              onMouseLeave={e => e.currentTarget.style.filter='none'}>
+            <Link
+              to="/register/retailer"
+              className="block rounded-[14px] border-[1.5px] border-[#F5C518] bg-[#FEF3C7] px-3 py-3 text-center text-[13px] font-semibold text-[#0D1F4C] transition hover:brightness-[0.96]"
+            >
               Register a Local Shop
             </Link>
           </div>
 
-          <p style={{ textAlign: 'center', fontSize: 12, color: 'var(--text-muted)', marginTop: 28 }}>
+          <p className="mt-7 text-center text-xs text-gray-400">
             © 2025 UniLift · Empowering Sri Lankan Students
           </p>
         </div>

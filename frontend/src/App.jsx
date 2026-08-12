@@ -51,37 +51,23 @@ export default function App() {
 /* ── Under-construction placeholder ───────────────────────── */
 function PlaceholderPage({ title }) {
   return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      background: 'linear-gradient(135deg, var(--navy), var(--navy-mid))',
-      padding: '24px',
-    }}>
-      <div style={{
-        background: 'var(--white)', borderRadius: 20,
-        padding: '48px 40px', textAlign: 'center',
-        maxWidth: 360, width: '100%',
-        boxShadow: 'var(--shadow-lg)',
-      }}>
-        <div style={{
-          fontSize: 40, marginBottom: 16,
-          width: 72, height: 72, borderRadius: 18,
-          background: 'var(--accent-soft)', border: '2px solid var(--border)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          margin: '0 auto 20px',
-        }}>🚧</div>
-        <h1 style={{ fontSize: 18, fontWeight: 800, color: 'var(--text-main)', marginBottom: 8 }}>
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#0D1F4C] to-[#1A3268] p-6">
+      <div className="w-full max-w-[360px] rounded-[20px] bg-white p-12 text-center shadow-[0_8px_32px_rgba(0,0,0,0.14)]">
+        <div className="mx-auto mb-5 flex h-[72px] w-[72px] items-center justify-center rounded-[18px] border-2 border-[#E4E9F2] bg-[#FEF3C7] text-[40px]">
+          🚧
+        </div>
+        <h1 className="mb-2 text-lg font-extrabold text-gray-900">
           {title}
         </h1>
-        <p style={{ fontSize: 13.5, color: 'var(--text-sub)', marginBottom: 28 }}>
+        <p className="mb-7 text-[13.5px] text-gray-500">
           This page is under construction.
         </p>
-        <a href="/student/home" style={{
-          display: 'inline-block', padding: '11px 24px',
-          background: 'var(--navy)', color: '#fff',
-          borderRadius: 12, fontSize: 13, fontWeight: 600,
-          textDecoration: 'none',
-        }}>← Back to Home</a>
+        <a
+          href="/student/home"
+          className="inline-block rounded-xl bg-[#0D1F4C] px-6 py-2.5 text-[13px] font-semibold text-white no-underline"
+        >
+          ← Back to Home
+        </a>
       </div>
     </div>
   );

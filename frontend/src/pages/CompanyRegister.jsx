@@ -69,11 +69,9 @@ export default function CompanyRegister() {
   /* ── Success Screen ── */
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4"
-           style={{ background: 'linear-gradient(135deg, #0f2557 0%, #1a3a7c 100%)' }}>
+      <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-[#0f2557] to-[#1a3a7c]">
         <div className="bg-white rounded-2xl shadow-2xl p-10 max-w-md w-full text-center">
-          <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4"
-               style={{ background: '#f0fdf4' }}>
+          <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 bg-green-50">
             <span className="text-4xl">✅</span>
           </div>
           <h2 className="text-2xl font-bold text-slate-800 mb-2">Company Registered!</h2>
@@ -81,8 +79,7 @@ export default function CompanyRegister() {
             Your company profile is under review. We'll notify you at <strong>{form.email}</strong>.
           </p>
           <button onClick={() => navigate('/login')}
-                  className="w-full py-3 rounded-xl font-bold text-white cursor-pointer"
-                  style={{ background: 'linear-gradient(135deg, #0f2557, #1a3a7c)' }}>
+                  className="w-full py-3 rounded-xl font-bold text-white cursor-pointer bg-gradient-to-br from-[#0f2557] to-[#1a3a7c]">
             Go to Login
           </button>
         </div>
@@ -91,18 +88,15 @@ export default function CompanyRegister() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-14"
-         style={{ background: 'linear-gradient(135deg, #0f2557 0%, #1a3a7c 100%)' }}>
+    <div className="min-h-screen flex items-center justify-center px-4 py-14 bg-gradient-to-br from-[#0f2557] to-[#1a3a7c]">
 
       <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden">
 
         {/* ── Header ── */}
-        <div className="px-8 pt-8 pb-6"
-             style={{ background: 'linear-gradient(135deg, #0f2557, #1a3a7c)' }}>
+        <div className="px-8 pt-8 pb-6 bg-gradient-to-br from-[#0f2557] to-[#1a3a7c]">
           <div className="flex items-center gap-3 mb-1">
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
-                 style={{ background: '#f5c518' }}>
-              <span className="text-lg font-black" style={{ color: '#0f2557' }}>U</span>
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 bg-[#f5c518]">
+              <span className="text-lg font-black text-[#0f2557]">U</span>
             </div>
             <div>
               <h1 className="text-xl font-bold text-white leading-tight">Company Registration</h1>
@@ -118,7 +112,7 @@ export default function CompanyRegister() {
         <div className="flex items-center px-8 py-3 bg-blue-50 border-b border-blue-100">
           <span className="text-xs font-semibold text-blue-600">Step 1 of 1 — Company Details</span>
           <div className="ml-auto flex gap-1">
-            <span className="w-2 h-2 rounded-full" style={{ background: '#0f2557' }}></span>
+            <span className="w-2 h-2 rounded-full bg-[#0f2557]"></span>
             <span className="w-2 h-2 rounded-full bg-gray-300"></span>
             <span className="w-2 h-2 rounded-full bg-gray-300"></span>
           </div>
@@ -227,8 +221,8 @@ export default function CompanyRegister() {
           {/* Terms */}
           <p className="text-xs text-slate-400 leading-relaxed">
             By registering, you agree to UniLift's{' '}
-            <a href="#" className="underline" style={{ color: '#0f2557' }}>Terms of Service</a> and{' '}
-            <a href="#" className="underline" style={{ color: '#0f2557' }}>Privacy Policy</a>.
+            <a href="#" className="underline text-[#0f2557]">Terms of Service</a> and{' '}
+            <a href="#" className="underline text-[#0f2557]">Privacy Policy</a>.
           </p>
 
           {/* Error */}
@@ -242,16 +236,15 @@ export default function CompanyRegister() {
           {/* Submit */}
           <button type="submit" disabled={loading}
                   className="w-full py-3.5 rounded-xl font-bold text-white text-sm tracking-wide
-                             cursor-pointer disabled:opacity-60 active:scale-[0.98] mt-2"
-                  style={{ background: 'linear-gradient(135deg, #0f2557, #1a3a7c)' }}
-                  onMouseEnter={(e) => { if (!loading) e.currentTarget.style.background = 'linear-gradient(135deg, #091840, #0f2557)'; }}
-                  onMouseLeave={(e) => { if (!loading) e.currentTarget.style.background = 'linear-gradient(135deg, #0f2557, #1a3a7c)'; }}>
+                             cursor-pointer disabled:opacity-60 active:scale-[0.98] mt-2
+                             bg-gradient-to-br from-[#0f2557] to-[#1a3a7c]
+                             hover:from-[#091840] hover:to-[#0f2557]">
             {loading ? '⏳ Registering Company...' : '🏛️ Register Company'}
           </button>
 
           <p className="text-center text-sm text-slate-500">
             Already registered?{' '}
-            <Link to="/login" className="font-semibold hover:underline" style={{ color: '#0f2557' }}>
+            <Link to="/login" className="font-semibold hover:underline text-[#0f2557]">
               Sign In
             </Link>
           </p>

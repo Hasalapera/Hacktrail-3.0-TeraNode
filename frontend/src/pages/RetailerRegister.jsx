@@ -63,11 +63,9 @@ export default function RetailerRegister() {
   /* ── Success Screen ── */
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4"
-           style={{ background: 'linear-gradient(135deg, #f5c518 0%, #d4a800 100%)' }}>
+      <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-[#f5c518] to-[#d4a800]">
         <div className="bg-white rounded-2xl shadow-2xl p-10 max-w-md w-full text-center">
-          <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4"
-               style={{ background: '#fefce8' }}>
+          <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 bg-yellow-50">
             <span className="text-4xl">🛍️</span>
           </div>
           <h2 className="text-2xl font-bold text-slate-800 mb-2">Shop Registered!</h2>
@@ -80,8 +78,8 @@ export default function RetailerRegister() {
           </p>
           <button onClick={() => navigate('/login')}
                   className="w-full py-3 rounded-xl font-bold text-slate-800 cursor-pointer
-                             hover:shadow-lg transition-all"
-                  style={{ background: 'linear-gradient(135deg, #f5c518, #d4a800)' }}>
+                             hover:shadow-lg transition-all
+                             bg-gradient-to-br from-[#f5c518] to-[#d4a800]">
             Go to Login →
           </button>
         </div>
@@ -90,39 +88,33 @@ export default function RetailerRegister() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-14"
-         style={{ background: 'linear-gradient(160deg, #0f2557 0%, #1a3a7c 40%, #0f2557 100%)' }}>
+    <div className="min-h-screen flex items-center justify-center px-4 py-14 bg-gradient-to-b from-[#0f2557] via-[#1a3a7c] via-40% to-[#0f2557]">
 
       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden">
 
         {/* ── Header — Yellow accent for retailer ── */}
-        <div className="px-8 pt-7 pb-6 relative overflow-hidden"
-             style={{ background: 'linear-gradient(135deg, #f5c518, #d4a800)' }}>
+        <div className="px-8 pt-7 pb-6 relative overflow-hidden bg-gradient-to-br from-[#f5c518] to-[#d4a800]">
 
           {/* Decorative circles */}
-          <div className="absolute -top-6 -right-6 w-28 h-28 rounded-full opacity-20"
-               style={{ background: '#0f2557' }}></div>
-          <div className="absolute -bottom-4 -left-4 w-20 h-20 rounded-full opacity-10"
-               style={{ background: '#0f2557' }}></div>
+          <div className="absolute -top-6 -right-6 w-28 h-28 rounded-full opacity-20 bg-[#0f2557]"></div>
+          <div className="absolute -bottom-4 -left-4 w-20 h-20 rounded-full opacity-10 bg-[#0f2557]"></div>
 
           <div className="relative flex items-center gap-3 mb-3">
-            <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md"
-                 style={{ background: '#0f2557' }}>
+            <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md bg-[#0f2557]">
               <span className="text-xl">🏪</span>
             </div>
             <div>
-              <h1 className="text-xl font-bold leading-tight" style={{ color: '#0f2557' }}>
+              <h1 className="text-xl font-bold leading-tight text-[#0f2557]">
                 Shop Registration
               </h1>
-              <p className="text-xs font-medium opacity-70" style={{ color: '#0f2557' }}>
+              <p className="text-xs font-medium opacity-70 text-[#0f2557]">
                 UniLift Retailer Portal
               </p>
             </div>
           </div>
 
           {/* Tagline pill */}
-          <div className="relative inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold"
-               style={{ background: '#0f2557', color: '#f5c518' }}>
+          <div className="relative inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-[#0f2557] text-[#f5c518]">
             <span>⚡</span>
             Post part-time jobs and find local students instantly!
           </div>
@@ -132,7 +124,7 @@ export default function RetailerRegister() {
         <div className="flex divide-x divide-gray-100 bg-amber-50 border-b border-amber-100">
           {[['128K+', 'Students'], ['75%', 'SME Focus'], ['Free', 'to Post']].map(([num, label]) => (
             <div key={label} className="flex-1 py-3 text-center">
-              <div className="text-sm font-bold" style={{ color: '#0f2557' }}>{num}</div>
+              <div className="text-sm font-bold text-[#0f2557]">{num}</div>
               <div className="text-xs text-slate-500">{label}</div>
             </div>
           ))}
@@ -219,7 +211,7 @@ export default function RetailerRegister() {
             </label>
             <input name="confirmPassword" value={form.confirmPassword} onChange={handleChange}
                    type={showPass ? 'text' : 'password'} placeholder="Re-enter password"
-                   className="w-full px-4 py-3 rounded-xl border border-gray-200 text sm
+                   className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm
                               bg-slate-50 text-slate-800 outline-none placeholder-slate-400
                               focus:border-amber-400 focus:ring-2 focus:ring-amber-100 focus:bg-white" />
           </div>
@@ -244,20 +236,19 @@ export default function RetailerRegister() {
 
           {/* Submit — Yellow accent CTA */}
           <button type="submit" disabled={loading}
-                  className="w-full py-3.5 rounded-xl font-bold text-sm tracking-wide
-                             cursor-pointer disabled:opacity-60 active:scale-[0.98] shadow-md mt-1"
-                  style={{
-                    background: loading ? '#94a3b8' : 'linear-gradient(135deg, #f5c518, #d4a800)',
-                    color: '#0f2557',
-                  }}
-                  onMouseEnter={(e) => { if (!loading) e.currentTarget.style.boxShadow = '0 8px 24px rgba(245,197,24,0.45)'; }}
-                  onMouseLeave={(e) => { if (!loading) e.currentTarget.style.boxShadow = 'none'; }}>
+                  className={`w-full py-3.5 rounded-xl font-bold text-sm tracking-wide text-[#0f2557]
+                             cursor-pointer disabled:opacity-60 active:scale-[0.98] shadow-md mt-1
+                             transition-shadow ${
+                               loading
+                                 ? 'bg-slate-400'
+                                 : 'bg-gradient-to-br from-[#f5c518] to-[#d4a800] hover:shadow-[0_8px_24px_rgba(245,197,24,0.45)]'
+                             }`}>
             {loading ? '⏳ Registering Shop...' : '🏪 Register My Shop — It\'s Free!'}
           </button>
 
           <p className="text-center text-sm text-slate-500">
             Already have an account?{' '}
-            <Link to="/login" className="font-semibold hover:underline" style={{ color: '#0f2557' }}>
+            <Link to="/login" className="font-semibold hover:underline text-[#0f2557]">
               Sign In
             </Link>
           </p>
