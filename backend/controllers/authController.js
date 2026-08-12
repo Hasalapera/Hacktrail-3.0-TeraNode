@@ -172,4 +172,30 @@ const changeFirstPassword = async (req, res) => {
   }
 };
 
-module.exports = { register, login, changeFirstPassword };
+// Current logged-in user eke details return karanna (protected - JWT token eka awashya)
+const me = async (req, res) => {
+  try {
+    // req.user middleware eken set karanawa (authMiddleware)
+    const user = await User.findByPk(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        university_id: user.university_id,
+        isOpenToWork: user.isOpenToWork,
+        skills: user.skills,
+      },
+    });
+  } catch (error) {
+    console.error('Me error:', error);
+    res.status(500).json({ message: 'Server error while fetching user' });
+  }
+};
+
+module.exports = { register, login, changeFirstPassword, me };
