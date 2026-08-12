@@ -1,7 +1,6 @@
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import AdminRoute from './components/AdminRoute';
 import ProtectedRoute from './components/ProtectedRoute';
-import DashboardLayout from './layout/DashboardLayout';
 
 // ── Auth & Onboarding pages (hass branch) ──────────────────
 import Login from './pages/Login';
@@ -14,7 +13,7 @@ import RetailerRegister from './pages/RetailerRegister';
 import NotFound from './pages/NotFound';
 
 // ── Student & Publisher pages (Rasara branch) ──────────────
-import StudentHome from './pages/StudentHome';
+
 import RetailJobPublisher from './pages/RetailJobPublisher';
 import CompanyJobPublisher from './pages/CompanyJobPublisher';
 import FreelancerClient from './pages/FreelancerClient';
@@ -47,12 +46,12 @@ export default function App() {
       {/* Protected Admin Routes */}
       <Route element={<AdminRoute />}>
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/admin/add-users" element={<AddUserPage />} />
+        <Route path="/admin/add-users" element={<AddUser />} />
       </Route>
       {/* ── Placeholder routes (unlock as pages are built) ── */}
       <Route path="/change-password" element={<PlaceholderPage title="Change Password" />} />
       <Route path="/complete-profile" element={<PlaceholderPage title="Complete Your Profile" />} />
-      <Route path="/dashboard" element={<PlaceholderPage title="Dashboard 🚀" />} />
+
 
       {/* 404 */}
       <Route path="*" element={<NotFound />} />
