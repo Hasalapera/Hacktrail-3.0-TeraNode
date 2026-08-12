@@ -1,201 +1,227 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-/* ─── Role tab config ────────────────────────────────────── */
 const ROLES = [
-  { id: 'student',  label: '🎓 Student',  placeholder: 'e.g. student1' },
-  { id: 'company',  label: '🏛️ Company',  placeholder: 'e.g. hr@company.com' },
-  { id: 'retailer', label: '🏪 Retailer', placeholder: 'e.g. shop_owner1' },
+  { id: 'student',  label: 'Student',  hint: 'Enter your university credentials' },
+  { id: 'company',  label: 'Company',  hint: 'Corporate HR or recruiter access' },
+  { id: 'retailer', label: 'Retailer', hint: 'Local business owner access' },
 ];
 
+const EyeIcon = ({ open }) => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    {open
+      ? <><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></>
+      : <><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></>
+    }
+  </svg>
+);
+
 export default function Login() {
-  const navigate   = useNavigate();
-  const [role, setRole]         = useState('student');
-  const [form, setForm]         = useState({ username: '', password: '' });
+  const navigate = useNavigate();
+  const [role, setRole]       = useState('student');
+  const [form, setForm]       = useState({ username: '', password: '' });
   const [showPass, setShowPass] = useState(false);
-  const [loading, setLoading]   = useState(false);
-  const [error, setError]       = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError]     = useState('');
 
-  const activeRole = ROLES.find((r) => r.id === role);
+  const active = ROLES.find(r => r.id === role);
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     setError('');
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setForm(p => ({ ...p, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    if (!form.username || !form.password) {
-      setError('Please fill in both fields.');
-      return;
-    }
-    setLoading(true);
-    setError('');
-
+    if (!form.username.trim() || !form.password) { setError('Both fields are required.'); return; }
+    setLoading(true); setError('');
     try {
       const res  = await fetch('http://localhost:5000/auth/login', {
-        method:  'POST',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ username: form.username, password: form.password }),
+        body: JSON.stringify({ username: form.username, password: form.password }),
       });
       const data = await res.json();
-
-      if (!data.success) {
-        setError(data.message);
-        return;
-      }
-
-      /* Frontend navigation based on server's action flag */
-      if (data.action === 'REDIRECT_TO_CHANGE_PASSWORD')  navigate('/change-password');
-      else if (data.action === 'REDIRECT_TO_COMPLETE_PROFILE') navigate('/complete-profile');
+      if (!data.success) { setError(data.message); return; }
+      if      (data.action === 'REDIRECT_TO_CHANGE_PASSWORD')   navigate('/change-password');
+      else if (data.action === 'REDIRECT_TO_COMPLETE_PROFILE')  navigate('/complete-profile');
       else navigate('/dashboard');
-
     } catch {
-      setError('Cannot connect to server. Make sure the backend is running.');
-    } finally {
-      setLoading(false);
-    }
+      setError('Unable to connect. Make sure the backend server is running.');
+    } finally { setLoading(false); }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12"
-         style={{ background: 'linear-gradient(135deg, #0f2557 0%, #1a3a7c 50%, #0f2557 100%)' }}>
+    <div className="auth-shell">
 
-      {/* ── Card ── */}
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden">
-
-        {/* ── Header ── */}
-        <div className="px-8 pt-8 pb-6 text-center"
-             style={{ background: 'linear-gradient(135deg, #0f2557, #1a3a7c)' }}>
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-3"
-               style={{ background: '#f5c518' }}>
-            <span className="text-2xl font-black" style={{ color: '#0f2557' }}>U</span>
-          </div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">UniLift</h1>
-          <p className="text-blue-200 text-sm mt-1">Your gateway to opportunities</p>
-        </div>
-
-        {/* ── Role Tabs ── */}
-        <div className="flex border-b border-gray-100 bg-gray-50">
-          {ROLES.map((r) => (
-            <button
-              key={r.id}
-              onClick={() => { setRole(r.id); setError(''); setForm({ username: '', password: '' }); }}
-              className="flex-1 py-3 text-sm font-semibold transition-all duration-200 cursor-pointer"
-              style={
-                role === r.id
-                  ? { color: '#0f2557', borderBottom: '3px solid #0f2557', background: '#fff' }
-                  : { color: '#94a3b8', borderBottom: '3px solid transparent' }
-              }
-            >
-              {r.label}
-            </button>
-          ))}
-        </div>
-
-        {/* ── Form ── */}
-        <form onSubmit={handleSubmit} className="px-8 py-7 space-y-5">
-
-          {/* Username */}
-          <div>
-            <label className="block text-sm font-semibold text-slate-600 mb-1.5">
-              Username / Email
-            </label>
-            <input
-              type="text"
-              name="username"
-              value={form.username}
-              onChange={handleChange}
-              placeholder={activeRole.placeholder}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-slate-800 text-sm
-                         outline-none placeholder-slate-400 bg-slate-50
-                         focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:bg-white"
-            />
+      {/* ── Left Brand Panel ─────────────────────────────── */}
+      <div className="auth-brand">
+        {/* Logo */}
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 48 }}>
+            <div style={{
+              width: 40, height: 40, borderRadius: 10,
+              background: 'var(--accent)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontWeight: 800, fontSize: 18, color: 'var(--navy)', flexShrink: 0,
+            }}>U</div>
+            <span style={{ color: '#fff', fontWeight: 700, fontSize: 20, letterSpacing: '-0.02em' }}>
+              UniLift
+            </span>
           </div>
 
-          {/* Password */}
-          <div>
-            <label className="block text-sm font-semibold text-slate-600 mb-1.5">
-              Password
-            </label>
-            <div className="relative">
-              <input
-                type={showPass ? 'text' : 'password'}
-                name="password"
-                value={form.password}
-                onChange={handleChange}
-                placeholder="Enter your password"
-                className="w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 text-slate-800 text-sm
-                           outline-none placeholder-slate-400 bg-slate-50
-                           focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:bg-white"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPass((p) => !p)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
-              >
-                {showPass ? '🙈' : '👁️'}
+          <h2 style={{ color: '#fff', fontSize: 28, fontWeight: 800, lineHeight: 1.25, marginBottom: 16, letterSpacing: '-0.03em' }}>
+            Your gateway to<br />real opportunities.
+          </h2>
+          <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 14, lineHeight: 1.7, marginBottom: 40 }}>
+            Connecting Sri Lankan university students with companies, retailers, and freelance clients — all in one place.
+          </p>
+
+          {/* Feature list */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {[
+              ['Internships & Corporate Projects', 'Match with top companies by skill & degree'],
+              ['Part-Time & Flexible Jobs',        'Find nearby gigs posted by local retailers'],
+              ['Freelance Marketplace',            'Earn from design, dev, video editing & more'],
+            ].map(([title, sub]) => (
+              <div key={title} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                <div style={{
+                  width: 6, height: 6, borderRadius: '50%',
+                  background: 'var(--accent)', marginTop: 7, flexShrink: 0,
+                }} />
+                <div>
+                  <div style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>{title}</div>
+                  <div style={{ color: 'rgba(255,255,255,0.45)', fontSize: 12 }}>{sub}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom badge */}
+        <div style={{
+          display: 'inline-flex', alignItems: 'center', gap: 8,
+          background: 'rgba(255,255,255,0.07)', borderRadius: 8,
+          padding: '10px 14px', border: '1px solid rgba(255,255,255,0.10)',
+        }}>
+          <div style={{ display: 'flex', gap: -6 }}>
+            {['#3B82F6','#10B981','#F59E0B'].map((c,i) => (
+              <div key={i} style={{
+                width: 24, height: 24, borderRadius: '50%',
+                background: c, border: '2px solid var(--navy)',
+                marginLeft: i > 0 ? -8 : 0,
+              }} />
+            ))}
+          </div>
+          <span style={{ color: 'rgba(255,255,255,0.70)', fontSize: 12 }}>
+            Trusted by <strong style={{ color: '#fff' }}>128,000+</strong> students
+          </span>
+        </div>
+      </div>
+
+      {/* ── Right Form Panel ─────────────────────────────── */}
+      <div className="auth-form-panel">
+        <div className="auth-form-inner fade-up">
+
+          {/* Heading */}
+          <div style={{ marginBottom: 32 }}>
+            <h1 style={{ fontSize: 24, fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em', marginBottom: 4 }}>
+              Sign in
+            </h1>
+            <p style={{ fontSize: 14, color: 'var(--text-sub)' }}>{active.hint}</p>
+          </div>
+
+          {/* Role Tabs */}
+          <div style={{
+            display: 'flex', background: 'var(--surface)',
+            borderRadius: 10, padding: 4, marginBottom: 28,
+            border: '1px solid var(--border)',
+          }}>
+            {ROLES.map(r => (
+              <button key={r.id} onClick={() => { setRole(r.id); setError(''); setForm({ username: '', password: '' }); }}
+                style={{
+                  flex: 1, padding: '8px 4px', border: 'none', borderRadius: 7, cursor: 'pointer',
+                  fontSize: 13, fontWeight: 600, fontFamily: 'inherit', transition: 'all 0.18s',
+                  background: role === r.id ? 'var(--white)' : 'transparent',
+                  color: role === r.id ? 'var(--navy)' : 'var(--text-muted)',
+                  boxShadow: role === r.id ? 'var(--shadow-sm)' : 'none',
+                }}>
+                {r.label}
               </button>
-            </div>
-            <div className="flex justify-end mt-1.5">
-              <a href="#" className="text-xs font-medium hover:underline"
-                 style={{ color: '#0f2557' }}>
-                Forgot Password?
-              </a>
-            </div>
+            ))}
           </div>
 
-          {/* Error Banner */}
-          {error && (
-            <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-600
-                            text-sm px-4 py-3 rounded-xl">
-              <span>⚠️</span> {error}
-            </div>
-          )}
+          {/* Form */}
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
 
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3.5 rounded-xl font-bold text-white text-sm tracking-wide
-                       cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed
-                       active:scale-[0.98]"
-            style={{ background: loading ? '#94a3b8' : 'linear-gradient(135deg, #0f2557, #1a3a7c)' }}
-            onMouseEnter={(e) => { if (!loading) e.currentTarget.style.background = 'linear-gradient(135deg, #091840, #0f2557)'; }}
-            onMouseLeave={(e) => { if (!loading) e.currentTarget.style.background = 'linear-gradient(135deg, #0f2557, #1a3a7c)'; }}
-          >
-            {loading ? '⏳ Signing in...' : `Sign In as ${activeRole.label}`}
-          </button>
+            <div>
+              <label className="field-label">Username</label>
+              <input className="input-field" type="text" name="username"
+                value={form.username} onChange={handleChange}
+                placeholder={role === 'company' ? 'company_hr or email' : `${role}_username`}
+                autoComplete="username" />
+            </div>
+
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                <label className="field-label" style={{ marginBottom: 0 }}>Password</label>
+                <a href="#" style={{ fontSize: 12, color: 'var(--navy-mid)', fontWeight: 500, textDecoration: 'none' }}
+                   onMouseEnter={e => e.target.style.textDecoration='underline'}
+                   onMouseLeave={e => e.target.style.textDecoration='none'}>
+                  Forgot password?
+                </a>
+              </div>
+              <div style={{ position: 'relative' }}>
+                <input className="input-field" type={showPass ? 'text' : 'password'}
+                  name="password" value={form.password} onChange={handleChange}
+                  placeholder="Enter your password"
+                  style={{ paddingRight: 44 }} autoComplete="current-password" />
+                <button type="button" onClick={() => setShowPass(p => !p)}
+                  style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)',
+                    background: 'none', border: 'none', cursor: 'pointer',
+                    color: 'var(--text-muted)', display: 'flex', alignItems: 'center', padding: 0 }}>
+                  <EyeIcon open={showPass} />
+                </button>
+              </div>
+            </div>
+
+            {error && <div className="error-banner"><span>⚠</span>{error}</div>}
+
+            <button className="btn-primary" type="submit" disabled={loading}
+              style={{ marginTop: 4 }}>
+              {loading ? 'Signing in…' : 'Sign in'}
+            </button>
+          </form>
 
           {/* Divider */}
-          <div className="flex items-center gap-3">
-            <hr className="flex-1 border-gray-200" />
-            <span className="text-xs text-slate-400">or</span>
-            <hr className="flex-1 border-gray-200" />
+          <div className="divider" style={{ margin: '24px 0' }}>or</div>
+
+          {/* Register links */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <Link to="/register/company" style={{
+              display: 'block', textAlign: 'center', padding: '12px',
+              border: '1.5px solid var(--border)', borderRadius: 'var(--radius-lg)',
+              fontSize: 13, fontWeight: 600, color: 'var(--navy)',
+              textDecoration: 'none', transition: 'border-color 0.18s, background 0.18s',
+            }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor='var(--navy)'; e.currentTarget.style.background='var(--surface)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor='var(--border)'; e.currentTarget.style.background='transparent'; }}>
+              Register a Company
+            </Link>
+            <Link to="/register/retailer" style={{
+              display: 'block', textAlign: 'center', padding: '12px',
+              border: '1.5px solid var(--accent)', borderRadius: 'var(--radius-lg)',
+              fontSize: 13, fontWeight: 600, color: 'var(--navy)',
+              textDecoration: 'none', background: 'var(--accent-soft)',
+              transition: 'filter 0.18s',
+            }}
+              onMouseEnter={e => e.currentTarget.style.filter='brightness(0.96)'}
+              onMouseLeave={e => e.currentTarget.style.filter='none'}>
+              Register a Local Shop
+            </Link>
           </div>
 
-          {/* Register Links */}
-          <div className="text-center space-y-2">
-            <p className="text-sm text-slate-500">
-              Are you a business?{' '}
-              <Link to="/register/company"
-                    className="font-semibold hover:underline" style={{ color: '#0f2557' }}>
-                Register your Company
-              </Link>
-            </p>
-            <p className="text-sm text-slate-500">
-              Local shop owner?{' '}
-              <Link to="/register/retailer"
-                    className="font-semibold hover:underline" style={{ color: '#d4a800' }}>
-                Register your Shop →
-              </Link>
-            </p>
-          </div>
-        </form>
-
-        {/* Footer */}
-        <div className="px-8 pb-6 text-center">
-          <p className="text-xs text-slate-400">
+          <p style={{ textAlign: 'center', fontSize: 12, color: 'var(--text-muted)', marginTop: 28 }}>
             © 2025 UniLift · Empowering Sri Lankan Students
           </p>
         </div>
