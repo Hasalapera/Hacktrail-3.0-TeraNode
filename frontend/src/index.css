@@ -1,2 +1,32 @@
 @import "tailwindcss";
 
+/* ── Brand palette ─────────────────────────────────────────────
+   Registers the site's theme as Tailwind utilities, e.g. bg-primary,
+   text-primary-mid, border-accent-border, bg-surface. Matches the
+   UniLift logo mark: navy -> blue -> sky for primary/primary-mid/
+   primary-light, emerald "lift" gradient for accent/accent-dark. */
+@theme {
+  --color-primary: #0F172A;        /* Navy (logo mark base) */
+  --color-primary-mid: #2563EB;    /* Blue (logo mark / "Lift" wordmark) */
+  --color-primary-light: #38BDF8;  /* Sky (logo node dot) */
+  --color-accent: #34D399;         /* Emerald light (lift arrow) */
+  --color-accent-dark: #10B981;    /* Emerald (lift arrow) */
+  --color-accent-soft: #EFF6FF;    /* Soft Blue */
+  --color-accent-border: #BFDBFE;  /* Soft Blue Border */
+  --color-surface: #F8FAFB;        /* Off White */
+  --color-border: #E2E8F0;         /* Light Gray */
+  --color-text-main: #0F172A;      /* Near Black */
+  --color-text-sub: #64748B;       /* Slate (logo tagline) */
+  --color-text-muted: #94A3B8;     /* Cool Gray */
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+

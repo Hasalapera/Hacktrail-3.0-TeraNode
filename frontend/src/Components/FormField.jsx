@@ -4,11 +4,10 @@
 // ---------------------------------------------------------------------------
 export default function FormField({ label, required, children }) {
   return (
-    <label className="flex flex-col gap-1.5 text-sm font-semibold" style={{ color: "#475569" }}>
-      <span>
-        {label}
-        {required && <span className="ml-1" style={{ color: "#EF4444" }}>*</span>}
-      </span>
+
+    <label className="flex flex-col gap-1 text-sm font-medium text-text-sub">
+      {label}
+
       {children}
     </label>
   );

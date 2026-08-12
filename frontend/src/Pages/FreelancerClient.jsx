@@ -33,7 +33,7 @@ const INITIAL_LISTINGS = [
     badge: "",
     rating: 0,
     reviews: "New",
-    price: 150,
+    price: 18000,
     image: THUMBNAILS[0],
   },
   {
@@ -44,7 +44,7 @@ const INITIAL_LISTINGS = [
     badge: "",
     rating: 0,
     reviews: "New",
-    price: 80,
+    price: 9500,
     image: THUMBNAILS[1],
   },
 ];
@@ -92,18 +92,18 @@ export default function FreelancerClient() {
 
   return (
     <div className="mx-auto flex min-h-screen max-w-6xl flex-col bg-white">
-      <PublisherNav title="Freelancer Client" />
+      <PublisherNav title="Freelancer Client" profileHref="/freelancer/profile" />
 
       <main className="flex-1 px-6 py-8">
-        <h1 className="text-2xl font-semibold text-gray-900">Post a Freelance Request</h1>
-        <p className="mt-1 text-sm text-gray-500">
+        <h1 className="text-2xl font-semibold text-text-main">Post a Freelance Request</h1>
+        <p className="mt-1 text-sm text-text-sub">
           Find student freelancers for design, video, and typing work.
         </p>
 
         <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[380px_1fr]">
           <form
             onSubmit={handleSubmit}
-            className="flex flex-col gap-4 rounded-xl border border-gray-200 p-5 shadow-sm"
+            className="flex flex-col gap-4 rounded-xl border border-border p-5 shadow-sm"
           >
             <FormField label="Your name / business">
               <input
@@ -112,7 +112,7 @@ export default function FreelancerClient() {
                 value={form.clientName}
                 onChange={handleChange("clientName")}
                 placeholder="e.g. Nova Threads"
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="rounded-lg border border-border px-3 py-2 text-sm font-normal text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
               />
             </FormField>
 
@@ -123,7 +123,7 @@ export default function FreelancerClient() {
                 value={form.title}
                 onChange={handleChange("title")}
                 placeholder="e.g. Logo for a new fashion brand"
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="rounded-lg border border-border px-3 py-2 text-sm font-normal text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
               />
             </FormField>
 
@@ -131,7 +131,7 @@ export default function FreelancerClient() {
               <select
                 value={form.category}
                 onChange={handleChange("category")}
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="rounded-lg border border-border px-3 py-2 text-sm font-normal text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
               >
                 {CATEGORIES.map((category) => (
                   <option key={category} value={category}>
@@ -141,15 +141,15 @@ export default function FreelancerClient() {
               </select>
             </FormField>
 
-            <FormField label="Budget (US$)">
+            <FormField label="Budget (Rs.)">
               <input
                 type="number"
                 min="0"
                 required
                 value={form.budget}
                 onChange={handleChange("budget")}
-                placeholder="e.g. 150"
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                placeholder="e.g. 18000"
+                className="rounded-lg border border-border px-3 py-2 text-sm font-normal text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
               />
             </FormField>
 
@@ -159,30 +159,30 @@ export default function FreelancerClient() {
                 value={form.description}
                 onChange={handleChange("description")}
                 placeholder="Scope, deadline, references..."
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="rounded-lg border border-border px-3 py-2 text-sm font-normal text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
               />
             </FormField>
 
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+            <label className="flex items-center gap-2 text-sm font-medium text-text-sub">
               <input
                 type="checkbox"
                 checked={form.offersVideo}
                 onChange={handleOffersVideoChange}
-                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                className="h-4 w-4 rounded border-border text-primary focus:ring-primary-light"
               />
               Open to a video consultation
             </label>
 
             <button
               type="submit"
-              className="mt-2 rounded-full bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700"
+              className="mt-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-white transition hover:bg-primary-mid"
             >
               Post Freelance Request
             </button>
           </form>
 
           <div>
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-text-sub">
               Your posted requests
             </h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

@@ -32,7 +32,7 @@ const INITIAL_LISTINGS = [
     badge: "Vetted Pro",
     rating: 4.7,
     reviews: "212",
-    price: 12,
+    price: 1500,
     image: THUMBNAILS[0],
   },
   {
@@ -44,7 +44,7 @@ const INITIAL_LISTINGS = [
     badge: "",
     rating: 4.5,
     reviews: "89",
-    price: 10,
+    price: 1200,
     image: THUMBNAILS[1],
   },
 ];
@@ -113,67 +113,82 @@ export default function RetailJobPublisher() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col" style={{ background: "#F8FAFB" }}>
-      <PublisherNav title="Retail Job Publisher" />
 
-      <main className="flex-1 px-6 py-8 mx-auto w-full max-w-6xl">
+    <div className="mx-auto flex min-h-screen max-w-6xl flex-col bg-white">
+      <PublisherNav title="Retail Job Publisher" profileHref="/retail/profile" />
 
-        {/* ── Page header ── */}
-        <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <div
-              className="mb-2 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold"
-              style={{ background: "#F0FDF4", color: "#166534", border: "1px solid #BBF7D0" }}
-            >
-              <Store className="h-3.5 w-3.5" />
-              Retailer Dashboard
-            </div>
-            <h1 className="text-2xl font-extrabold tracking-tight" style={{ color: "#0F172A" }}>
-              Post a Retail Job
-            </h1>
-            <p className="mt-1 text-sm" style={{ color: "#475569" }}>
-              Reach students looking for part-time and full-time retail shifts near you.
-            </p>
-          </div>
+      <main className="flex-1 px-6 py-8">
+        <h1 className="text-2xl font-semibold text-text-main">Post a Retail Job</h1>
+        <p className="mt-1 text-sm text-text-sub">
+          Reach students looking for part-time and full-time retail shifts.
+        </p>
 
-          {/* Stats chips */}
-          <div className="flex gap-3 flex-wrap">
-            {[
-              { label: "Active Listings", value: listings.length, icon: LayoutGrid },
-              { label: "Total Applicants", value: "—",            icon: Briefcase },
-            ].map(({ label, value, icon: Icon }) => (
-              <div
-                key={label}
-                className="flex items-center gap-2.5 rounded-xl px-4 py-3"
-                style={{ background: "#ffffff", border: "1.5px solid #E2E8F0", boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}
-              >
-                <div
-                  className="flex h-8 w-8 items-center justify-center rounded-lg"
-                  style={{ background: "#F0FDF4" }}
-                >
-                  <Icon className="h-4 w-4" style={{ color: "#166534" }} />
-                </div>
-                <div>
-                  <div className="text-base font-extrabold" style={{ color: "#0F172A" }}>{value}</div>
-                  <div className="text-[11px]" style={{ color: "#94A3B8" }}>{label}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ── Two-column layout ── */}
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[400px_1fr]">
-
-          {/* ── Post Form ── */}
-          <div
-            className="rounded-2xl overflow-hidden"
-            style={{ background: "#ffffff", border: "1.5px solid #E2E8F0", boxShadow: "0 2px 12px rgba(0,0,0,0.06)" }}
+        <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[380px_1fr]">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-4 rounded-xl border border-border p-5 shadow-sm"
           >
-            {/* Form header */}
-            <div
-              className="px-6 py-5"
-              style={{ background: "linear-gradient(135deg, #0B4D2E 0%, #166534 100%)", borderBottom: "1px solid rgba(74,222,128,0.15)" }}
+            <FormField label="Business name">
+              <input
+                type="text"
+                required
+                value={form.businessName}
+                onChange={handleChange("businessName")}
+                placeholder="e.g. Odel Fashion"
+                className="rounded-lg border border-border px-3 py-2 text-sm font-normal text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
+              />
+            </FormField>
+
+            <FormField label="Job title">
+              <input
+                type="text"
+                required
+                value={form.title}
+                onChange={handleChange("title")}
+                placeholder="e.g. Weekend Sales Associate"
+                className="rounded-lg border border-border px-3 py-2 text-sm font-normal text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
+              />
+            </FormField>
+
+            <FormField label="Employment type">
+              <select
+                value={form.employmentType}
+                onChange={handleChange("employmentType")}
+                className="rounded-lg border border-border px-3 py-2 text-sm font-normal text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
+              >
+                {EMPLOYMENT_TYPES.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+            </FormField>
+
+            <FormField label="Hourly rate (Rs.)">
+              <input
+                type="number"
+                min="0"
+                required
+                value={form.hourlyRate}
+                onChange={handleChange("hourlyRate")}
+                placeholder="e.g. 1500"
+                className="rounded-lg border border-border px-3 py-2 text-sm font-normal text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
+              />
+            </FormField>
+
+            <FormField label="Description">
+              <textarea
+                rows={4}
+                value={form.description}
+                onChange={handleChange("description")}
+                placeholder="Shift hours, responsibilities, requirements..."
+                className="rounded-lg border border-border px-3 py-2 text-sm font-normal text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
+              />
+            </FormField>
+
+            <button
+              type="submit"
+              className="mt-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-white transition hover:bg-primary-mid"
             >
               <div className="flex items-center gap-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ background: "rgba(74,222,128,0.15)" }}>
@@ -283,16 +298,14 @@ export default function RetailJobPublisher() {
 
           {/* ── Listings panel ── */}
           <div>
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-sm font-bold uppercase tracking-widest" style={{ color: "#94A3B8" }}>
-                Your Posted Listings
-              </h2>
-              <span
-                className="rounded-full px-3 py-1 text-xs font-bold"
-                style={{ background: "#F0FDF4", color: "#166534", border: "1px solid #BBF7D0" }}
-              >
-                {listings.length} active
-              </span>
+
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-text-sub">
+              Your posted listings
+            </h2>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {listings.map((listing, index) => (
+                <ListingCard key={`${listing.title}-${index}`} listing={listing} />
+              ))}
             </div>
 
             {listings.length === 0 ? (
