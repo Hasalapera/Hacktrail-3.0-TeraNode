@@ -105,7 +105,7 @@ export default function CompanyJobPublisher() {
                 value={form.companyName}
                 onChange={handleChange("companyName")}
                 placeholder="e.g. TeraNode Labs"
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="input-field"
               />
             </FormField>
 
@@ -116,7 +116,7 @@ export default function CompanyJobPublisher() {
                 value={form.title}
                 onChange={handleChange("title")}
                 placeholder="e.g. Software Engineering Intern"
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="input-field"
               />
             </FormField>
 
@@ -124,7 +124,7 @@ export default function CompanyJobPublisher() {
               <select
                 value={form.listingType}
                 onChange={handleChange("listingType")}
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="select-field"
               >
                 {LISTING_TYPES.map((type) => (
                   <option key={type} value={type}>
@@ -142,7 +142,7 @@ export default function CompanyJobPublisher() {
                 value={form.budget}
                 onChange={handleChange("budget")}
                 placeholder="e.g. 350"
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="input-field"
               />
             </FormField>
 
@@ -152,13 +152,13 @@ export default function CompanyJobPublisher() {
                 value={form.description}
                 onChange={handleChange("description")}
                 placeholder="Responsibilities, duration, requirements..."
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="input-field"
               />
             </FormField>
 
             <button
               type="submit"
-              className="mt-2 rounded-full bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700"
+              className="btn-primary mt-2"
             >
               Post Company Listing
             </button>

@@ -106,7 +106,7 @@ export default function RetailJobPublisher() {
                 value={form.businessName}
                 onChange={handleChange("businessName")}
                 placeholder="e.g. Odel Fashion"
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="input-field"
               />
             </FormField>
 
@@ -117,7 +117,7 @@ export default function RetailJobPublisher() {
                 value={form.title}
                 onChange={handleChange("title")}
                 placeholder="e.g. Weekend Sales Associate"
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="input-field"
               />
             </FormField>
 
@@ -125,7 +125,7 @@ export default function RetailJobPublisher() {
               <select
                 value={form.employmentType}
                 onChange={handleChange("employmentType")}
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="select-field"
               >
                 {EMPLOYMENT_TYPES.map((type) => (
                   <option key={type} value={type}>
@@ -143,7 +143,7 @@ export default function RetailJobPublisher() {
                 value={form.hourlyRate}
                 onChange={handleChange("hourlyRate")}
                 placeholder="e.g. 12"
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="input-field"
               />
             </FormField>
 
@@ -153,13 +153,13 @@ export default function RetailJobPublisher() {
                 value={form.description}
                 onChange={handleChange("description")}
                 placeholder="Shift hours, responsibilities, requirements..."
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="input-field"
               />
             </FormField>
 
             <button
               type="submit"
-              className="mt-2 rounded-full bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700"
+              className="btn-primary mt-2"
             >
               Post Retail Job
             </button>

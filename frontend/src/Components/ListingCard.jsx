@@ -3,8 +3,8 @@ import { Heart, Play, Star, Video } from "lucide-react";
 // Badge styling per variant — "pro" mirrors the indigo "Vetted Pro" pill,
 // "topRated" mirrors the amber "Top Rated ♦♦♦" pill.
 const BADGE_STYLES = {
-  pro: "bg-indigo-50 text-indigo-600",
-  topRated: "bg-amber-100 text-amber-800",
+  pro: "bg-[var(--accent-soft)] text-[var(--primary)] border border-[var(--accent-border)]",
+  topRated: "bg-[#FEF9C3] text-[#854D0E] border border-[#FEF08A]",
 };
 
 // ---------------------------------------------------------------------------
@@ -29,7 +29,7 @@ export default function ListingCard({ listing }) {
   return (
     <button
       type="button"
-      className="flex w-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white text-left shadow-sm transition hover:border-indigo-400 hover:shadow-md"
+      className="flex w-full flex-col overflow-hidden rounded-xl border border-[var(--border)] bg-white text-left shadow-sm transition hover:border-[var(--primary-light)] hover:shadow-md"
     >
       <div className={`relative aspect-video w-full ${image}`}>
         <span className="absolute right-2 top-2 rounded-full bg-black/30 p-1.5 text-white backdrop-blur-sm">
@@ -51,10 +51,10 @@ export default function ListingCard({ listing }) {
       <div className="flex flex-col gap-1.5 px-3 py-3">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-indigo-100 text-xs font-semibold text-indigo-700">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--accent-soft)] text-xs font-semibold text-[var(--primary)]">
               {seller.charAt(0)}
             </span>
-            <span className="text-sm font-medium text-gray-900">{seller}</span>
+            <span className="text-sm font-semibold text-gray-900 tracking-tight">{seller}</span>
             {isAd && <span className="text-xs text-gray-400">Ad</span>}
           </div>
           {badge && (

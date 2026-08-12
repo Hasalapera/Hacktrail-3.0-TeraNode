@@ -112,7 +112,7 @@ export default function FreelancerClient() {
                 value={form.clientName}
                 onChange={handleChange("clientName")}
                 placeholder="e.g. Nova Threads"
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="input-field"
               />
             </FormField>
 
@@ -123,7 +123,7 @@ export default function FreelancerClient() {
                 value={form.title}
                 onChange={handleChange("title")}
                 placeholder="e.g. Logo for a new fashion brand"
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="input-field"
               />
             </FormField>
 
@@ -131,7 +131,7 @@ export default function FreelancerClient() {
               <select
                 value={form.category}
                 onChange={handleChange("category")}
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="select-field"
               >
                 {CATEGORIES.map((category) => (
                   <option key={category} value={category}>
@@ -149,7 +149,7 @@ export default function FreelancerClient() {
                 value={form.budget}
                 onChange={handleChange("budget")}
                 placeholder="e.g. 150"
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="input-field"
               />
             </FormField>
 
@@ -159,7 +159,7 @@ export default function FreelancerClient() {
                 value={form.description}
                 onChange={handleChange("description")}
                 placeholder="Scope, deadline, references..."
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="input-field"
               />
             </FormField>
 
@@ -168,14 +168,14 @@ export default function FreelancerClient() {
                 type="checkbox"
                 checked={form.offersVideo}
                 onChange={handleOffersVideoChange}
-                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                className="h-4 w-4 rounded border-gray-300 text-[var(--primary)] focus:ring-[var(--primary)]"
               />
               Open to a video consultation
             </label>
 
             <button
               type="submit"
-              className="mt-2 rounded-full bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700"
+              className="btn-primary mt-2"
             >
               Post Freelance Request
             </button>

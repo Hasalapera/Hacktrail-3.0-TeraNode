@@ -24,10 +24,10 @@ export default function Footer() {
       <div className="mx-auto grid max-w-4xl grid-cols-2 gap-8 px-6 py-10 sm:grid-cols-4">
         <div className="col-span-2 sm:col-span-1">
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500 text-sm font-bold text-white">
-              W
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--primary)] text-sm font-bold text-white shadow-sm">
+              U
             </div>
-            <span className="text-base font-semibold text-white">Web Name</span>
+            <span className="text-base font-bold text-white tracking-tight">UniLift</span>
           </div>
           <p className="mt-3 text-sm text-gray-400">
             Connecting students with internships, projects, and freelance
@@ -45,7 +45,7 @@ export default function Footer() {
                 <li key={link}>
                   <a
                     href="#"
-                    className="text-sm text-gray-400 transition hover:text-indigo-400"
+                    className="text-sm text-gray-400 transition hover:text-[var(--accent)]"
                   >
                     {link}
                   </a>
@@ -59,14 +59,14 @@ export default function Footer() {
       <div className="border-t border-gray-800 px-6 py-4">
         <div className="mx-auto flex max-w-4xl flex-col items-center justify-between gap-3 sm:flex-row">
           <p className="text-xs text-gray-500">
-            &copy; {new Date().getFullYear()} Web Name. All rights reserved.
+            &copy; {new Date().getFullYear()} UniLift. All rights reserved.
           </p>
           <div className="flex gap-4">
             {SOCIAL_LINKS.map((social) => (
               <a
                 key={social.label}
                 href={social.href}
-                className="text-xs text-gray-400 transition hover:text-indigo-400"
+                className="text-xs text-gray-400 transition hover:text-[var(--accent)]"
               >
                 {social.label}
               </a>

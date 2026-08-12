@@ -39,8 +39,8 @@ function FilterBar({ filters, activeFilter, onSelect }) {
             onClick={() => onSelect(filter)}
             className={`rounded-full border px-4 py-1.5 text-sm font-medium transition ${
               isActive
-                ? "border-indigo-600 bg-indigo-600 text-white"
-                : "border-gray-300 bg-white text-gray-600 hover:border-indigo-400 hover:text-indigo-600"
+                ? "border-[var(--primary)] bg-[var(--primary)] text-white shadow-sm"
+                : "border-gray-300 bg-white text-gray-600 hover:border-[var(--primary-light)] hover:text-[var(--primary-light)]"
             }`}
           >
             {filter}

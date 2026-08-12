@@ -6,23 +6,23 @@ import { UserCircle2 } from "lucide-react";
 // ---------------------------------------------------------------------------
 export default function PublisherNav({ title }) {
   return (
-    <header className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 px-6 py-4">
-      <div className="flex items-center gap-2">
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-600 text-sm font-bold text-white">
-          W
+    <header className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 px-6 py-4 bg-white">
+      <div className="flex items-center gap-3">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--primary)] text-lg font-bold text-white shadow-sm">
+          U
         </div>
-        <span className="text-lg font-semibold text-gray-900">Web Name</span>
+        <span className="text-xl font-bold text-gray-900 tracking-tight">UniLift</span>
       </div>
 
       <div className="flex items-center gap-4">
-        {title && <span className="text-sm font-medium text-gray-500">{title}</span>}
+        {title && <span className="text-sm font-semibold text-[var(--primary-light)]">{title}</span>}
 
         <button
           type="button"
           aria-label="Profile"
-          className="text-gray-600 hover:text-gray-900"
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--surface)] text-[var(--text-sub)] hover:bg-[var(--border)] transition-colors"
         >
-          <UserCircle2 className="h-8 w-8" />
+          <UserCircle2 className="h-6 w-6" />
         </button>
       </div>
     </header>
