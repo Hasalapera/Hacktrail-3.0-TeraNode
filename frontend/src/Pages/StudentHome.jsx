@@ -7,8 +7,9 @@ import Footer from "../Components/Footer";
  * StudentHome
  * -----------
  * Student-side landing page, built from the hand-drawn wireframe:
- *   Header    -> logo, "Job"/"Company"/"Freelancer" category switch, profile icon
+ *   Header    -> logo, "Retail Job"/"Company"/"Freelancer" category switch, profile icon
  *   FilterBar -> sub-filters for the active category
+ *                  Retail Job -> Part-time, Full-time
  *                  Company    -> Intern, Project
  *                  Freelancer -> Graphic Design, Video Editing, Typing
  *   Results   -> listings matching the active category + filter
@@ -84,9 +85,17 @@ function ResultsList({ listings, activeFilter }) {
 // StudentHome: top-level page assembling all sections
 // ---------------------------------------------------------------------------
 
+// Top-level category tabs — `key` drives filtering/state, `label` is what
+// the Header shows (lets a tab read differently from its internal key).
+const CATEGORIES = [
+  { key: "job", label: "Retail Job" },
+  { key: "company", label: "Company" },
+  { key: "freelancer", label: "Freelancer" },
+];
+
 // Sub-filters offered per top-level category, straight from the wireframe.
 const FILTERS_BY_CATEGORY = {
-  job: [],
+  job: ["Part-time", "Full-time"],
   company: ["Intern", "Project"],
   freelancer: ["Graphic Design", "Video Editing", "Typing"],
 };
@@ -98,26 +107,49 @@ const FILTERS_BY_CATEGORY = {
 const LISTINGS_BY_CATEGORY = {
   job: [
     {
-      title: "Junior Web Developer needed for a growing fintech startup",
-      type: "Full-time",
-      seller: "Nimal Perera",
+      title: "Retail Sales Associate — weekend and evening shifts",
+      type: "Part-time",
+      seller: "Odel Fashion",
       isAd: true,
       badge: "Vetted Pro",
-      rating: 5.0,
-      reviews: "1k+",
-      price: 290,
-      image: "bg-gradient-to-br from-slate-700 via-slate-500 to-emerald-600",
+      rating: 4.7,
+      reviews: "212",
+      price: 12,
+      image: "bg-gradient-to-br from-pink-700 via-rose-500 to-orange-400",
     },
     {
-      title: "Remote React Native developer for a food delivery app",
-      type: "Full-time",
-      seller: "Ishara Fernando",
+      title: "Cashier needed for a busy campus-area supermarket",
+      type: "Part-time",
+      seller: "Cargills Food City",
       isAd: false,
+      badge: "",
+      rating: 4.5,
+      reviews: "89",
+      price: 10,
+      image: "bg-gradient-to-br from-emerald-700 via-emerald-500 to-lime-400",
+    },
+    {
+      title: "Store Team Member — full-time, flexible scheduling",
+      type: "Full-time",
+      seller: "Keells Super",
+      isAd: true,
       badge: "Vetted Pro",
+      rating: 4.8,
+      reviews: "456",
+      price: 15,
+      image: "bg-gradient-to-br from-blue-700 via-blue-500 to-cyan-400",
+    },
+    {
+      title: "Stock & Inventory Assistant for a electronics retail chain",
+      type: "Full-time",
+      seller: "Softlogic Retail",
+      isAd: false,
+      badge: "Top Rated",
+      badgeVariant: "topRated",
       rating: 4.9,
-      reviews: "820",
-      price: 450,
-      image: "bg-gradient-to-br from-indigo-700 via-indigo-500 to-sky-500",
+      reviews: "173",
+      price: 14,
+      image: "bg-gradient-to-br from-slate-800 via-slate-600 to-gray-400",
     },
   ],
   company: [
@@ -168,6 +200,55 @@ const LISTINGS_BY_CATEGORY = {
       image: "bg-gradient-to-br from-stone-700 via-stone-500 to-green-600",
     },
     {
+      title: "I will design a modern minimalistic monogram logo for your brand",
+      type: "Graphic Design",
+      seller: "Unipen",
+      isAd: true,
+      badge: "Vetted Pro",
+      rating: 4.8,
+      reviews: "31",
+      price: 160,
+      offersVideo: true,
+      image: "bg-gradient-to-br from-neutral-900 via-neutral-800 to-black",
+    },
+    {
+      title: "I will design a creative minimalist logo",
+      type: "Graphic Design",
+      seller: "Alpa",
+      isAd: true,
+      badge: "Vetted Pro",
+      rating: 4.9,
+      reviews: "1k+",
+      price: 110,
+      offersVideo: true,
+      image: "bg-gradient-to-br from-gray-300 via-gray-200 to-gray-100",
+    },
+    {
+      title: "Our agency will design business logo designs with brand style guide",
+      type: "Graphic Design",
+      seller: "Illustra Sol",
+      isAd: true,
+      badge: "Top Rated",
+      badgeVariant: "topRated",
+      rating: 5.0,
+      reviews: "18",
+      price: 250,
+      offersVideo: true,
+      image: "bg-gradient-to-br from-slate-900 via-blue-700 to-blue-500",
+    },
+    {
+      title: "I will design a modern minimal custom logo for your business",
+      type: "Graphic Design",
+      seller: "Bhavik C",
+      isAd: true,
+      badge: "Vetted Pro",
+      rating: 4.9,
+      reviews: "113",
+      price: 125,
+      offersVideo: true,
+      image: "bg-gradient-to-br from-blue-700 via-blue-500 to-cyan-400",
+    },
+    {
       title: "I will edit a punchy highlight reel for your next event",
       type: "Video Editing",
       seller: "Ravindu Silva",
@@ -204,7 +285,7 @@ export default function StudentHome() {
   return (
     <div className="mx-auto flex min-h-screen max-w-6xl flex-col bg-white">
       <Header
-        categories={["job", "company", "freelancer"]}
+        categories={CATEGORIES}
         activeCategory={activeCategory}
         onSelectCategory={handleCategoryChange}
       />

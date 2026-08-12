@@ -1,4 +1,11 @@
-import { Heart, Play, Star } from "lucide-react";
+import { Heart, Play, Star, Video } from "lucide-react";
+
+// Badge styling per variant — "pro" mirrors the indigo "Vetted Pro" pill,
+// "topRated" mirrors the amber "Top Rated ♦♦♦" pill.
+const BADGE_STYLES = {
+  pro: "bg-indigo-50 text-indigo-600",
+  topRated: "bg-amber-100 text-amber-800",
+};
 
 // ---------------------------------------------------------------------------
 // ListingCard: Fiverr-style gig card — thumbnail, seller row, title, rating,
@@ -6,7 +13,18 @@ import { Heart, Play, Star } from "lucide-react";
 // network dependency; swap for a real thumbnail URL once wired to an API.
 // ---------------------------------------------------------------------------
 export default function ListingCard({ listing }) {
-  const { title, seller, isAd, badge, rating, reviews, price, image } = listing;
+  const {
+    title,
+    seller,
+    isAd,
+    badge,
+    badgeVariant = "pro",
+    rating,
+    reviews,
+    price,
+    image,
+    offersVideo,
+  } = listing;
 
   return (
     <button
@@ -40,8 +58,11 @@ export default function ListingCard({ listing }) {
             {isAd && <span className="text-xs text-gray-400">Ad</span>}
           </div>
           {badge && (
-            <span className="whitespace-nowrap rounded bg-indigo-50 px-1.5 py-0.5 text-xs font-medium text-indigo-600">
+            <span
+              className={`whitespace-nowrap rounded px-1.5 py-0.5 text-xs font-medium ${BADGE_STYLES[badgeVariant]}`}
+            >
               {badge}
+              {badgeVariant === "topRated" && " ♦♦♦"}
             </span>
           )}
         </div>
@@ -55,8 +76,15 @@ export default function ListingCard({ listing }) {
         </div>
 
         <p className="text-sm text-gray-500">
-          From <span className="font-semibold text-gray-900">${price}</span>
+          From <span className="font-semibold text-gray-900">US${price}</span>
         </p>
+
+        {offersVideo && (
+          <p className="flex items-center gap-1.5 text-xs text-gray-500">
+            <Video className="h-3.5 w-3.5" />
+            Offers video consultations
+          </p>
+        )}
       </div>
     </button>
   );

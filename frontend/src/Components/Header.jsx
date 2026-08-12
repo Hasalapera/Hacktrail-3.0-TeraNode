@@ -1,7 +1,7 @@
-import { UserCircle2 } from "lucide-react";
+import { MessageCircle, UserCircle2 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
-// Header: logo + site name, category tabs (Job/Company/Freelancer), profile icon
+// Header: logo + site name, category tabs (Retail Job/Company/Freelancer), profile icon
 // ---------------------------------------------------------------------------
 export default function Header({ categories, activeCategory, onSelectCategory }) {
   return (
@@ -14,32 +14,43 @@ export default function Header({ categories, activeCategory, onSelectCategory })
       </div>
 
       <nav className="flex gap-8">
-        {categories.map((category) => {
-          const isActive = category === activeCategory;
+        {categories.map(({ key, label }) => {
+          const isActive = key === activeCategory;
           return (
             <button
-              key={category}
+              key={key}
               type="button"
-              onClick={() => onSelectCategory(category)}
-              className={`text-sm font-medium capitalize transition-colors ${
+              onClick={() => onSelectCategory(key)}
+              className={`text-sm font-medium transition-colors ${
                 isActive
                   ? "border-b-2 border-indigo-600 pb-2 text-indigo-600"
                   : "pb-2 text-gray-500 hover:text-gray-800"
               }`}
             >
-              {category}
+              {label}
             </button>
           );
         })}
       </nav>
 
-      <button
-        type="button"
-        aria-label="Profile"
-        className="text-gray-600 hover:text-gray-900"
-      >
-        <UserCircle2 className="h-8 w-8" />
-      </button>
+      <div className="flex items-center gap-4">
+        {/* Placeholder entry point for the upcoming messenger service */}
+        <button
+          type="button"
+          aria-label="Messages"
+          className="relative text-gray-600 hover:text-gray-900"
+        >
+          <MessageCircle className="h-7 w-7" />
+        </button>
+
+        <button
+          type="button"
+          aria-label="Profile"
+          className="text-gray-600 hover:text-gray-900"
+        >
+          <UserCircle2 className="h-8 w-8" />
+        </button>
+      </div>
     </header>
   );
 }
