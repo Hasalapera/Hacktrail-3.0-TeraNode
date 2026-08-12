@@ -1,13 +1,8 @@
 import { useState } from "react";
 import PublisherNav from "../Components/PublisherNav";
-import ProfileScreen from "../Components/ProfileScreen";
-import InfoScreen from "../Components/InfoScreen";
-import { MENU_SCREENS } from "../Components/menuScreens";
 import FormField from "../Components/FormField";
 import ListingCard from "../Components/ListingCard";
 import Footer from "../Components/Footer";
-
-const BUSINESS_CATEGORIES = ["Fashion", "Grocery", "Electronics", "Food & Beverage", "Home & Living"];
 
 /**
  * RetailJobPublisher
@@ -65,7 +60,6 @@ const EMPTY_FORM = {
 export default function RetailJobPublisher() {
   const [listings, setListings] = useState(INITIAL_LISTINGS);
   const [form, setForm] = useState(EMPTY_FORM);
-  const [activeScreen, setActiveScreen] = useState(null);
 
   function handleChange(field) {
     return (event) => setForm((prev) => ({ ...prev, [field]: event.target.value }));
@@ -92,113 +86,96 @@ export default function RetailJobPublisher() {
 
   return (
     <div className="mx-auto flex min-h-screen max-w-6xl flex-col bg-white">
-      <PublisherNav title="Retail Job Publisher" onNavigate={setActiveScreen} />
+      <PublisherNav title="Retail Job Publisher" />
 
       <main className="flex-1 px-6 py-8">
-        {activeScreen === "profile" ? (
-          <ProfileScreen
-            heading="Business Profile"
-            namePlaceholder="e.g. Odel Fashion"
-            categories={BUSINESS_CATEGORIES}
-            onBack={() => setActiveScreen(null)}
-          />
-        ) : activeScreen ? (
-          <InfoScreen
-            heading={MENU_SCREENS[activeScreen].heading}
-            description={MENU_SCREENS[activeScreen].description}
-            onBack={() => setActiveScreen(null)}
-          />
-        ) : (
-          <>
-            <h1 className="text-2xl font-semibold text-gray-900">Post a Retail Job</h1>
-            <p className="mt-1 text-sm text-gray-500">
-              Reach students looking for part-time and full-time retail shifts.
-            </p>
+        <h1 className="text-2xl font-semibold text-gray-900">Post a Retail Job</h1>
+        <p className="mt-1 text-sm text-gray-500">
+          Reach students looking for part-time and full-time retail shifts.
+        </p>
 
-            <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[380px_1fr]">
-              <form
-                onSubmit={handleSubmit}
-                className="flex flex-col gap-4 rounded-xl border border-gray-200 p-5 shadow-sm"
+        <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[380px_1fr]">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-4 rounded-xl border border-gray-200 p-5 shadow-sm"
+          >
+            <FormField label="Business name">
+              <input
+                type="text"
+                required
+                value={form.businessName}
+                onChange={handleChange("businessName")}
+                placeholder="e.g. Odel Fashion"
+                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+              />
+            </FormField>
+
+            <FormField label="Job title">
+              <input
+                type="text"
+                required
+                value={form.title}
+                onChange={handleChange("title")}
+                placeholder="e.g. Weekend Sales Associate"
+                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+              />
+            </FormField>
+
+            <FormField label="Employment type">
+              <select
+                value={form.employmentType}
+                onChange={handleChange("employmentType")}
+                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
               >
-                <FormField label="Business name">
-                  <input
-                    type="text"
-                    required
-                    value={form.businessName}
-                    onChange={handleChange("businessName")}
-                    placeholder="e.g. Odel Fashion"
-                    className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                  />
-                </FormField>
+                {EMPLOYMENT_TYPES.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+            </FormField>
 
-                <FormField label="Job title">
-                  <input
-                    type="text"
-                    required
-                    value={form.title}
-                    onChange={handleChange("title")}
-                    placeholder="e.g. Weekend Sales Associate"
-                    className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                  />
-                </FormField>
+            <FormField label="Hourly rate (US$)">
+              <input
+                type="number"
+                min="0"
+                required
+                value={form.hourlyRate}
+                onChange={handleChange("hourlyRate")}
+                placeholder="e.g. 12"
+                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+              />
+            </FormField>
 
-                <FormField label="Employment type">
-                  <select
-                    value={form.employmentType}
-                    onChange={handleChange("employmentType")}
-                    className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                  >
-                    {EMPLOYMENT_TYPES.map((type) => (
-                      <option key={type} value={type}>
-                        {type}
-                      </option>
-                    ))}
-                  </select>
-                </FormField>
+            <FormField label="Description">
+              <textarea
+                rows={4}
+                value={form.description}
+                onChange={handleChange("description")}
+                placeholder="Shift hours, responsibilities, requirements..."
+                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+              />
+            </FormField>
 
-                <FormField label="Hourly rate (US$)">
-                  <input
-                    type="number"
-                    min="0"
-                    required
-                    value={form.hourlyRate}
-                    onChange={handleChange("hourlyRate")}
-                    placeholder="e.g. 12"
-                    className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                  />
-                </FormField>
+            <button
+              type="submit"
+              className="mt-2 rounded-full bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700"
+            >
+              Post Retail Job
+            </button>
+          </form>
 
-                <FormField label="Description">
-                  <textarea
-                    rows={4}
-                    value={form.description}
-                    onChange={handleChange("description")}
-                    placeholder="Shift hours, responsibilities, requirements..."
-                    className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                  />
-                </FormField>
-
-                <button
-                  type="submit"
-                  className="mt-2 rounded-full bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700"
-                >
-                  Post Retail Job
-                </button>
-              </form>
-
-              <div>
-                <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">
-                  Your posted listings
-                </h2>
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  {listings.map((listing, index) => (
-                    <ListingCard key={`${listing.title}-${index}`} listing={listing} />
-                  ))}
-                </div>
-              </div>
+          <div>
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">
+              Your posted listings
+            </h2>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {listings.map((listing, index) => (
+                <ListingCard key={`${listing.title}-${index}`} listing={listing} />
+              ))}
             </div>
-          </>
-        )}
+          </div>
+        </div>
       </main>
 
       <Footer />

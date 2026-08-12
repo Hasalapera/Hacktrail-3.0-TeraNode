@@ -1,21 +1,7 @@
 import { useState } from "react";
 import Header from "../Components/Header";
-import ProfileScreen from "../Components/ProfileScreen";
-import InfoScreen from "../Components/InfoScreen";
-import { MENU_SCREENS } from "../Components/menuScreens";
 import ListingCard from "../Components/ListingCard";
 import Footer from "../Components/Footer";
-
-// Skills a student can list on their profile — spans the categories they
-// might apply to across all three publisher types.
-const STUDENT_CATEGORIES = [
-  "Retail Experience",
-  "Customer Service",
-  "Software Development",
-  "Graphic Design",
-  "Video Editing",
-  "Typing",
-];
 
 /**
  * StudentHome
@@ -290,7 +276,6 @@ const LISTINGS_BY_CATEGORY = {
 export default function StudentHome() {
   const [activeCategory, setActiveCategory] = useState("company");
   const [activeFilter, setActiveFilter] = useState("All");
-  const [activeScreen, setActiveScreen] = useState(null);
 
   function handleCategoryChange(category) {
     setActiveCategory(category);
@@ -303,42 +288,20 @@ export default function StudentHome() {
         categories={CATEGORIES}
         activeCategory={activeCategory}
         onSelectCategory={handleCategoryChange}
-        onNavigate={setActiveScreen}
       />
 
-      {activeScreen === "profile" ? (
-        <main className="flex-1 px-6 py-8">
-          <ProfileScreen
-            heading="Student Profile"
-            namePlaceholder="e.g. Nimal Perera"
-            categories={STUDENT_CATEGORIES}
-            onBack={() => setActiveScreen(null)}
-          />
-        </main>
-      ) : activeScreen ? (
-        <main className="flex-1 px-6 py-8">
-          <InfoScreen
-            heading={MENU_SCREENS[activeScreen].heading}
-            description={MENU_SCREENS[activeScreen].description}
-            onBack={() => setActiveScreen(null)}
-          />
-        </main>
-      ) : (
-        <>
-          <FilterBar
-            filters={FILTERS_BY_CATEGORY[activeCategory]}
-            activeFilter={activeFilter}
-            onSelect={setActiveFilter}
-          />
+      <FilterBar
+        filters={FILTERS_BY_CATEGORY[activeCategory]}
+        activeFilter={activeFilter}
+        onSelect={setActiveFilter}
+      />
 
-          <main className="flex-1">
-            <ResultsList
-              listings={LISTINGS_BY_CATEGORY[activeCategory]}
-              activeFilter={activeFilter}
-            />
-          </main>
-        </>
-      )}
+      <main className="flex-1">
+        <ResultsList
+          listings={LISTINGS_BY_CATEGORY[activeCategory]}
+          activeFilter={activeFilter}
+        />
+      </main>
 
       <Footer />
     </div>

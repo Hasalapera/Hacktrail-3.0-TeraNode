@@ -1,9 +1,9 @@
-import ProfileMenu from "./ProfileMenu";
+import { UserCircle2 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
 // Header: logo + site name, category tabs (Retail Job/Company/Freelancer), profile icon
 // ---------------------------------------------------------------------------
-export default function Header({ categories, activeCategory, onSelectCategory, onNavigate }) {
+export default function Header({ categories, activeCategory, onSelectCategory }) {
   return (
     <header className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 px-6 py-4">
       <div className="flex items-center gap-2">
@@ -33,7 +33,13 @@ export default function Header({ categories, activeCategory, onSelectCategory, o
         })}
       </nav>
 
-      <ProfileMenu onNavigate={onNavigate} />
+      <button
+        type="button"
+        aria-label="Profile"
+        className="text-gray-600 hover:text-gray-900"
+      >
+        <UserCircle2 className="h-8 w-8" />
+      </button>
     </header>
   );
 }
