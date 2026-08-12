@@ -1,12 +1,14 @@
-// ============================================================
-// App.jsx — UniLift Route Configuration
-// BrowserRouter is already wrapped in main.jsx
-// ============================================================
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import AdminRoute from './components/AdminRoute';
+import ProtectedRoute from './components/ProtectedRoute';
+import DashboardLayout from './layout/DashboardLayout';
 
 // ── Auth & Onboarding pages (hass branch) ──────────────────
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
+import AddUser from './pages/management/user/AddUser'; // The page with the form
+import StudentHome from './pages/StudentHome';
 import CompanyRegister from './pages/CompanyRegister';
 import RetailerRegister from './pages/RetailerRegister';
 import NotFound from './pages/NotFound';
@@ -37,6 +39,16 @@ export default function App() {
       <Route path="/retail/jobs" element={<RetailJobPublisher />} />
       <Route path="/company/jobs" element={<CompanyJobPublisher />} />
 
+      {/* Protected Student Route */}
+      <Route element={<ProtectedRoute />}>
+        <Route path="/student-home" element={<StudentHome />} />
+      </Route>
+
+      {/* Protected Admin Routes */}
+      <Route element={<AdminRoute />}>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/admin/add-users" element={<AddUserPage />} />
+      </Route>
       {/* ── Placeholder routes (unlock as pages are built) ── */}
       <Route path="/change-password" element={<PlaceholderPage title="Change Password" />} />
       <Route path="/complete-profile" element={<PlaceholderPage title="Complete Your Profile" />} />
