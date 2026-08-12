@@ -22,9 +22,9 @@ const ROLES = [
 ];
 
 const FEATURES = [
-  ['Internships & Corporate Projects', 'Match with top companies by skill & degree'],
-  ['Part-Time & Flexible Jobs',        'Find nearby gigs posted by local retailers'],
-  ['Freelance Marketplace',            'Earn from design, dev, video editing & more'],
+  { title: 'Internships & Corporate Projects', sub: 'Match with top companies by skill & degree', icon: '🎓' },
+  { title: 'Part-Time & Flexible Jobs', sub: 'Find nearby gigs posted by local retailers', icon: '🏪' },
+  { title: 'Freelance Marketplace', sub: 'Earn from design, dev, video editing & more', icon: '💼' },
 ];
 
 const EyeIcon = ({ open }) => (
@@ -275,7 +275,7 @@ export default function Login() {
     } catch (err) {
       setError(
         err.response?.data?.message ||
-          'Unable to connect. Make sure the backend server is running.'
+        'Unable to connect. Make sure the backend server is running.'
       );
     } finally {
       setLoading(false);
@@ -318,7 +318,7 @@ export default function Login() {
     } catch (err) {
       setChangePwError(
         err.response?.data?.message ||
-          'Failed to change password. Please try again.'
+        'Failed to change password. Please try again.'
       );
     } finally {
       setChangingPw(false);
@@ -553,11 +553,10 @@ export default function Login() {
                     password: '',
                   });
                 }}
-                className={`relative rounded-xl px-2 py-2.5 text-center text-xs font-bold transition-all duration-200 ${
-                  role === r.id
+                className={`relative rounded-xl px-2 py-2.5 text-center text-xs font-bold transition-all duration-200 ${role === r.id
                     ? 'bg-white text-[#0D1F4C] shadow-sm ring-1 ring-slate-200'
                     : 'text-slate-500 hover:bg-white/60 hover:text-slate-800'
-                }`}
+                  }`}
               >
                 {r.label}
 
