@@ -4,7 +4,6 @@ import {
   Briefcase,
   Building2,
   GraduationCap,
-  LogIn,
   Rocket,
   ShieldCheck,
   Sparkles,
@@ -13,10 +12,17 @@ import {
 } from "lucide-react";
 import Logo from "../Components/Logo";
 import Footer from "../Components/Footer";
+import Reveal from "../Components/Reveal";
 import landingHero from "../assets/landingpage.png";
 
+// Applied alongside animate-fade-up so content stays visible (rather than
+// stuck invisible) for users who've asked the OS to reduce motion.
+const FADE_UP = "animate-fade-up motion-reduce:animate-none motion-reduce:opacity-100";
+
+// Same-page anchors. "Home" isn't here — it's a real Link to "/" below, so
+// it always returns to a clean URL instead of leaving a "#section" hash
+// that can strand a returning visitor mid-page instead of on the hero.
 const NAV_LINKS = [
-  { label: "Home", href: "#top" },
   { label: "Opportunities", href: "#audiences" },
   { label: "Features", href: "#features" },
 ];
@@ -82,134 +88,154 @@ const FEATURES = [
 export default function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col bg-white">
-      {/* ── Nav + Hero (dark, full-bleed) ── */}
-      <div id="top" className="relative overflow-hidden bg-primary">
-        <img
-          src={landingHero}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover opacity-25"
+      {/* ── Top nav ── */}
+      <header id="top" className="flex items-center justify-between gap-4 border-b border-border px-6 py-4">
+        <Link to="/">
+          <Logo iconClassName="h-9 w-9" textClassName="text-lg" />
+        </Link>
+
+        <nav className="hidden items-center gap-8 md:flex">
+          <Link
+            to="/"
+            className="text-sm font-medium text-text-sub transition hover:text-primary"
+          >
+            Home
+          </Link>
+          {NAV_LINKS.map(({ label, href }) => (
+            <a
+              key={label}
+              href={href}
+              className="text-sm font-medium text-text-sub transition hover:text-primary"
+            >
+              {label}
+            </a>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-3">
+          <Link
+            to="/login"
+            className="text-sm font-medium text-text-sub transition hover:text-primary"
+          >
+            Sign in
+          </Link>
+          <Link
+            to="/login"
+            className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary-mid"
+          >
+            Get Started
+          </Link>
+        </div>
+      </header>
+
+      {/* ── Hero ── */}
+      <section className="relative mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-10 overflow-hidden px-6 py-12 lg:grid-cols-2 lg:py-20">
+        <div className="pointer-events-none absolute -left-24 -top-24 -z-10 h-72 w-72 animate-float rounded-full bg-accent/15 blur-3xl motion-reduce:animate-none" />
+        <div
+          className="pointer-events-none absolute -bottom-24 left-1/3 -z-10 h-72 w-72 animate-float rounded-full bg-primary/5 blur-3xl [animation-delay:1.5s] motion-reduce:animate-none"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/95 to-primary/70" />
 
-        <div className="relative">
-          <header className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-6">
-            <Logo iconClassName="h-9 w-9" textClassName="text-lg" variant="light" />
+        <div>
+          <span
+            className={`inline-flex items-center gap-1.5 rounded-full border border-accent-border bg-accent-soft/80 px-3 py-1 text-xs font-semibold text-primary-mid ${FADE_UP}`}
+          >
+            <Sparkles className="h-3.5 w-3.5" />
+            Built for Sri Lankan university students
+          </span>
 
-            <nav className="hidden items-center gap-8 md:flex">
-              {NAV_LINKS.map(({ label, href }) => (
-                <a
-                  key={label}
-                  href={href}
-                  className="text-xs font-semibold uppercase tracking-widest text-white/70 transition hover:text-white"
-                >
-                  {label}
-                </a>
-              ))}
-            </nav>
+          <h1
+            className={`mt-5 text-4xl font-extrabold leading-tight tracking-tight text-text-main sm:text-5xl ${FADE_UP} [animation-delay:100ms]`}
+          >
+            Where ambitious students meet{" "}
+            <span className="text-primary-mid">real opportunities.</span>
+          </h1>
 
+          <p
+            className={`mt-5 max-w-lg text-base leading-relaxed text-text-sub ${FADE_UP} [animation-delay:200ms]`}
+          >
+            UniLift connects students with companies, retailers, and freelance clients —
+            internships, part-time jobs, and freelance gigs, all in one place.
+          </p>
+
+          <div className={`mt-8 flex flex-wrap items-center gap-3 ${FADE_UP} [animation-delay:300ms]`}>
             <Link
               to="/login"
-              className="flex items-center gap-1.5 rounded-full bg-[#D4AF37] px-5 py-2.5 text-xs font-bold uppercase tracking-widest text-primary transition hover:bg-[#E4C158]"
+              className="flex items-center gap-1.5 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition hover:bg-primary-mid"
             >
-              <LogIn className="h-3.5 w-3.5" />
-              Sign In
+              Get Started Free
+              <ArrowRight className="h-4 w-4" />
             </Link>
-          </header>
-
-          <section className="mx-auto max-w-6xl px-6 pb-24 pt-8 sm:pb-32">
-            <span className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/30 bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[#D4AF37]">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#D4AF37]" />
-              Direct From Colombo · Sri Lanka
-            </span>
-
-            <h1
-              className="mt-6 max-w-3xl text-5xl font-semibold leading-[1.1] text-white sm:text-6xl"
-              style={{ fontFamily: "'Playfair Display', serif" }}
+            <Link
+              to="/student/home"
+              className="rounded-full border border-border px-6 py-3 text-sm font-semibold text-text-main transition hover:border-primary hover:text-primary"
             >
-              Where Ambitious Students
-              <br />
-              Meet{" "}
-              <span className="italic text-[#D4AF37]">Real Opportunities.</span>
-            </h1>
+              Browse Opportunities
+            </Link>
+          </div>
 
-            <p className="mt-6 max-w-lg text-base leading-relaxed text-white/60">
-              UniLift connects students with companies, retailers, and freelance clients —
-              internships, part-time jobs, and freelance gigs, all in one place.
-            </p>
-
-            <div className="mt-10 flex flex-wrap items-center gap-4">
-              <Link
-                to="/login"
-                className="flex items-center gap-1.5 rounded-md bg-[#D4AF37] px-8 py-4 text-xs font-bold uppercase tracking-widest text-primary transition hover:bg-[#E4C158]"
-              >
-                Get Started Free
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-              <Link
-                to="/student/home"
-                className="rounded-md border border-white/25 px-8 py-4 text-xs font-bold uppercase tracking-widest text-white transition hover:border-white hover:bg-white/5"
-              >
-                Browse Opportunities
-              </Link>
+          <div className={`mt-10 flex items-center gap-4 ${FADE_UP} [animation-delay:400ms]`}>
+            <div className="flex">
+              {AVATAR_STACK.map((c, i) => (
+                <div
+                  key={c}
+                  className={`h-9 w-9 rounded-full border-2 border-white ${c} ${i > 0 ? "-ml-2.5" : ""}`}
+                />
+              ))}
             </div>
-
-            <div className="mt-14 flex items-center gap-4">
-              <div className="flex">
-                {AVATAR_STACK.map((c, i) => (
-                  <div
-                    key={c}
-                    className={`h-9 w-9 rounded-full border-2 border-primary ${c} ${i > 0 ? "-ml-2.5" : ""}`}
-                  />
-                ))}
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-white">Trusted by 128,000+ Students</p>
-                <div className="flex items-center gap-1 text-xs text-white/60">
-                  <span className="flex text-[#D4AF37]">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star key={i} className="h-3 w-3 fill-current" />
-                    ))}
-                  </span>
-                  4.9 (2,400+ Reviews)
-                </div>
+            <div>
+              <p className="text-sm font-semibold text-text-main">Trusted by 128,000+ Students</p>
+              <div className="flex items-center gap-1 text-xs text-text-sub">
+                <span className="flex text-yellow-400">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star key={i} className="h-3 w-3 fill-current" />
+                  ))}
+                </span>
+                4.9 (2,400+ Reviews)
               </div>
             </div>
-          </section>
+          </div>
         </div>
-      </div>
+
+        <div className={`relative ${FADE_UP} [animation-delay:150ms]`}>
+          <div className="pointer-events-none absolute -inset-x-8 -inset-y-12 -z-10 rounded-[40%] bg-gradient-to-br from-accent/30 via-accent-soft/60 to-transparent blur-3xl" />
+          <img
+            src={landingHero}
+            alt="A company team reviewing analytics on screen, blending into a student in a graduation cap and gown"
+            className="w-full rounded-2xl object-cover shadow-[0_25px_70px_-15px_rgba(15,23,42,0.35)]"
+          />
+        </div>
+      </section>
 
       {/* ── Audience picker ── */}
       <section id="audiences" className="bg-surface py-16">
         <div className="mx-auto max-w-6xl px-6">
-          <div className="mb-10 text-center">
+          <Reveal className="mb-10 text-center">
             <h2 className="text-2xl font-extrabold tracking-tight text-text-main sm:text-3xl">
               Built for everyone in the opportunity economy
             </h2>
             <p className="mt-2 text-sm text-text-sub">
               Whichever side you're on, UniLift has a path for you.
             </p>
-          </div>
+          </Reveal>
 
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {AUDIENCES.map(({ icon: Icon, title, description, cta, to }) => (
-              <div
-                key={title}
-                className="flex flex-col rounded-xl border border-border bg-white p-6 shadow-sm transition hover:border-primary-light hover:shadow-md"
-              >
-                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-accent-soft text-primary-mid">
-                  <Icon className="h-5 w-5" />
+            {AUDIENCES.map(({ icon: Icon, title, description, cta, to }, index) => (
+              <Reveal key={title} delay={index * 80}>
+                <div className="flex h-full flex-col rounded-xl border border-border bg-white p-6 shadow-sm transition hover:border-primary-light hover:shadow-[0_12px_30px_-10px_rgba(11,77,46,0.25)]">
+                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg border border-accent-border bg-accent-soft text-primary-mid">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <h3 className="mb-1.5 text-base font-bold text-text-main">{title}</h3>
+                  <p className="mb-5 flex-1 text-sm leading-relaxed text-text-sub">{description}</p>
+                  <Link
+                    to={to}
+                    className="flex items-center gap-1 text-sm font-semibold text-primary-mid transition hover:text-primary"
+                  >
+                    {cta}
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
                 </div>
-                <h3 className="mb-1.5 text-base font-bold text-text-main">{title}</h3>
-                <p className="mb-5 flex-1 text-sm leading-relaxed text-text-sub">{description}</p>
-                <Link
-                  to={to}
-                  className="flex items-center gap-1 text-sm font-semibold text-primary-mid transition hover:text-primary"
-                >
-                  {cta}
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -218,35 +244,41 @@ export default function LandingPage() {
       {/* ── Features ── */}
       <section id="features" className="mx-auto w-full max-w-6xl px-6 py-16">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
-          {FEATURES.map(({ icon: Icon, title, description }) => (
-            <div key={title} className="flex flex-col items-start">
-              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-primary text-white">
-                <Icon className="h-5 w-5" />
+          {FEATURES.map(({ icon: Icon, title, description }, index) => (
+            <Reveal key={title} delay={index * 100}>
+              <div className="flex flex-col items-start">
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-primary text-white">
+                  <Icon className="h-5 w-5" />
+                </div>
+                <h3 className="mb-1.5 text-base font-bold text-text-main">{title}</h3>
+                <p className="text-sm leading-relaxed text-text-sub">{description}</p>
               </div>
-              <h3 className="mb-1.5 text-base font-bold text-text-main">{title}</h3>
-              <p className="text-sm leading-relaxed text-text-sub">{description}</p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
 
       {/* ── CTA banner ── */}
       <section className="mx-auto w-full max-w-6xl px-6 pb-16">
-        <div className="flex flex-col items-center gap-5 rounded-2xl bg-gradient-to-br from-primary to-primary-mid px-8 py-12 text-center">
-          <h2 className="text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
-            Ready to get started?
-          </h2>
-          <p className="max-w-md text-sm text-white/70">
-            Join UniLift today — it's free, and takes less than a minute.
-          </p>
-          <Link
-            to="/login"
-            className="flex items-center gap-1.5 rounded-full bg-white px-6 py-3 text-sm font-semibold text-primary transition hover:bg-accent-soft"
-          >
-            Get Started Free
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
+        <Reveal>
+          <div className="relative flex flex-col items-center gap-5 overflow-hidden rounded-2xl border border-border bg-surface px-8 py-12 text-center shadow-sm">
+            <div className="pointer-events-none absolute -right-16 -top-16 z-0 h-56 w-56 animate-float rounded-full bg-accent/15 blur-3xl motion-reduce:animate-none" />
+            <div className="pointer-events-none absolute -bottom-16 -left-16 z-0 h-56 w-56 animate-float rounded-full bg-primary/10 blur-3xl [animation-delay:2s] motion-reduce:animate-none" />
+            <h2 className="relative z-10 text-2xl font-extrabold tracking-tight text-text-main sm:text-3xl">
+              Ready to get started?
+            </h2>
+            <p className="relative z-10 max-w-md text-sm text-text-sub">
+              Join UniLift today — it's free, and takes less than a minute.
+            </p>
+            <Link
+              to="/login"
+              className="relative z-10 flex items-center gap-1.5 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition hover:bg-primary-mid"
+            >
+              Get Started Free
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </Reveal>
       </section>
 
       <Footer />
