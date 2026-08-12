@@ -1,3 +1,4 @@
+
 // ============================================================
 // App.jsx — UniLift Route Configuration
 // BrowserRouter is already wrapped in main.jsx
@@ -7,16 +8,22 @@ import MessageButton from './Components/MessageButton.jsx';
 import LandingPage from './pages/LandingPage';
 
 // ── Auth & Onboarding pages (hass branch) ──────────────────
-import Login            from './pages/Login';
-import Register         from './pages/Register';
-import CompanyRegister  from './pages/CompanyRegister';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
+import AddUser from './pages/management/user/AddUser'; // The page with the form
+import StudentDashboard from './pages/StudentDashboard';
+import EmployerDashboard from './pages/EmployerDashboard';
+
+import StudentHome from './pages/StudentHome';
+import CompanyRegister from './pages/CompanyRegister';
 import RetailerRegister from './pages/RetailerRegister';
-import NotFound         from './pages/NotFound';
+import NotFound from './pages/NotFound';
 
 // ── Student & Publisher pages (Rasara branch) ──────────────
-import StudentHome         from './pages/StudentHome';
-import RetailJobPublisher  from './pages/RetailJobPublisher';
+import RetailJobPublisher from './pages/RetailJobPublisher';
 import CompanyJobPublisher from './pages/CompanyJobPublisher';
+
 import FreelancerClient    from './pages/FreelancerClient';
 import RetailProfile       from './pages/RetailProfile';
 import CompanyProfile      from './pages/CompanyProfile';

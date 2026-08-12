@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import Header from "../Components/Header";
 import ListingCard from "../Components/ListingCard";
@@ -272,15 +273,17 @@ const LISTINGS_BY_CATEGORY = {
     },
   ],
 };
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from './context/authContext';
 
 export default function StudentHome() {
-  const [activeCategory, setActiveCategory] = useState("company");
-  const [activeFilter, setActiveFilter] = useState("All");
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
-  function handleCategoryChange(category) {
-    setActiveCategory(category);
-    setActiveFilter("All"); // reset sub-filter whenever the main tab changes
-  }
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <div className="mx-auto flex min-h-screen max-w-6xl flex-col bg-white">
@@ -305,6 +308,7 @@ export default function StudentHome() {
       </main>
 
       <Footer />
+
     </div>
   );
 }

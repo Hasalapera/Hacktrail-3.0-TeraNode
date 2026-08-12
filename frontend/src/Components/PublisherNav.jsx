@@ -1,9 +1,11 @@
+
 import Logo from "./Logo";
 import ProfileMenu from "./ProfileMenu";
 
+
 // ---------------------------------------------------------------------------
 // PublisherNav: top bar shared by the three publisher pages — logo + title,
-// profile icon.
+// profile icon. Restyled with the UniLift forest-green palette.
 // ---------------------------------------------------------------------------
 export default function PublisherNav({ title, profileHref }) {
   return (
@@ -14,6 +16,7 @@ export default function PublisherNav({ title, profileHref }) {
         {title && <span className="text-sm font-medium text-text-sub">{title}</span>}
 
         <ProfileMenu profileHref={profileHref} />
+
       </div>
     </header>
   );

@@ -15,23 +15,68 @@ const INDUSTRIES = [
   'Other',
 ];
 
+const EyeIcon = ({ open }) => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    {open
+      ? <><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></>
+      : <><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></>
+    }
+  </svg>
+);
+
+const inputBase = {
+  border: '1.5px solid #E2E8F0',
+  background: '#ffffff',
+  color: '#0F172A',
+  borderRadius: '12px',
+  width: '100%',
+  padding: '12px 16px',
+  fontSize: '14px',
+  outline: 'none',
+  transition: 'all 0.2s',
+};
+
+function FormInput({ onFocus, onBlur, ...props }) {
+  return (
+    <input
+      {...props}
+      style={inputBase}
+      onFocus={e => { e.target.style.borderColor = '#15803D'; e.target.style.boxShadow = '0 0 0 3px rgba(21,128,61,0.10)'; onFocus?.(e); }}
+      onBlur={e => { e.target.style.borderColor = '#E2E8F0'; e.target.style.boxShadow = 'none'; onBlur?.(e); }}
+    />
+  );
+}
+
+function FormSelect({ children, ...props }) {
+  return (
+    <select
+      {...props}
+      style={{ ...inputBase, cursor: 'pointer' }}
+      onFocus={e => { e.target.style.borderColor = '#15803D'; e.target.style.boxShadow = '0 0 0 3px rgba(21,128,61,0.10)'; }}
+      onBlur={e => { e.target.style.borderColor = '#E2E8F0'; e.target.style.boxShadow = 'none'; }}
+    >
+      {children}
+    </select>
+  );
+}
+
 export default function CompanyRegister() {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    companyName:   '',
-    industry:      '',
-    hrContactName: '',
-    email:         '',
-    contactNumber: '',
-    password:      '',
+    companyName:     '',
+    industry:        '',
+    hrContactName:   '',
+    email:           '',
+    contactNumber:   '',
+    password:        '',
     confirmPassword: '',
   });
 
-  const [showPass, setShowPass]     = useState(false);
-  const [loading, setLoading]       = useState(false);
-  const [error, setError]           = useState('');
-  const [success, setSuccess]       = useState(false);
+  const [showPass, setShowPass] = useState(false);
+  const [loading, setLoading]   = useState(false);
+  const [error, setError]       = useState('');
+  const [success, setSuccess]   = useState(false);
 
   const handleChange = (e) => {
     setError('');
@@ -59,10 +104,9 @@ export default function CompanyRegister() {
     e.preventDefault();
     const err = validate();
     if (err) { setError(err); return; }
-
     setLoading(true);
     /* TODO: POST /auth/register/company when backend endpoint is ready */
-    await new Promise((r) => setTimeout(r, 1200)); // simulate API call
+    await new Promise((r) => setTimeout(r, 1200));
     setLoading(false);
     setSuccess(true);
   };
@@ -82,6 +126,7 @@ export default function CompanyRegister() {
           <button onClick={() => navigate('/login')}
                   className="w-full py-3 rounded-xl font-bold text-white cursor-pointer bg-gradient-to-br from-primary to-primary-mid">
             Go to Login
+
           </button>
         </div>
       </div>
@@ -91,9 +136,12 @@ export default function CompanyRegister() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-14 bg-gradient-to-br from-primary to-primary-mid">
 
-      <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden">
+
+      <div className="relative w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden"
+           style={{ background: '#ffffff' }}>
 
         {/* ── Header ── */}
+
         <div className="px-8 pt-8 pb-6 bg-gradient-to-br from-primary to-primary-mid">
           <div className="flex items-center gap-3 mb-1">
             <Logo iconClassName="h-10 w-10" showWordmark={false} />
@@ -103,6 +151,7 @@ export default function CompanyRegister() {
             </div>
           </div>
           <p className="text-white/85 text-sm mt-4 leading-relaxed">
+
             Join UniLift to access Sri Lanka's largest pool of university talent. Post internships and projects instantly.
           </p>
         </div>
@@ -114,7 +163,18 @@ export default function CompanyRegister() {
             <span className="w-2 h-2 rounded-full bg-primary"></span>
             <span className="w-2 h-2 rounded-full bg-border"></span>
             <span className="w-2 h-2 rounded-full bg-border"></span>
+
           </div>
+        </div>
+
+        {/* ── Stats strip ── */}
+        <div className="flex divide-x" style={{ background: '#F8FAFB', borderBottom: '1px solid #E2E8F0', divideColor: '#E2E8F0' }}>
+          {[['128K+', 'Students'], ['Top 500', 'Companies'], ['Free', 'to Start']].map(([num, label]) => (
+            <div key={label} className="flex-1 py-3 text-center">
+              <div className="text-sm font-bold" style={{ color: '#0B4D2E' }}>{num}</div>
+              <div className="text-xs" style={{ color: '#94A3B8' }}>{label}</div>
+            </div>
+          ))}
         </div>
 
         {/* ── Form ── */}
@@ -130,6 +190,7 @@ export default function CompanyRegister() {
                    className="w-full px-4 py-3 rounded-xl border border-border text-sm
                               bg-surface text-text-main outline-none placeholder-text-muted
                               focus:border-primary-mid focus:ring-2 focus:ring-accent-border focus:bg-white" />
+
           </div>
 
           {/* Industry */}
@@ -141,14 +202,15 @@ export default function CompanyRegister() {
                     className="w-full px-4 py-3 rounded-xl border border-border text-sm
                                bg-surface text-text-main outline-none
                                focus:border-primary-mid focus:ring-2 focus:ring-accent-border focus:bg-white cursor-pointer">
+
               <option value="">— Select Industry —</option>
               {INDUSTRIES.map((ind) => (
                 <option key={ind} value={ind}>{ind}</option>
               ))}
-            </select>
+            </FormSelect>
           </div>
 
-          {/* HR Contact Name & Email — 2 column grid on md+ */}
+          {/* HR Contact Name & Phone — 2 col */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-text-sub mb-1.5">
@@ -169,11 +231,13 @@ export default function CompanyRegister() {
                      className="w-full px-4 py-3 rounded-xl border border-border text-sm
                                 bg-surface text-text-main outline-none placeholder-text-muted
                                 focus:border-primary-mid focus:ring-2 focus:ring-accent-border focus:bg-white" />
+
             </div>
           </div>
 
           {/* Corporate Email */}
           <div>
+
             <label className="block text-sm font-semibold text-text-sub mb-1.5">
               Official Corporate Email <span className="text-red-400">*</span>
             </label>
@@ -202,10 +266,12 @@ export default function CompanyRegister() {
                 <button type="button" onClick={() => setShowPass((p) => !p)}
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted cursor-pointer">
                   {showPass ? '🙈' : '👁️'}
+
                 </button>
               </div>
             </div>
             <div>
+
               <label className="block text-sm font-semibold text-text-sub mb-1.5">
                 Confirm Password <span className="text-red-400">*</span>
               </label>
@@ -214,6 +280,7 @@ export default function CompanyRegister() {
                      className="w-full px-4 py-3 rounded-xl border border-border text-sm
                                 bg-surface text-text-main outline-none placeholder-text-muted
                                 focus:border-primary-mid focus:ring-2 focus:ring-accent-border focus:bg-white" />
+
             </div>
           </div>
 
@@ -222,12 +289,13 @@ export default function CompanyRegister() {
             By registering, you agree to UniLift's{' '}
             <a href="#" className="underline text-primary">Terms of Service</a> and{' '}
             <a href="#" className="underline text-primary">Privacy Policy</a>.
+
           </p>
 
           {/* Error */}
           {error && (
-            <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-600
-                            text-sm px-4 py-3 rounded-xl">
+            <div className="flex items-center gap-2 text-sm px-4 py-3 rounded-xl"
+                 style={{ background: '#FEF2F2', border: '1px solid #FECACA', color: '#DC2626' }}>
               <span>⚠️</span> {error}
             </div>
           )}
@@ -244,6 +312,7 @@ export default function CompanyRegister() {
           <p className="text-center text-sm text-text-sub">
             Already registered?{' '}
             <Link to="/login" className="font-semibold hover:underline text-primary">
+
               Sign In
             </Link>
           </p>
