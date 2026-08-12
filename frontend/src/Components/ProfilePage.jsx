@@ -125,7 +125,10 @@ export default function ProfilePage({
 
           {/* ── About ── */}
           <section className="rounded-xl border border-border p-6 shadow-sm">
-            <h2 className="mb-3 text-lg font-bold text-text-main">About</h2>
+            <div className="mb-3 flex items-center gap-2">
+              <h2 className="text-lg font-bold text-text-main">About</h2>
+              <Pencil className="h-3.5 w-3.5 text-text-muted" />
+            </div>
             <p className="whitespace-pre-line text-sm leading-relaxed text-text-sub">{about}</p>
           </section>
 

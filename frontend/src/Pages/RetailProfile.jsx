@@ -1,4 +1,3 @@
-import { LayoutGrid } from "lucide-react";
 import PublisherNav from "../Components/PublisherNav";
 import ProfilePage from "../Components/ProfilePage";
 import Footer from "../Components/Footer";
@@ -22,10 +21,10 @@ export default function RetailProfile() {
           location="Colombo, Sri Lanka"
           languages="Speaks English, Sinhala"
           about={`Hello,\n\nWe're Odel Fashion, a retail store in Colombo hiring students for weekend and evening shifts. We're looking for friendly, reliable people to join our sales floor team — no experience required, just a good attitude and a willingness to learn.\n\ncontact us: hr@odelfashion.lk\nThank you.`}
-          portfolioBlurb="Show students what it's like to work at your store."
-          introBlurb="Introduce your team and make a connection with applicants."
-          strength={7}
-          quickLinks={[{ icon: LayoutGrid, label: "Jobs", to: "/retail/jobs" }]}
+          showPortfolio={false}
+          showIntroVideo={false}
+          showStrength={false}
+          showQuickLinks={false}
           backHref="/retail/jobs"
         />
       </main>

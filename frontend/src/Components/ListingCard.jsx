@@ -76,7 +76,7 @@ export default function ListingCard({ listing }) {
         </div>
 
         <p className="text-sm text-text-sub">
-          From <span className="font-semibold text-text-main">US${price}</span>
+          From <span className="font-semibold text-text-main">Rs. {price.toLocaleString()}</span>
         </p>
 
         {offersVideo && (

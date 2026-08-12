@@ -33,7 +33,7 @@ const INITIAL_LISTINGS = [
     badge: "Vetted Pro",
     rating: 4.7,
     reviews: "212",
-    price: 12,
+    price: 1500,
     image: THUMBNAILS[0],
   },
   {
@@ -44,7 +44,7 @@ const INITIAL_LISTINGS = [
     badge: "",
     rating: 4.5,
     reviews: "89",
-    price: 10,
+    price: 1200,
     image: THUMBNAILS[1],
   },
 ];
@@ -135,14 +135,14 @@ export default function RetailJobPublisher() {
               </select>
             </FormField>
 
-            <FormField label="Hourly rate (US$)">
+            <FormField label="Hourly rate (Rs.)">
               <input
                 type="number"
                 min="0"
                 required
                 value={form.hourlyRate}
                 onChange={handleChange("hourlyRate")}
-                placeholder="e.g. 12"
+                placeholder="e.g. 1500"
                 className="rounded-lg border border-border px-3 py-2 text-sm font-normal text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
               />
             </FormField>

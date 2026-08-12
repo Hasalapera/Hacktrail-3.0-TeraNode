@@ -155,14 +155,14 @@ export default function CreateGigForm({ onSaveAndContinue, onCancel }) {
               <h4 className="mb-1 text-sm font-bold text-text-main">Starting price</h4>
               <div className="relative max-w-xs">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-text-muted">
-                  US$
+                  Rs.
                 </span>
                 <input
                   type="number"
                   min="0"
                   value={price}
                   onChange={(event) => setPrice(event.target.value)}
-                  placeholder="0"
+                  placeholder="5000"
                   className="w-full rounded-lg border border-border py-2.5 pl-11 pr-3 text-sm text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
                 />
               </div>

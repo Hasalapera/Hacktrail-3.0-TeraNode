@@ -1,3 +1,4 @@
+import Logo from "./Logo";
 import ProfileMenu from "./ProfileMenu";
 
 // ---------------------------------------------------------------------------
@@ -6,12 +7,7 @@ import ProfileMenu from "./ProfileMenu";
 export default function Header({ categories, activeCategory, onSelectCategory, profileHref }) {
   return (
     <header className="flex flex-wrap items-center justify-between gap-4 border-b border-border px-6 py-4">
-      <div className="flex items-center gap-2">
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
-          W
-        </div>
-        <span className="text-lg font-semibold text-text-main">Web Name</span>
-      </div>
+      <Logo iconClassName="h-9 w-9" textClassName="text-lg" />
 
       <nav className="flex gap-8">
         {categories.map(({ key, label }) => {

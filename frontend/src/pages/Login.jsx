@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Logo from '../Components/Logo';
 
 const ROLES = [
   { id: 'student',  label: 'Student',  hint: 'Enter your university credentials' },
@@ -66,11 +67,8 @@ export default function Login() {
         <div className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-accent-dark/[0.06]" />
 
         <div className="relative">
-          <div className="mb-12 flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-accent-dark text-lg font-extrabold text-primary">
-              U
-            </div>
-            <span className="text-xl font-bold tracking-tight text-white">UniLift</span>
+          <div className="mb-12">
+            <Logo iconClassName="h-11 w-11" textClassName="text-xl" variant="light" />
           </div>
 
           <h2 className="mb-4 text-[28px] font-extrabold leading-tight tracking-tight text-white">

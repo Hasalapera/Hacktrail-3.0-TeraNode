@@ -1,23 +1,22 @@
 @import "tailwindcss";
 
 /* ── Brand palette ─────────────────────────────────────────────
-   Registers the site's green theme as Tailwind utilities, e.g.
-   bg-primary, text-primary-mid, border-accent-border, bg-surface.
-   Most tokens intentionally match Tailwind's built-in green/slate
-   scale exactly (green-700/800/400/500/50/200, slate-900/600/400/200)
-   — only "primary" (Deep Forest) falls outside the default palette. */
+   Registers the site's theme as Tailwind utilities, e.g. bg-primary,
+   text-primary-mid, border-accent-border, bg-surface. Matches the
+   UniLift logo mark: navy -> blue -> sky for primary/primary-mid/
+   primary-light, emerald "lift" gradient for accent/accent-dark. */
 @theme {
-  --color-primary: #0B4D2E;        /* Deep Forest */
-  --color-primary-mid: #166534;    /* Rich Emerald */
-  --color-primary-light: #15803D;  /* Green */
-  --color-accent: #4ADE80;         /* Lime Green */
-  --color-accent-dark: #22C55E;    /* Bright Green */
-  --color-accent-soft: #F0FDF4;    /* Mint White */
-  --color-accent-border: #BBF7D0;  /* Soft Green */
+  --color-primary: #0F172A;        /* Navy (logo mark base) */
+  --color-primary-mid: #2563EB;    /* Blue (logo mark / "Lift" wordmark) */
+  --color-primary-light: #38BDF8;  /* Sky (logo node dot) */
+  --color-accent: #34D399;         /* Emerald light (lift arrow) */
+  --color-accent-dark: #10B981;    /* Emerald (lift arrow) */
+  --color-accent-soft: #EFF6FF;    /* Soft Blue */
+  --color-accent-border: #BFDBFE;  /* Soft Blue Border */
   --color-surface: #F8FAFB;        /* Off White */
   --color-border: #E2E8F0;         /* Light Gray */
   --color-text-main: #0F172A;      /* Near Black */
-  --color-text-sub: #475569;       /* Slate */
+  --color-text-sub: #64748B;       /* Slate (logo tagline) */
   --color-text-muted: #94A3B8;     /* Cool Gray */
 }
 

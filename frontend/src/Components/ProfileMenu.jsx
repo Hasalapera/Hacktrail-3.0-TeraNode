@@ -69,7 +69,7 @@ export default function ProfileMenu({ profileHref }) {
             <div className="flex items-center justify-between px-4 py-1.5">
               <span className="text-sm font-semibold text-text-main">Exclusive features</span>
               <span className="rounded bg-primary-mid px-1.5 py-0.5 text-xs font-semibold text-white">
-                Web Name Pro
+                UniLift Pro
               </span>
             </div>
             {/* <MenuItem>Invite your teammates</MenuItem>
@@ -85,7 +85,7 @@ export default function ProfileMenu({ profileHref }) {
               <Globe className="h-4 w-4" />
               English
             </button>
-            {/* <MenuItem>US$ USD</MenuItem>
+            {/* <MenuItem>Rs. LKR</MenuItem>
             <MenuItem>Support</MenuItem> */}
 
             <Divider />

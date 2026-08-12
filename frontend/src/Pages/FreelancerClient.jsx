@@ -33,7 +33,7 @@ const INITIAL_LISTINGS = [
     badge: "",
     rating: 0,
     reviews: "New",
-    price: 150,
+    price: 18000,
     image: THUMBNAILS[0],
   },
   {
@@ -44,7 +44,7 @@ const INITIAL_LISTINGS = [
     badge: "",
     rating: 0,
     reviews: "New",
-    price: 80,
+    price: 9500,
     image: THUMBNAILS[1],
   },
 ];
@@ -141,14 +141,14 @@ export default function FreelancerClient() {
               </select>
             </FormField>
 
-            <FormField label="Budget (US$)">
+            <FormField label="Budget (Rs.)">
               <input
                 type="number"
                 min="0"
                 required
                 value={form.budget}
                 onChange={handleChange("budget")}
-                placeholder="e.g. 150"
+                placeholder="e.g. 18000"
                 className="rounded-lg border border-border px-3 py-2 text-sm font-normal text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
               />
             </FormField>

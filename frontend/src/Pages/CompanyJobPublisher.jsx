@@ -43,7 +43,7 @@ const INITIAL_LISTINGS = [
     badge: "Vetted Pro",
     rating: 4.9,
     reviews: "540",
-    price: 350,
+    price: 45000,
     image: THUMBNAILS[2],
   },
 ];
@@ -134,14 +134,14 @@ export default function CompanyJobPublisher() {
               </select>
             </FormField>
 
-            <FormField label="Stipend / budget (US$, 0 if unpaid)">
+            <FormField label="Stipend / budget (Rs., 0 if unpaid)">
               <input
                 type="number"
                 min="0"
                 required
                 value={form.budget}
                 onChange={handleChange("budget")}
-                placeholder="e.g. 350"
+                placeholder="e.g. 45000"
                 className="rounded-lg border border-border px-3 py-2 text-sm font-normal text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
               />
             </FormField>

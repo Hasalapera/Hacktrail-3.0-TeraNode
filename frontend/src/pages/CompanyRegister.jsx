@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Logo from '../Components/Logo';
 
 const INDUSTRIES = [
   'Information Technology',
@@ -95,9 +96,7 @@ export default function CompanyRegister() {
         {/* ── Header ── */}
         <div className="px-8 pt-8 pb-6 bg-gradient-to-br from-primary to-primary-mid">
           <div className="flex items-center gap-3 mb-1">
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 bg-accent-dark">
-              <span className="text-lg font-black text-primary">U</span>
-            </div>
+            <Logo iconClassName="h-10 w-10" showWordmark={false} />
             <div>
               <h1 className="text-xl font-bold text-white leading-tight">Company Registration</h1>
               <p className="text-accent-soft text-xs">UniLift Corporate Portal</p>

@@ -11,7 +11,7 @@ const INITIAL_GIGS_BY_STATUS = {
   Paused: [
     {
       title: "do creative logo design design",
-      price: 45,
+      price: 6000,
       impressions: 0,
       clicks: 0,
       orders: 0,
@@ -20,7 +20,7 @@ const INITIAL_GIGS_BY_STATUS = {
     },
     {
       title: "create unique and professional graphic designs",
-      price: 60,
+      price: 7500,
       impressions: 0,
       clicks: 0,
       orders: 0,
@@ -176,7 +176,7 @@ export default function GigsScreen() {
                       <span className="text-text-main">{gig.title}</span>
                     </div>
                   </td>
-                  <td className="px-2 py-4 text-right font-medium text-text-main">US${gig.price}</td>
+                  <td className="px-2 py-4 text-right font-medium text-text-main">Rs. {gig.price.toLocaleString()}</td>
                   <td className="px-2 py-4 text-right text-text-sub">{gig.impressions}</td>
                   <td className="px-2 py-4 text-right text-text-sub">{gig.clicks}</td>
                   <td className="px-2 py-4 text-right text-text-sub">{gig.orders}</td>
