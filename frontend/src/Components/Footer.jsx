@@ -83,7 +83,6 @@ export default function Footer() {
                 key={item}
                 href="#"
                 className="text-xs text-white/55 transition hover:text-accent"
-
               >
                 {item}
               </a>

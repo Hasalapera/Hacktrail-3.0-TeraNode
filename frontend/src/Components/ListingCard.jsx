@@ -1,12 +1,5 @@
 
-import { Heart, Play, Star, Video, MapPin } from "lucide-react";
-
-// Badge styling per variant — "pro" mirrors the brand-green "Vetted Pro"
-// pill, "topRated" mirrors the amber "Top Rated ♦♦♦" merit pill.
-const BADGE_STYLES = {
-  pro: "bg-accent-soft text-primary-mid",
-  topRated: "bg-amber-100 text-amber-800",
-};
+import { Heart, MapPin, Play, Star, Video } from "lucide-react";
 
 
 // ---------------------------------------------------------------------------
@@ -27,8 +20,6 @@ export default function ListingCard({ listing }) {
     type,
     city,
   } = listing;
-
-  const isNew = reviews === "New";
 
   return (
     <button

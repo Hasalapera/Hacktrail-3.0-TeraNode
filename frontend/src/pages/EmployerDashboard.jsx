@@ -49,6 +49,7 @@ export default function EmployerDashboard() {
 
   useEffect(() => {
     if (activeTab === 'my-gigs') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchEmployerGigs();
     }
   }, [activeTab]);

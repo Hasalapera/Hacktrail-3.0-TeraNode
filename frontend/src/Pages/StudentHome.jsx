@@ -273,24 +273,13 @@ const LISTINGS_BY_CATEGORY = {
     },
   ],
 };
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from './context/authContext';
-
 export default function StudentHome() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-
   const [activeCategory, setActiveCategory] = useState("job");
   const [activeFilter, setActiveFilter] = useState("All");
 
   const handleCategoryChange = (cat) => {
     setActiveCategory(cat);
     setActiveFilter("All");
-  };
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
   };
 
   return (
@@ -303,20 +292,19 @@ export default function StudentHome() {
       />
 
       <FilterBar
-        filters={FILTERS_BY_CATEGORY[activeCategory]}
+        filters={FILTERS_BY_CATEGORY[activeCategory] || []}
         activeFilter={activeFilter}
         onSelect={setActiveFilter}
       />
 
       <main className="flex-1">
         <ResultsList
-          listings={LISTINGS_BY_CATEGORY[activeCategory]}
+          listings={LISTINGS_BY_CATEGORY[activeCategory] || []}
           activeFilter={activeFilter}
         />
       </main>
 
       <Footer />
-
     </div>
   );
 }

@@ -1,7 +1,4 @@
 import { useState } from 'react';
-
-import Logo from '../Components/Logo';
-
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import api from '../api/axiosInstance';
 import { useAuth } from './context/authContext';
@@ -24,11 +21,7 @@ const ROLES = [
   },
 ];
 
-const FEATURES = [
-  { title: 'Internships & Corporate Projects', sub: 'Match with top companies by skill & degree', icon: '🎓' },
-  { title: 'Part-Time & Flexible Jobs', sub: 'Find nearby gigs posted by local retailers', icon: '🏪' },
-  { title: 'Freelance Marketplace', sub: 'Earn from design, dev, video editing & more', icon: '💼' },
-];
+
 
 const EyeIcon = ({ open }) => (
   <svg
@@ -278,7 +271,7 @@ export default function Login() {
     } catch (err) {
       setError(
         err.response?.data?.message ||
-        'Unable to connect. Make sure the backend server is running.'
+          'Unable to connect. Make sure the backend server is running.'
       );
     } finally {
       setLoading(false);
@@ -321,7 +314,7 @@ export default function Login() {
     } catch (err) {
       setChangePwError(
         err.response?.data?.message ||
-        'Failed to change password. Please try again.'
+          'Failed to change password. Please try again.'
       );
     } finally {
       setChangingPw(false);
@@ -337,9 +330,20 @@ export default function Login() {
       <div className="min-h-screen bg-slate-50 lg:flex">
         <BrandPanel />
 
-        {/* ── Right Content Panel ────────────────────────────── */}
-        <div className="flex flex-1 items-center justify-center p-6 sm:p-12">
-          <div className="w-full max-w-[400px]">
+        <main className="flex min-h-screen flex-1 items-center justify-center px-5 py-10 sm:px-8 lg:px-12">
+          <div className="w-full max-w-[430px]">
+            {/* Mobile logo */}
+            <div className="mb-10 flex items-center gap-3 lg:hidden">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F5C518] text-lg font-black text-[#0D1F4C]">
+                U
+              </div>
+
+              <span className="text-xl font-extrabold tracking-tight text-[#0D1F4C]">
+                UniLift
+              </span>
+            </div>
+
+            {/* Header */}
             <div className="mb-8">
               <h1 className="mb-1 text-2xl font-extrabold tracking-tight text-text-main">
                 Set a new password
@@ -349,24 +353,17 @@ export default function Login() {
               </p>
             </div>
 
-            {changePwError && (
-              <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-600">
-                {changePwError}
-              </div>
-            )}
-
-            <form onSubmit={handleChangePassword} className="flex flex-col gap-5">
-              <div>
-                <label className="mb-1.5 block text-[13px] font-semibold tracking-wide text-text-sub">
-                  University Index Number
-                </label>
-                <input
-                  type="text"
-                  value={changePw.university_id}
-                  disabled
-                  className="w-full cursor-not-allowed rounded-[14px] border border-border bg-slate-100 px-4 py-3 text-sm text-slate-500 outline-none"
-                />
-              </div>
+            {/* Form card */}
+            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+              <form
+                onSubmit={handleChangePassword}
+                className="flex flex-col gap-5"
+              >
+                {/* University ID */}
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                    University Index Number
+                  </label>
 
               <div>
                 <label className="mb-1.5 block text-[13px] font-semibold tracking-wide text-text-sub">
@@ -388,41 +385,95 @@ export default function Login() {
                 </div>
               </div>
 
-              <div>
-                <label className="mb-1.5 block text-[13px] font-semibold tracking-wide text-text-sub">
-                  Confirm Password
-                </label>
-                <div className="relative">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                      <path d="M7 11V7a5 5 0 0110 0v4" />
-                    </svg>
-                  </div>
-                  <input
-                    type={showPass ? 'text' : 'password'}
-                    value={confirmPassword}
-                    onChange={(e) => { setConfirmPassword(e.target.value); setChangePwError(''); }}
-                    className="w-full rounded-[14px] border border-border bg-white px-4 py-3 pl-11 text-sm text-text-main outline-none transition focus:border-primary-mid focus:ring-[3px] focus:ring-primary-mid/10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPass(!showPass)}
-                    className="absolute inset-y-0 right-0 flex items-center pr-4 text-xs font-bold uppercase tracking-wider text-text-muted hover:text-text-main"
-                  >
-                    {showPass ? 'Hide' : 'Show'}
-                  </button>
-                </div>
-              </div>
+                {/* New password */}
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                    New Password
+                  </label>
 
-              <button
-                type="submit"
-                disabled={changingPw}
-                className="mt-2 w-full rounded-[14px] bg-primary py-3.5 text-[15px] font-bold tracking-wide text-white transition hover:bg-primary-mid active:scale-[0.98] disabled:opacity-70"
-              >
-                {changingPw ? 'Updating...' : 'Update & Login'}
-              </button>
-            </form>
+                  <input
+                    className={inputClassName}
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => {
+                      setNewPassword(e.target.value);
+                      setChangePwError('');
+                    }}
+                    placeholder="Enter a new password"
+                    autoComplete="new-password"
+                  />
+
+                  <p className="mt-2 text-[11px] text-slate-400">
+                    Use at least 6 characters.
+                  </p>
+                </div>
+
+                {/* Confirm password */}
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Confirm New Password
+                  </label>
+
+                  <input
+                    className={inputClassName}
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => {
+                      setConfirmPassword(e.target.value);
+                      setChangePwError('');
+                    }}
+                    placeholder="Re-enter the new password"
+                    autoComplete="new-password"
+                  />
+                </div>
+
+                {/* Error */}
+                {changePwError && (
+                  <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3.5 text-sm text-red-700">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100 text-xs font-bold">
+                      !
+                    </span>
+
+                    <span className="leading-5">{changePwError}</span>
+                  </div>
+                )}
+
+                {/* Submit */}
+                <button
+                  className="mt-1 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#1A3268] to-[#0D1F4C] py-3.5 text-sm font-bold text-white shadow-lg shadow-[#0D1F4C]/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#0D1F4C]/25 active:translate-y-0 disabled:cursor-not-allowed disabled:translate-y-0 disabled:opacity-60"
+                  type="submit"
+                  disabled={changingPw}
+                >
+                  {changingPw ? (
+                    <>
+                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      Change Password
+                      <svg
+                        width="17"
+                        height="17"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M5 12h14" />
+                        <path d="m12 5 7 7-7 7" />
+                      </svg>
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
+
+            <p className="mt-8 text-center text-[11px] text-slate-400">
+              © 2025 UniLift · Empowering Sri Lankan Students
+            </p>
           </div>
         </div>
       </div>
@@ -437,25 +488,65 @@ export default function Login() {
     <div className="min-h-screen bg-slate-50 lg:flex">
       <BrandPanel />
 
-      <main className="flex flex-1 items-center justify-center p-6 sm:p-12">
-        <div className="w-full max-w-[400px]">
-          <div className="mb-8">
-            <h1 className="mb-1 text-2xl font-extrabold tracking-tight text-text-main">
-              Sign in
-            </h1>
-            <p className="text-sm text-text-sub">{active.hint}</p>
+      <main className="flex min-h-screen flex-1 items-center justify-center px-5 py-10 sm:px-8 lg:px-12">
+        <div className="w-full max-w-[430px]">
+          {/* Mobile logo */}
+          <div className="mb-10 flex items-center gap-3 lg:hidden">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F5C518] text-lg font-black text-[#0D1F4C]">
+              U
+            </div>
+
+            <span className="text-xl font-extrabold tracking-tight text-[#0D1F4C]">
+              UniLift
+            </span>
           </div>
 
-          <div className="mb-7 flex rounded-[10px] border border-border bg-surface p-1">
-            {ROLES.map(r => (
+          {/* Header */}
+          <div className="mb-7">
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0D1F4C]/5 text-[#0D1F4C]">
+              <svg
+                width="23"
+                height="23"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4" />
+                <polyline points="10 17 15 12 10 7" />
+                <line x1="15" y1="12" x2="3" y2="12" />
+              </svg>
+            </div>
+
+            <h1 className="text-3xl font-extrabold tracking-[-0.03em] text-slate-900">
+              Sign in
+            </h1>
+
+            <p className="mt-2 text-sm leading-6 text-slate-500">
+              {active.hint}
+            </p>
+          </div>
+
+          {/* Role Tabs */}
+          <div className="mb-7 grid grid-cols-3 gap-1 rounded-2xl border border-slate-200 bg-slate-100 p-1.5">
+            {ROLES.map((r) => (
               <button
                 key={r.id}
                 type="button"
-                onClick={() => { setRole(r.id); setError(''); setForm({ username: '', password: '' }); }}
-                className={`flex-1 rounded-[7px] px-1 py-2 text-[13px] font-semibold transition-all ${
+                onClick={() => {
+                  setRole(r.id);
+                  setError('');
+                  setForm({
+                    username: '',
+                    password: '',
+                  });
+                }}
+                className={`relative rounded-xl px-2 py-2.5 text-center text-xs font-bold transition-all duration-200 ${
                   role === r.id
-                    ? 'bg-white text-primary shadow-sm'
-                    : 'text-text-muted hover:text-text-main'
+                    ? 'bg-white text-[#0D1F4C] shadow-sm ring-1 ring-slate-200'
+                    : 'text-slate-500 hover:bg-white/60 hover:text-slate-800'
                 }`}
               >
                 {r.label}
@@ -482,25 +573,61 @@ export default function Login() {
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             {/* Username */}
             <div>
-              <label className="mb-1.5 block text-[13px] font-semibold tracking-wide text-text-sub">
-                Username
+              <label
+                htmlFor="username"
+                className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500"
+              >
+                Email or University Index Number
               </label>
-              <input
-                type="text"
-                name="username"
-                value={form.username}
-                onChange={handleChange}
-                placeholder={role === 'company' ? 'company_hr or email' : `${role}_username`}
-                autoComplete="username"
-                className="w-full rounded-[14px] border border-border bg-white px-4 py-3 text-sm text-text-main outline-none transition placeholder:text-text-muted focus:border-primary-mid focus:ring-[3px] focus:ring-primary-mid/10"
-              />
+
+              <div className="relative">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M20 21a8 8 0 00-16 0" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
+                </div>
+
+                <input
+                  id="username"
+                  className={`${inputClassName} pl-11`}
+                  type="text"
+                  name="username"
+                  value={form.username}
+                  onChange={handleChange}
+                  placeholder={
+                    role === 'student'
+                      ? 'e.g. TG/2022/1357'
+                      : 'e.g. name@company.com'
+                  }
+                  autoComplete="username"
+                />
+              </div>
             </div>
 
             {/* Password */}
             <div>
-              <div className="mb-1.5 flex items-center justify-between">
-                <label className="text-[13px] font-semibold tracking-wide text-text-sub">Password</label>
-                <a href="#" className="text-xs font-medium text-primary-mid hover:underline">
+              <div className="mb-2 flex items-center justify-between">
+                <label
+                  htmlFor="password"
+                  className="text-xs font-bold uppercase tracking-wider text-slate-500"
+                >
+                  Password
+                </label>
+
+                <a
+                  href="#"
+                  className="text-xs font-semibold text-[#1A3268] no-underline transition-colors hover:text-[#0D1F4C] hover:underline"
+                >
                   Forgot password?
                 </a>
               </div>
@@ -537,13 +664,15 @@ export default function Login() {
                   onChange={handleChange}
                   placeholder="Enter your password"
                   autoComplete="current-password"
-                  className="w-full rounded-[14px] border border-border bg-white py-3 pl-4 pr-11 text-sm text-text-main outline-none transition placeholder:text-text-muted focus:border-primary-mid focus:ring-[3px] focus:ring-primary-mid/10"
                 />
 
                 <button
                   type="button"
-                  onClick={() => setShowPass(p => !p)}
-                  className="absolute right-3.5 top-1/2 flex -translate-y-1/2 items-center text-text-muted hover:text-text-main"
+                  onClick={() => setShowPass((p) => !p)}
+                  aria-label={
+                    showPass ? 'Hide password' : 'Show password'
+                  }
+                  className="absolute inset-y-0 right-0 flex items-center px-4 text-slate-400 transition-colors hover:text-[#1A3268]"
                 >
                   <EyeIcon open={showPass} />
                 </button>
@@ -566,7 +695,6 @@ export default function Login() {
               className="mt-1 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#1A3268] to-[#0D1F4C] py-3.5 text-sm font-bold text-white shadow-lg shadow-[#0D1F4C]/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#0D1F4C]/25 active:translate-y-0 disabled:cursor-not-allowed disabled:translate-y-0 disabled:opacity-60"
               type="submit"
               disabled={loading}
-              className="mt-1 w-full rounded-[14px] bg-primary py-3.5 text-sm font-semibold tracking-wide text-white transition hover:bg-primary-mid hover:shadow-[0_4px_16px_rgba(11,77,46,0.25)] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-55 disabled:shadow-none disabled:active:scale-100"
             >
               {loading ? (
                 <>
@@ -594,17 +722,22 @@ export default function Login() {
             </button>
           </form>
 
-          <div className="my-6 flex items-center gap-3 text-xs text-text-muted">
-            <span className="h-px flex-1 bg-border" />
-            or
-            <span className="h-px flex-1 bg-border" />
+          {/* Divider */}
+          <div className="my-7 flex items-center gap-4">
+            <div className="h-px flex-1 bg-slate-200" />
+
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">
+              or
+            </span>
+
+            <div className="h-px flex-1 bg-slate-200" />
           </div>
 
           {/* Register options */}
           <div className="grid gap-3 sm:grid-cols-2">
             <Link
               to="/register/company"
-              className="block rounded-[14px] border-[1.5px] border-border px-3 py-3 text-center text-[13px] font-semibold text-primary transition hover:border-primary hover:bg-surface"
+              className="group flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-left no-underline shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#1A3268]/30 hover:shadow-md"
             >
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#0D1F4C]/5 text-lg transition-transform duration-200 group-hover:scale-105">
                 🏢
@@ -623,7 +756,7 @@ export default function Login() {
 
             <Link
               to="/register/retailer"
-              className="block rounded-[14px] border-[1.5px] border-accent-border bg-accent-soft px-3 py-3 text-center text-[13px] font-semibold text-primary transition hover:brightness-[0.96]"
+              className="group flex items-center gap-3 rounded-xl border border-amber-200 bg-amber-50/70 px-4 py-3.5 text-left no-underline shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-amber-300 hover:bg-amber-50 hover:shadow-md"
             >
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-lg transition-transform duration-200 group-hover:scale-105">
                 🏪
@@ -641,7 +774,8 @@ export default function Login() {
             </Link>
           </div>
 
-          <p className="mt-7 text-center text-xs text-text-muted">
+          {/* Footer */}
+          <p className="mt-9 text-center text-[11px] text-slate-400">
             © 2025 UniLift · Empowering Sri Lankan Students
           </p>
         </div>

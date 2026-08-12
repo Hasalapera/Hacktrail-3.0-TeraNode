@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Briefcase, Clock, DollarSign, FileText, Store, PlusCircle, LayoutGrid, ChevronDown } from "lucide-react";
+import { Briefcase, PlusCircle, ChevronDown } from "lucide-react";
 import PublisherNav from "../Components/PublisherNav";
 import FormField from "../Components/FormField";
 import ListingCard from "../Components/ListingCard";
@@ -123,17 +123,20 @@ export default function RetailJobPublisher() {
           Reach students looking for part-time and full-time retail shifts.
         </p>
 
-        <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[380px_1fr]">
-          <div className="rounded-2xl shadow-sm border border-slate-200 overflow-hidden bg-white">
-            <div className="px-6 py-5" style={{ background: "linear-gradient(135deg, #0B4D2E 0%, #166534 100%)" }}>
-              <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ background: "rgba(74,222,128,0.15)" }}>
-                  <PlusCircle className="h-5 w-5" style={{ color: "#4ADE80" }} />
-                </div>
-                <div>
-                  <h2 className="text-base font-bold text-white">New Job Listing</h2>
-                  <p className="text-xs" style={{ color: "rgba(187,247,208,0.60)" }}>Fill in the details below</p>
-                </div>
+        <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[400px_1fr]">
+          {/* ── Form Card ── */}
+          <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm">
+            {/* Header */}
+            <div
+              className="flex items-center gap-3 px-6 py-5"
+              style={{ background: "linear-gradient(135deg, #0B4D2E 0%, #166534 100%)" }}
+            >
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ background: "rgba(74,222,128,0.15)" }}>
+                <PlusCircle className="h-5 w-5" style={{ color: "#4ADE80" }} />
+              </div>
+              <div>
+                <h2 className="text-base font-bold text-white">New Job Listing</h2>
+                <p className="text-xs" style={{ color: "rgba(187,247,208,0.60)" }}>Fill in the details below</p>
               </div>
             </div>
 
@@ -234,16 +237,9 @@ export default function RetailJobPublisher() {
 
           {/* ── Listings panel ── */}
           <div>
-
             <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-text-sub">
               Your posted listings
             </h2>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {listings.map((listing, index) => (
-                <ListingCard key={`${listing.title}-${index}`} listing={listing} />
-              ))}
-            </div>
-
             {listings.length === 0 ? (
               <div
                 className="flex flex-col items-center justify-center rounded-2xl py-16 text-center"
