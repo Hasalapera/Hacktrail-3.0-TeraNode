@@ -4,8 +4,11 @@
 // ============================================================
 
 const express = require('express');
-const cors    = require('cors');
-const dotenv  = require('dotenv');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const { sequelize } = require('./models'); // Sequelize instance eka models walin import kirima
+const authRoutes = require('./routes/authRoutes'); // Auth routes import kirima
+const adminRoutes = require('./routes/adminRoutes'); // Admin routes import kirima
 
 dotenv.config();
 
@@ -27,28 +30,25 @@ app.use('/student', studentRoutes);
 
 // ── Health Check ─────────────────────────────────────────────
 app.get('/', (req, res) => {
-  res.json({
-    status: 'ok',
-    message: 'UniLift API is running 🚀',
-    version: '1.0.0 (In-Memory Mode)',
-    endpoints: [
-      'POST /admin/add-students',
-      'POST /auth/login',
-      'POST /auth/change-password',
-      'POST /student/complete-profile',
-    ],
+  res.send('Hacktrail API is running perfectly! 🚀 (Using CommonJS & Supabase DB)');
+});
+
+// Auth API Routes (POST /api/auth/register, POST /api/auth/login)
+app.use('/api/auth', authRoutes);
+
+// Admin API Routes (POST /api/admin/students/single, POST /api/admin/students/bulk)
+app.use('/api/admin', adminRoutes);
+
+// Server eka start kirimata pera DB connection eka check kirima
+sequelize.authenticate()
+  .then(() => {
+    console.log('✅ Supabase PostgreSQL Database Connected Successfully!');
+    
+    // DB connect unata passe Server eka start kirima
+    app.listen(PORT, () => {
+      console.log(`🚀 Server is running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error('❌ Unable to connect to the database:', error);
   });
-});
-
-// ── 404 Handler ──────────────────────────────────────────────
-app.use((req, res) => {
-  res.status(404).json({ success: false, message: `Route ${req.originalUrl} not found.` });
-});
-
-// ── Start Server ─────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`\n🚀 UniLift API server started`);
-  console.log(`   URL  : http://localhost:${PORT}`);
-  console.log(`   Mode : In-Memory (no DB required)`);
-  console.log(`   Time : ${new Date().toLocaleString()}\n`);
-});
