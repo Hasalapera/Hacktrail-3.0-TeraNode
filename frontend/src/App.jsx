@@ -7,7 +7,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import AddUser from './pages/management/user/AddUser'; // The page with the form
-import StudentHome from './pages/StudentHome';
+import StudentDashboard from './pages/StudentDashboard';
+import EmployerDashboard from './pages/EmployerDashboard';
 import NotFound from './pages/NotFound';
 
 // AddUser පිටුව DashboardLayout එක ඇතුළේ render කිරීමට හදන wrapper component එක
@@ -35,9 +36,15 @@ export default function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
-      {/* Protected Student Route */}
-      <Route element={<ProtectedRoute />}>
-        <Route path="/student-home" element={<StudentHome />} />
+      {/* Protected Student Routes */}
+      <Route element={<ProtectedRoute allowedRole="STUDENT" />}>
+        <Route path="/student/dashboard" element={<StudentDashboard />} />
+        <Route path="/student-home" element={<Navigate to="/student/dashboard" replace />} />
+      </Route>
+
+      {/* Protected Employer Routes */}
+      <Route element={<ProtectedRoute allowedRole="EMPLOYER" />}>
+        <Route path="/employer/dashboard" element={<EmployerDashboard />} />
       </Route>
 
       {/* Protected Admin Routes */}
@@ -48,5 +55,5 @@ export default function App() {
 
       <Route path="*" element={<NotFound />} />
     </Routes>
-  )
+  );
 }

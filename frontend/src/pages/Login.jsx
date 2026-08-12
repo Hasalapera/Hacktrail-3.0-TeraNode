@@ -238,14 +238,16 @@ export default function Login() {
     setLoading(true);
     setError('');
 
+    const payload = { password: form.password };
+    if (role === 'student') {
+      payload.university_id = form.username;
+    } else {
+      // Admin, Company, and Retailer use email
+      payload.email = form.username;
+    }
+
     try {
-      // Employers la email eken, students la university index number eken login wena nisa
-      // dekama send karanawa - backend eke email OR university_id check wela
-      const res = await api.post('/auth/login', {
-        email: form.username,
-        university_id: form.username,
-        password: form.password,
-      });
+      const res = await api.post('/auth/login', payload);
 
       // SCENARIO B: Student first login - auto-generated password eka change karanna one
       if (res.data.requirePasswordChange) {
@@ -264,7 +266,9 @@ export default function Login() {
       if (res.data.user.role === 'STUDENT') {
         navigate('/student-home');
       } else if (res.data.user.role === 'ADMIN' || res.data.user.role === 'EMPLOYER') {
-        navigate('/dashboard');
+        if (res.data.user.role === 'EMPLOYER') {
+          navigate('/employer/dashboard'); // Redirect employers to their specific dashboard
+        } else navigate('/dashboard'); // Admins go to the admin dashboard
       } else {
         navigate('/dashboard');
       }

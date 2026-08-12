@@ -6,6 +6,7 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const jobRoutes = require('./routes/jobRoutes'); // Import job routes
 const { sequelize } = require('./models'); // Sequelize instance eka models walin import kirima
 const authRoutes = require('./routes/authRoutes'); // Auth routes import kirima
 const adminRoutes = require('./routes/adminRoutes'); // Admin routes import kirima
@@ -36,6 +37,9 @@ app.use('/api/auth', authRoutes);
 
 // Admin API Routes (POST /api/admin/students/single, POST /api/admin/students/bulk)
 app.use('/api/admin', adminRoutes);
+
+// Job API Routes (POST /api/jobs, GET /api/jobs, etc.)
+app.use('/api/jobs', jobRoutes);
 
 // Server eka start kirimata pera DB connection eka check kirima
 sequelize.authenticate()

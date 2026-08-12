@@ -68,17 +68,20 @@ const login = async (req, res) => {
   try {
     const { email, university_id, password } = req.body;
 
-    const identifier = email || university_id;
-    if (!identifier || !password) {
+    if ((!email && !university_id) || !password) {
       return res.status(400).json({ message: 'email or university_id, and password are required' });
     }
 
-    // email ekath university_id ekath dekama hoyaganna
-    const user = await User.findOne({
-      where: {
-        [Op.or]: [{ email: identifier }, { university_id: identifier }],
-      },
-    });
+    // Mokadda identifier eka kiyala balala e anuva where clause eka hadanna
+    // Eka parata email ekak ho university_id ekak witharai check karanne
+    const whereClause = {};
+    if (email) {
+      whereClause.email = email;
+    } else {
+      whereClause.university_id = university_id;
+    }
+
+    const user = await User.findOne({ where: whereClause });
     if (!user) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }

@@ -20,15 +20,4 @@ const authenticate = (req, res, next) => {
   }
 };
 
-const isStudent = (req, res, next) => {
-  // Me middleware eka 'authenticate' ekata passe run wenna one
-  if (req.user && req.user.role === 'STUDENT') {
-    return next();
-  }
-  return res.status(403).json({ message: 'Forbidden: Access is restricted to students.' });
-};
-
-module.exports = {
-  authenticate,
-  isStudent,
-};
+module.exports = { authenticate };

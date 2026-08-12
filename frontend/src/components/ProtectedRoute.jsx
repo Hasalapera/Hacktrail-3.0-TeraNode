@@ -1,15 +1,13 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../pages/context/authContext';
 
-export default function ProtectedRoute() {
+export default function ProtectedRoute({ allowedRole }) {
   const { user, loading } = useAuth();
 
   if (loading) {
-    // Auth state එක check කරනකන් loading indicator එකක් පෙන්වමු.
-    // මේකෙන් login page එකට ගිහින් ආපහු එන flicker එක නැති වෙනවා.
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Loading...</p>
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <p className="text-sm font-semibold text-slate-600">Loading UniTasker...</p>
       </div>
     );
   }
@@ -18,5 +16,12 @@ export default function ProtectedRoute() {
     return <Navigate to="/login" replace />;
   }
 
-  return <Outlet />; // User log wela nam, nested routes ටික render කරන්න.
+  if (allowedRole && user.role !== allowedRole) {
+    if (user.role === 'ADMIN') return <Navigate to="/dashboard" replace />;
+    if (user.role === 'EMPLOYER') return <Navigate to="/employer/dashboard" replace />;
+    if (user.role === 'STUDENT') return <Navigate to="/student/dashboard" replace />;
+    return <Navigate to="/login" replace />;
+  }
+
+  return <Outlet />;
 }
