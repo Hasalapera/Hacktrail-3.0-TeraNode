@@ -1,4 +1,8 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from "react-router-dom";
+import Login from './pages/Login'
+import Register from './pages/Register'
+import NotFound from './pages/NotFound'
+function App() {
 
 import Login            from './pages/Login';
 import CompanyRegister  from './pages/CompanyRegister';
@@ -6,24 +10,15 @@ import RetailerRegister from './pages/RetailerRegister';
 
 export default function App() {
   return (
-    <BrowserRouter>
       <Routes>
-        {/* Default → Login */}
-        <Route path="/"                      element={<Navigate to="/login" replace />} />
-        <Route path="/login"                 element={<Login />} />
-        <Route path="/register/company"      element={<CompanyRegister />} />
-        <Route path="/register/retailer"     element={<RetailerRegister />} />
-
-        {/* Placeholder routes — build these next */}
-        <Route path="/change-password"       element={<PlaceholderPage title="Change Password" />} />
-        <Route path="/complete-profile"      element={<PlaceholderPage title="Complete Your Profile" />} />
-        <Route path="/dashboard"             element={<PlaceholderPage title="Dashboard 🚀" />} />
-
-        {/* 404 */}
-        <Route path="*"                      element={<PlaceholderPage title="404 — Page Not Found" />} />
+        <Route path="/" element={<Navigate to="/login" />} />
+        
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        
+        <Route path="*" element={<NotFound />} />
       </Routes>
-    </BrowserRouter>
-  );
+  )
 }
 
 /* Temporary placeholder for routes not yet built */

@@ -1,11 +1,16 @@
+// Auth routes eka define karanna (Express 5 Router)
 const express = require('express');
-const router = express.Router();
-const { login, changePassword } = require('../controllers/authController');
+const { register, login, changeFirstPassword } = require('../controllers/authController');
 
-// POST /auth/login
+const router = express.Router();
+
+// POST /api/auth/register - Register employer user eka
+router.post('/register', register);
+
+// POST /api/auth/login - Login karala token eka ganna
 router.post('/login', login);
 
-// POST /auth/change-password
-router.post('/change-password', changePassword);
+// POST /api/auth/change-first-password - First login ekedi auto-generated password eka change karanna
+router.post('/change-first-password', changeFirstPassword);
 
 module.exports = router;
