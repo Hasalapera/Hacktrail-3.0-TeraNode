@@ -1,6 +1,6 @@
 // ============================================================
-// UniLift Backend — server.js
-// PERN Stack | Phase 1: In-Memory Auth & Onboarding API
+// Hacktrail-3.0-TeraNode Backend — server.js
+// PERN Stack | CommonJS | Supabase PostgreSQL
 // ============================================================
 
 const express = require('express');
@@ -10,30 +10,28 @@ const { sequelize } = require('./models'); // Sequelize instance eka models wali
 const authRoutes = require('./routes/authRoutes'); // Auth routes import kirima
 const adminRoutes = require('./routes/adminRoutes'); // Admin routes import kirima
 
+// .env file eke thiyena variables load karanna
 dotenv.config();
 
-const app  = express();
-const PORT = process.env.PORT || 5000;
+const app = express();
+const PORT = process.env.PORT || 5001;
 
 // ── Middleware ────────────────────────────────────────────────
-app.use(cors());
+// Vite dev server (http://localhost:5173) walin request accept karanna CORS configure kirima
+app.use(cors({
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
+}));
 app.use(express.json());
 
 // ── Routes ───────────────────────────────────────────────────
-const adminRoutes   = require('./routes/adminRoutes');
-const authRoutes    = require('./routes/authRoutes');
-const studentRoutes = require('./routes/studentRoutes');
-
-app.use('/admin',   adminRoutes);
-app.use('/auth',    authRoutes);
-app.use('/student', studentRoutes);
-
-// ── Health Check ─────────────────────────────────────────────
+// Moolika API Route eka
 app.get('/', (req, res) => {
   res.send('Hacktrail API is running perfectly! 🚀 (Using CommonJS & Supabase DB)');
 });
 
-// Auth API Routes (POST /api/auth/register, POST /api/auth/login)
+// Auth API Routes (POST /api/auth/register, POST /api/auth/login, GET /api/auth/me)
 app.use('/api/auth', authRoutes);
 
 // Admin API Routes (POST /api/admin/students/single, POST /api/admin/students/bulk)
@@ -43,7 +41,7 @@ app.use('/api/admin', adminRoutes);
 sequelize.authenticate()
   .then(() => {
     console.log('✅ Supabase PostgreSQL Database Connected Successfully!');
-    
+
     // DB connect unata passe Server eka start kirima
     app.listen(PORT, () => {
       console.log(`🚀 Server is running on http://localhost:${PORT}`);
