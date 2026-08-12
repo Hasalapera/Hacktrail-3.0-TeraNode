@@ -6,16 +6,16 @@ import ProfileMenu from "./ProfileMenu";
 // ---------------------------------------------------------------------------
 export default function PublisherNav({ title, profileHref }) {
   return (
-    <header className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 px-6 py-4">
+    <header className="flex flex-wrap items-center justify-between gap-4 border-b border-border px-6 py-4">
       <div className="flex items-center gap-2">
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-600 text-sm font-bold text-white">
+        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
           W
         </div>
-        <span className="text-lg font-semibold text-gray-900">Web Name</span>
+        <span className="text-lg font-semibold text-text-main">Web Name</span>
       </div>
 
       <div className="flex items-center gap-4">
-        {title && <span className="text-sm font-medium text-gray-500">{title}</span>}
+        {title && <span className="text-sm font-medium text-text-sub">{title}</span>}
 
         <ProfileMenu profileHref={profileHref} />
       </div>

@@ -89,15 +89,15 @@ export default function RetailJobPublisher() {
       <PublisherNav title="Retail Job Publisher" profileHref="/retail/profile" />
 
       <main className="flex-1 px-6 py-8">
-        <h1 className="text-2xl font-semibold text-gray-900">Post a Retail Job</h1>
-        <p className="mt-1 text-sm text-gray-500">
+        <h1 className="text-2xl font-semibold text-text-main">Post a Retail Job</h1>
+        <p className="mt-1 text-sm text-text-sub">
           Reach students looking for part-time and full-time retail shifts.
         </p>
 
         <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[380px_1fr]">
           <form
             onSubmit={handleSubmit}
-            className="flex flex-col gap-4 rounded-xl border border-gray-200 p-5 shadow-sm"
+            className="flex flex-col gap-4 rounded-xl border border-border p-5 shadow-sm"
           >
             <FormField label="Business name">
               <input
@@ -106,7 +106,7 @@ export default function RetailJobPublisher() {
                 value={form.businessName}
                 onChange={handleChange("businessName")}
                 placeholder="e.g. Odel Fashion"
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="rounded-lg border border-border px-3 py-2 text-sm font-normal text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
               />
             </FormField>
 
@@ -117,7 +117,7 @@ export default function RetailJobPublisher() {
                 value={form.title}
                 onChange={handleChange("title")}
                 placeholder="e.g. Weekend Sales Associate"
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="rounded-lg border border-border px-3 py-2 text-sm font-normal text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
               />
             </FormField>
 
@@ -125,7 +125,7 @@ export default function RetailJobPublisher() {
               <select
                 value={form.employmentType}
                 onChange={handleChange("employmentType")}
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="rounded-lg border border-border px-3 py-2 text-sm font-normal text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
               >
                 {EMPLOYMENT_TYPES.map((type) => (
                   <option key={type} value={type}>
@@ -143,7 +143,7 @@ export default function RetailJobPublisher() {
                 value={form.hourlyRate}
                 onChange={handleChange("hourlyRate")}
                 placeholder="e.g. 12"
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="rounded-lg border border-border px-3 py-2 text-sm font-normal text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
               />
             </FormField>
 
@@ -153,20 +153,20 @@ export default function RetailJobPublisher() {
                 value={form.description}
                 onChange={handleChange("description")}
                 placeholder="Shift hours, responsibilities, requirements..."
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="rounded-lg border border-border px-3 py-2 text-sm font-normal text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
               />
             </FormField>
 
             <button
               type="submit"
-              className="mt-2 rounded-full bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700"
+              className="mt-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-white transition hover:bg-primary-mid"
             >
               Post Retail Job
             </button>
           </form>
 
           <div>
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-text-sub">
               Your posted listings
             </h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

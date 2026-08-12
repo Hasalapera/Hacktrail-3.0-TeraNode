@@ -63,23 +63,23 @@ export default function RetailerRegister() {
   /* ── Success Screen ── */
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-[#f5c518] to-[#d4a800]">
+      <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-accent-dark to-primary-light">
         <div className="bg-white rounded-2xl shadow-2xl p-10 max-w-md w-full text-center">
-          <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 bg-yellow-50">
+          <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 bg-accent-soft">
             <span className="text-4xl">🛍️</span>
           </div>
-          <h2 className="text-2xl font-bold text-slate-800 mb-2">Shop Registered!</h2>
-          <p className="text-slate-500 text-sm mb-1">
+          <h2 className="text-2xl font-bold text-text-main mb-2">Shop Registered!</h2>
+          <p className="text-text-sub text-sm mb-1">
             Welcome, <strong>{form.ownerName}</strong>!
           </p>
-          <p className="text-slate-500 text-sm mb-6">
+          <p className="text-text-sub text-sm mb-6">
             <strong>{form.shopName}</strong> in <strong>{form.city}</strong> is now on UniLift.
             Start posting part-time jobs today!
           </p>
           <button onClick={() => navigate('/login')}
-                  className="w-full py-3 rounded-xl font-bold text-slate-800 cursor-pointer
+                  className="w-full py-3 rounded-xl font-bold text-text-main cursor-pointer
                              hover:shadow-lg transition-all
-                             bg-gradient-to-br from-[#f5c518] to-[#d4a800]">
+                             bg-gradient-to-br from-accent-dark to-primary-light">
             Go to Login →
           </button>
         </div>
@@ -88,44 +88,44 @@ export default function RetailerRegister() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-14 bg-gradient-to-b from-[#0f2557] via-[#1a3a7c] via-40% to-[#0f2557]">
+    <div className="min-h-screen flex items-center justify-center px-4 py-14 bg-gradient-to-b from-primary via-primary-mid via-40% to-primary">
 
       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden">
 
-        {/* ── Header — Yellow accent for retailer ── */}
-        <div className="px-8 pt-7 pb-6 relative overflow-hidden bg-gradient-to-br from-[#f5c518] to-[#d4a800]">
+        {/* ── Header — Green accent for retailer ── */}
+        <div className="px-8 pt-7 pb-6 relative overflow-hidden bg-gradient-to-br from-accent-dark to-primary-light">
 
           {/* Decorative circles */}
-          <div className="absolute -top-6 -right-6 w-28 h-28 rounded-full opacity-20 bg-[#0f2557]"></div>
-          <div className="absolute -bottom-4 -left-4 w-20 h-20 rounded-full opacity-10 bg-[#0f2557]"></div>
+          <div className="absolute -top-6 -right-6 w-28 h-28 rounded-full opacity-20 bg-primary"></div>
+          <div className="absolute -bottom-4 -left-4 w-20 h-20 rounded-full opacity-10 bg-primary"></div>
 
           <div className="relative flex items-center gap-3 mb-3">
-            <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md bg-[#0f2557]">
+            <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md bg-primary">
               <span className="text-xl">🏪</span>
             </div>
             <div>
-              <h1 className="text-xl font-bold leading-tight text-[#0f2557]">
+              <h1 className="text-xl font-bold leading-tight text-white">
                 Shop Registration
               </h1>
-              <p className="text-xs font-medium opacity-70 text-[#0f2557]">
+              <p className="text-xs font-medium opacity-80 text-white">
                 UniLift Retailer Portal
               </p>
             </div>
           </div>
 
           {/* Tagline pill */}
-          <div className="relative inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-[#0f2557] text-[#f5c518]">
+          <div className="relative inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-primary text-accent">
             <span>⚡</span>
             Post part-time jobs and find local students instantly!
           </div>
         </div>
 
         {/* ── Stats Strip ── */}
-        <div className="flex divide-x divide-gray-100 bg-amber-50 border-b border-amber-100">
+        <div className="flex divide-x divide-accent-border bg-accent-soft border-b border-accent-border">
           {[['128K+', 'Students'], ['75%', 'SME Focus'], ['Free', 'to Post']].map(([num, label]) => (
             <div key={label} className="flex-1 py-3 text-center">
-              <div className="text-sm font-bold text-[#0f2557]">{num}</div>
-              <div className="text-xs text-slate-500">{label}</div>
+              <div className="text-sm font-bold text-primary">{num}</div>
+              <div className="text-xs text-text-sub">{label}</div>
             </div>
           ))}
         </div>
@@ -135,25 +135,25 @@ export default function RetailerRegister() {
 
           {/* Shop Name */}
           <div>
-            <label className="block text-sm font-semibold text-slate-600 mb-1.5">
+            <label className="block text-sm font-semibold text-text-sub mb-1.5">
               Shop / Business Name <span className="text-red-400">*</span>
             </label>
             <input name="shopName" value={form.shopName} onChange={handleChange}
                    type="text" placeholder="e.g. Perera Grocery Store"
-                   className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm
-                              bg-slate-50 text-slate-800 outline-none placeholder-slate-400
-                              focus:border-amber-400 focus:ring-2 focus:ring-amber-100 focus:bg-white" />
+                   className="w-full px-4 py-3 rounded-xl border border-border text-sm
+                              bg-surface text-text-main outline-none placeholder-text-muted
+                              focus:border-primary-light focus:ring-2 focus:ring-accent-border focus:bg-white" />
           </div>
 
           {/* City */}
           <div>
-            <label className="block text-sm font-semibold text-slate-600 mb-1.5">
+            <label className="block text-sm font-semibold text-text-sub mb-1.5">
               City / Location <span className="text-red-400">*</span>
             </label>
             <select name="city" value={form.city} onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm
-                               bg-slate-50 text-slate-800 outline-none cursor-pointer
-                               focus:border-amber-400 focus:ring-2 focus:ring-amber-100 focus:bg-white">
+                    className="w-full px-4 py-3 rounded-xl border border-border text-sm
+                               bg-surface text-text-main outline-none cursor-pointer
+                               focus:border-primary-light focus:ring-2 focus:ring-accent-border focus:bg-white">
               <option value="">— Select your city —</option>
               {SRI_LANKA_CITIES.map((city) => (
                 <option key={city} value={city}>{city}</option>
@@ -164,41 +164,41 @@ export default function RetailerRegister() {
           {/* Owner Name & Mobile — grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-slate-600 mb-1.5">
+              <label className="block text-sm font-semibold text-text-sub mb-1.5">
                 Owner Name <span className="text-red-400">*</span>
               </label>
               <input name="ownerName" value={form.ownerName} onChange={handleChange}
                      type="text" placeholder="Your full name"
-                     className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm
-                                bg-slate-50 text-slate-800 outline-none placeholder-slate-400
-                                focus:border-amber-400 focus:ring-2 focus:ring-amber-100 focus:bg-white" />
+                     className="w-full px-4 py-3 rounded-xl border border-border text-sm
+                                bg-surface text-text-main outline-none placeholder-text-muted
+                                focus:border-primary-light focus:ring-2 focus:ring-accent-border focus:bg-white" />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-slate-600 mb-1.5">
+              <label className="block text-sm font-semibold text-text-sub mb-1.5">
                 Mobile Number <span className="text-red-400">*</span>
               </label>
               <input name="mobile" value={form.mobile} onChange={handleChange}
                      type="tel" placeholder="07X XXXXXXX"
                      maxLength={10}
-                     className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm
-                                bg-slate-50 text-slate-800 outline-none placeholder-slate-400
-                                focus:border-amber-400 focus:ring-2 focus:ring-amber-100 focus:bg-white" />
+                     className="w-full px-4 py-3 rounded-xl border border-border text-sm
+                                bg-surface text-text-main outline-none placeholder-text-muted
+                                focus:border-primary-light focus:ring-2 focus:ring-accent-border focus:bg-white" />
             </div>
           </div>
 
           {/* Password */}
           <div>
-            <label className="block text-sm font-semibold text-slate-600 mb-1.5">
+            <label className="block text-sm font-semibold text-text-sub mb-1.5">
               Password <span className="text-red-400">*</span>
             </label>
             <div className="relative">
               <input name="password" value={form.password} onChange={handleChange}
                      type={showPass ? 'text' : 'password'} placeholder="Min. 8 characters"
-                     className="w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 text-sm
-                                bg-slate-50 text-slate-800 outline-none placeholder-slate-400
-                                focus:border-amber-400 focus:ring-2 focus:ring-amber-100 focus:bg-white" />
+                     className="w-full px-4 py-3 pr-12 rounded-xl border border-border text-sm
+                                bg-surface text-text-main outline-none placeholder-text-muted
+                                focus:border-primary-light focus:ring-2 focus:ring-accent-border focus:bg-white" />
               <button type="button" onClick={() => setShowPass((p) => !p)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer">
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted cursor-pointer">
                 {showPass ? '🙈' : '👁️'}
               </button>
             </div>
@@ -206,22 +206,22 @@ export default function RetailerRegister() {
 
           {/* Confirm Password */}
           <div>
-            <label className="block text-sm font-semibold text-slate-600 mb-1.5">
+            <label className="block text-sm font-semibold text-text-sub mb-1.5">
               Confirm Password <span className="text-red-400">*</span>
             </label>
             <input name="confirmPassword" value={form.confirmPassword} onChange={handleChange}
                    type={showPass ? 'text' : 'password'} placeholder="Re-enter password"
-                   className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm
-                              bg-slate-50 text-slate-800 outline-none placeholder-slate-400
-                              focus:border-amber-400 focus:ring-2 focus:ring-amber-100 focus:bg-white" />
+                   className="w-full px-4 py-3 rounded-xl border border-border text-sm
+                              bg-surface text-text-main outline-none placeholder-text-muted
+                              focus:border-primary-light focus:ring-2 focus:ring-accent-border focus:bg-white" />
           </div>
 
           {/* SMS opt-in checkbox */}
           <label className="flex items-start gap-3 cursor-pointer group">
             <input type="checkbox" name="agreeToSms" checked={form.agreeToSms}
                    onChange={handleChange}
-                   className="mt-0.5 w-4 h-4 accent-amber-400 cursor-pointer" />
-            <span className="text-xs text-slate-500 leading-relaxed">
+                   className="mt-0.5 w-4 h-4 accent-accent-dark cursor-pointer" />
+            <span className="text-xs text-text-sub leading-relaxed">
               I agree to receive SMS notifications when a student applies for my job posts.
             </span>
           </label>
@@ -234,21 +234,21 @@ export default function RetailerRegister() {
             </div>
           )}
 
-          {/* Submit — Yellow accent CTA */}
+          {/* Submit — Green accent CTA */}
           <button type="submit" disabled={loading}
-                  className={`w-full py-3.5 rounded-xl font-bold text-sm tracking-wide text-[#0f2557]
+                  className={`w-full py-3.5 rounded-xl font-bold text-sm tracking-wide text-primary
                              cursor-pointer disabled:opacity-60 active:scale-[0.98] shadow-md mt-1
                              transition-shadow ${
                                loading
-                                 ? 'bg-slate-400'
-                                 : 'bg-gradient-to-br from-[#f5c518] to-[#d4a800] hover:shadow-[0_8px_24px_rgba(245,197,24,0.45)]'
+                                 ? 'bg-text-muted'
+                                 : 'bg-gradient-to-br from-accent-dark to-primary-light hover:shadow-[0_8px_24px_rgba(34,197,94,0.45)]'
                              }`}>
             {loading ? '⏳ Registering Shop...' : '🏪 Register My Shop — It\'s Free!'}
           </button>
 
-          <p className="text-center text-sm text-slate-500">
+          <p className="text-center text-sm text-text-sub">
             Already have an account?{' '}
-            <Link to="/login" className="font-semibold hover:underline text-[#0f2557]">
+            <Link to="/login" className="font-semibold hover:underline text-primary">
               Sign In
             </Link>
           </p>

@@ -66,20 +66,20 @@ export default function App() {
 /* ── Under-construction placeholder ───────────────────────── */
 function PlaceholderPage({ title }) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#0D1F4C] to-[#1A3268] p-6">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-primary to-primary-mid p-6">
       <div className="w-full max-w-[360px] rounded-[20px] bg-white p-12 text-center shadow-[0_8px_32px_rgba(0,0,0,0.14)]">
-        <div className="mx-auto mb-5 flex h-[72px] w-[72px] items-center justify-center rounded-[18px] border-2 border-[#E4E9F2] bg-[#FEF3C7] text-[40px]">
+        <div className="mx-auto mb-5 flex h-[72px] w-[72px] items-center justify-center rounded-[18px] border-2 border-accent-border bg-accent-soft text-[40px]">
           🚧
         </div>
-        <h1 className="mb-2 text-lg font-extrabold text-gray-900">
+        <h1 className="mb-2 text-lg font-extrabold text-text-main">
           {title}
         </h1>
-        <p className="mb-7 text-[13.5px] text-gray-500">
+        <p className="mb-7 text-[13.5px] text-text-sub">
           This page is under construction.
         </p>
         <a
           href="/student/home"
-          className="inline-block rounded-xl bg-[#0D1F4C] px-6 py-2.5 text-[13px] font-semibold text-white no-underline"
+          className="inline-block rounded-xl bg-primary px-6 py-2.5 text-[13px] font-semibold text-white no-underline"
         >
           ← Back to Home
         </a>

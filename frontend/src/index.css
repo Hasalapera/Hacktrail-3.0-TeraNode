@@ -1,5 +1,26 @@
 @import "tailwindcss";
 
+/* ── Brand palette ─────────────────────────────────────────────
+   Registers the site's green theme as Tailwind utilities, e.g.
+   bg-primary, text-primary-mid, border-accent-border, bg-surface.
+   Most tokens intentionally match Tailwind's built-in green/slate
+   scale exactly (green-700/800/400/500/50/200, slate-900/600/400/200)
+   — only "primary" (Deep Forest) falls outside the default palette. */
+@theme {
+  --color-primary: #0B4D2E;        /* Deep Forest */
+  --color-primary-mid: #166534;    /* Rich Emerald */
+  --color-primary-light: #15803D;  /* Green */
+  --color-accent: #4ADE80;         /* Lime Green */
+  --color-accent-dark: #22C55E;    /* Bright Green */
+  --color-accent-soft: #F0FDF4;    /* Mint White */
+  --color-accent-border: #BBF7D0;  /* Soft Green */
+  --color-surface: #F8FAFB;        /* Off White */
+  --color-border: #E2E8F0;         /* Light Gray */
+  --color-text-main: #0F172A;      /* Near Black */
+  --color-text-sub: #475569;       /* Slate */
+  --color-text-muted: #94A3B8;     /* Cool Gray */
+}
+
 html {
   scroll-behavior: smooth;
 }

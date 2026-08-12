@@ -39,8 +39,8 @@ function FilterBar({ filters, activeFilter, onSelect }) {
             onClick={() => onSelect(filter)}
             className={`rounded-full border px-4 py-1.5 text-sm font-medium transition ${
               isActive
-                ? "border-indigo-600 bg-indigo-600 text-white"
-                : "border-gray-300 bg-white text-gray-600 hover:border-indigo-400 hover:text-indigo-600"
+                ? "border-primary bg-primary text-white"
+                : "border-border bg-white text-text-sub hover:border-primary-light hover:text-primary"
             }`}
           >
             {filter}
@@ -64,7 +64,7 @@ function ResultsList({ listings, activeFilter }) {
 
   if (filtered.length === 0) {
     return (
-      <p className="px-6 py-8 text-center text-sm text-gray-400">
+      <p className="px-6 py-8 text-center text-sm text-text-muted">
         No listings found for this filter yet.
       </p>
     );

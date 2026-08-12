@@ -6,8 +6,8 @@ function MenuItem({ children, accent }) {
   return (
     <button
       type="button"
-      className={`block w-full px-4 py-1.5 text-left text-sm transition hover:bg-gray-50 ${
-        accent ? "font-medium text-emerald-600" : "text-gray-700"
+      className={`block w-full px-4 py-1.5 text-left text-sm transition hover:bg-surface ${
+        accent ? "font-medium text-accent-dark" : "text-text-sub"
       }`}
     >
       {children}
@@ -16,7 +16,7 @@ function MenuItem({ children, accent }) {
 }
 
 function Divider() {
-  return <div className="my-1.5 border-t border-gray-100" />;
+  return <div className="my-1.5 border-t border-border" />;
 }
 
 // ---------------------------------------------------------------------------
@@ -33,7 +33,7 @@ export default function ProfileMenu({ profileHref }) {
         aria-label="Profile menu"
         aria-expanded={open}
         onClick={() => setOpen((prev) => !prev)}
-        className="text-gray-600 hover:text-gray-900"
+        className="text-text-sub hover:text-text-main"
       >
         <UserCircle2 className="h-8 w-8" />
       </button>
@@ -42,12 +42,12 @@ export default function ProfileMenu({ profileHref }) {
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
 
-          <div className="absolute right-0 top-full z-50 mt-2 w-64 rounded-xl border border-gray-200 bg-white py-2 shadow-lg">
+          <div className="absolute right-0 top-full z-50 mt-2 w-64 rounded-xl border border-border bg-white py-2 shadow-lg">
             {profileHref ? (
               <Link
                 to={profileHref}
                 onClick={() => setOpen(false)}
-                className="block w-full px-4 py-1.5 text-left text-sm text-gray-700 transition hover:bg-gray-50"
+                className="block w-full px-4 py-1.5 text-left text-sm text-text-sub transition hover:bg-surface"
               >
                 Profile
               </Link>
@@ -67,8 +67,8 @@ export default function ProfileMenu({ profileHref }) {
             <Divider />
 
             <div className="flex items-center justify-between px-4 py-1.5">
-              <span className="text-sm font-semibold text-gray-900">Exclusive features</span>
-              <span className="rounded bg-emerald-800 px-1.5 py-0.5 text-xs font-semibold text-white">
+              <span className="text-sm font-semibold text-text-main">Exclusive features</span>
+              <span className="rounded bg-primary-mid px-1.5 py-0.5 text-xs font-semibold text-white">
                 Web Name Pro
               </span>
             </div>
@@ -80,7 +80,7 @@ export default function ProfileMenu({ profileHref }) {
 
             <button
               type="button"
-              className="flex w-full items-center gap-2 px-4 py-1.5 text-left text-sm text-gray-700 transition hover:bg-gray-50"
+              className="flex w-full items-center gap-2 px-4 py-1.5 text-left text-sm text-text-sub transition hover:bg-surface"
             >
               <Globe className="h-4 w-4" />
               English

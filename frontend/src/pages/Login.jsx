@@ -61,13 +61,13 @@ export default function Login() {
     <div className="flex min-h-screen items-stretch max-md:flex-col">
 
       {/* ── Left Brand Panel ─────────────────────────────── */}
-      <div className="relative flex w-full flex-shrink-0 flex-col justify-between overflow-hidden bg-gradient-to-br from-[#0D1F4C] to-[#1A3268] p-11 md:w-[420px] max-md:min-h-0 max-md:p-9">
+      <div className="relative flex w-full flex-shrink-0 flex-col justify-between overflow-hidden bg-gradient-to-br from-primary to-primary-mid p-11 md:w-[420px] max-md:min-h-0 max-md:p-9">
         <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-white/[0.04]" />
-        <div className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-[#F5C518]/[0.06]" />
+        <div className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-accent-dark/[0.06]" />
 
         <div className="relative">
           <div className="mb-12 flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-[#F5C518] text-lg font-extrabold text-[#0D1F4C]">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-accent-dark text-lg font-extrabold text-primary">
               U
             </div>
             <span className="text-xl font-bold tracking-tight text-white">UniLift</span>
@@ -83,7 +83,7 @@ export default function Login() {
           <div className="flex flex-col gap-4">
             {FEATURES.map(([title, sub]) => (
               <div key={title} className="flex items-start gap-3">
-                <div className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#F5C518]" />
+                <div className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-dark" />
                 <div>
                   <div className="text-[13px] font-semibold text-white">{title}</div>
                   <div className="text-xs text-white/45">{sub}</div>
@@ -98,7 +98,7 @@ export default function Login() {
             {['bg-blue-500', 'bg-emerald-500', 'bg-amber-500'].map((c, i) => (
               <div
                 key={c}
-                className={`h-6 w-6 rounded-full border-2 border-[#0D1F4C] ${c} ${i > 0 ? '-ml-2' : ''}`}
+                className={`h-6 w-6 rounded-full border-2 border-primary ${c} ${i > 0 ? '-ml-2' : ''}`}
               />
             ))}
           </div>
@@ -113,13 +113,13 @@ export default function Login() {
         <div className="w-full max-w-[400px]">
 
           <div className="mb-8">
-            <h1 className="mb-1 text-2xl font-extrabold tracking-tight text-gray-900">
+            <h1 className="mb-1 text-2xl font-extrabold tracking-tight text-text-main">
               Sign in
             </h1>
-            <p className="text-sm text-gray-500">{active.hint}</p>
+            <p className="text-sm text-text-sub">{active.hint}</p>
           </div>
 
-          <div className="mb-7 flex rounded-[10px] border border-gray-200 bg-gray-50 p-1">
+          <div className="mb-7 flex rounded-[10px] border border-border bg-surface p-1">
             {ROLES.map(r => (
               <button
                 key={r.id}
@@ -127,8 +127,8 @@ export default function Login() {
                 onClick={() => { setRole(r.id); setError(''); setForm({ username: '', password: '' }); }}
                 className={`flex-1 rounded-[7px] px-1 py-2 text-[13px] font-semibold transition-all ${
                   role === r.id
-                    ? 'bg-white text-[#0D1F4C] shadow-sm'
-                    : 'text-gray-400 hover:text-gray-600'
+                    ? 'bg-white text-primary shadow-sm'
+                    : 'text-text-muted hover:text-text-main'
                 }`}
               >
                 {r.label}
@@ -138,7 +138,7 @@ export default function Login() {
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-[18px]">
             <div>
-              <label className="mb-1.5 block text-[13px] font-semibold tracking-wide text-gray-500">
+              <label className="mb-1.5 block text-[13px] font-semibold tracking-wide text-text-sub">
                 Username
               </label>
               <input
@@ -148,14 +148,14 @@ export default function Login() {
                 onChange={handleChange}
                 placeholder={role === 'company' ? 'company_hr or email' : `${role}_username`}
                 autoComplete="username"
-                className="w-full rounded-[14px] border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#1A3268] focus:ring-[3px] focus:ring-[#1A3268]/10"
+                className="w-full rounded-[14px] border border-border bg-white px-4 py-3 text-sm text-text-main outline-none transition placeholder:text-text-muted focus:border-primary-mid focus:ring-[3px] focus:ring-primary-mid/10"
               />
             </div>
 
             <div>
               <div className="mb-1.5 flex items-center justify-between">
-                <label className="text-[13px] font-semibold tracking-wide text-gray-500">Password</label>
-                <a href="#" className="text-xs font-medium text-[#1A3268] hover:underline">
+                <label className="text-[13px] font-semibold tracking-wide text-text-sub">Password</label>
+                <a href="#" className="text-xs font-medium text-primary-mid hover:underline">
                   Forgot password?
                 </a>
               </div>
@@ -167,12 +167,12 @@ export default function Login() {
                   onChange={handleChange}
                   placeholder="Enter your password"
                   autoComplete="current-password"
-                  className="w-full rounded-[14px] border border-gray-200 bg-white py-3 pl-4 pr-11 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#1A3268] focus:ring-[3px] focus:ring-[#1A3268]/10"
+                  className="w-full rounded-[14px] border border-border bg-white py-3 pl-4 pr-11 text-sm text-text-main outline-none transition placeholder:text-text-muted focus:border-primary-mid focus:ring-[3px] focus:ring-primary-mid/10"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPass(p => !p)}
-                  className="absolute right-3.5 top-1/2 flex -translate-y-1/2 items-center text-gray-400 hover:text-gray-600"
+                  className="absolute right-3.5 top-1/2 flex -translate-y-1/2 items-center text-text-muted hover:text-text-main"
                 >
                   <EyeIcon open={showPass} />
                 </button>
@@ -188,34 +188,34 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="mt-1 w-full rounded-[14px] bg-[#0D1F4C] py-3.5 text-sm font-semibold tracking-wide text-white transition hover:bg-[#1A3268] hover:shadow-[0_4px_16px_rgba(13,31,76,0.25)] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-55 disabled:shadow-none disabled:active:scale-100"
+              className="mt-1 w-full rounded-[14px] bg-primary py-3.5 text-sm font-semibold tracking-wide text-white transition hover:bg-primary-mid hover:shadow-[0_4px_16px_rgba(11,77,46,0.25)] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-55 disabled:shadow-none disabled:active:scale-100"
             >
               {loading ? 'Signing in…' : 'Sign in'}
             </button>
           </form>
 
-          <div className="my-6 flex items-center gap-3 text-xs text-gray-400">
-            <span className="h-px flex-1 bg-gray-200" />
+          <div className="my-6 flex items-center gap-3 text-xs text-text-muted">
+            <span className="h-px flex-1 bg-border" />
             or
-            <span className="h-px flex-1 bg-gray-200" />
+            <span className="h-px flex-1 bg-border" />
           </div>
 
           <div className="flex flex-col gap-2.5">
             <Link
               to="/register/company"
-              className="block rounded-[14px] border-[1.5px] border-gray-200 px-3 py-3 text-center text-[13px] font-semibold text-[#0D1F4C] transition hover:border-[#0D1F4C] hover:bg-gray-50"
+              className="block rounded-[14px] border-[1.5px] border-border px-3 py-3 text-center text-[13px] font-semibold text-primary transition hover:border-primary hover:bg-surface"
             >
               Register a Company
             </Link>
             <Link
               to="/register/retailer"
-              className="block rounded-[14px] border-[1.5px] border-[#F5C518] bg-[#FEF3C7] px-3 py-3 text-center text-[13px] font-semibold text-[#0D1F4C] transition hover:brightness-[0.96]"
+              className="block rounded-[14px] border-[1.5px] border-accent-border bg-accent-soft px-3 py-3 text-center text-[13px] font-semibold text-primary transition hover:brightness-[0.96]"
             >
               Register a Local Shop
             </Link>
           </div>
 
-          <p className="mt-7 text-center text-xs text-gray-400">
+          <p className="mt-7 text-center text-xs text-text-muted">
             © 2025 UniLift · Empowering Sri Lankan Students
           </p>
         </div>
