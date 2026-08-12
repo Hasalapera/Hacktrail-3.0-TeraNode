@@ -1,267 +1,244 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import {
+  Store, MapPin, UserCircle, Phone, Lock, Eye, EyeOff,
+  CheckCircle2, ArrowLeft, ArrowRight, Zap, Users, BadgeCheck,
+} from 'lucide-react';
 
-const SRI_LANKA_CITIES = [
-  'Colombo', 'Kandy', 'Galle', 'Jaffna', 'Negombo', 'Anuradhapura',
-  'Badulla', 'Ratnapura', 'Trincomalee', 'Batticaloa', 'Matara',
-  'Kurunegala', 'Nuwara Eliya', 'Polonnaruwa', 'Kalmunai', 'Vavuniya',
-  'Dambulla', 'Wennappuwa', 'Chilaw', 'Puttalam', 'Other',
+const CITIES = [
+  'Colombo','Kandy','Galle','Jaffna','Negombo','Anuradhapura',
+  'Badulla','Ratnapura','Trincomalee','Batticaloa','Matara',
+  'Kurunegala','Nuwara Eliya','Polonnaruwa','Dambulla',
+  'Wennappuwa','Chilaw','Puttalam','Kalmunai','Vavuniya','Other',
+];
+
+const PERKS = [
+  { Icon: Zap,       text: 'Post jobs in under 60 seconds' },
+  { Icon: Users,     text: 'Access 128,000+ ready students' },
+  { Icon: BadgeCheck,text: 'Free to register — always' },
 ];
 
 export default function RetailerRegister() {
   const navigate = useNavigate();
-
   const [form, setForm] = useState({
-    shopName:    '',
-    city:        '',
-    ownerName:   '',
-    mobile:      '',
-    password:    '',
-    confirmPassword: '',
-    agreeToSms:  false,
+    shopName:'', city:'', ownerName:'', mobile:'', password:'', confirmPassword:'',
   });
-
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading]   = useState(false);
   const [error, setError]       = useState('');
   const [success, setSuccess]   = useState(false);
 
-  const handleChange = (e) => {
-    setError('');
-    const { name, value, type, checked } = e.target;
-    setForm((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
-  };
+  const handleChange = e => { setError(''); setForm(p => ({ ...p, [e.target.name]: e.target.value })); };
 
   const validate = () => {
-    if (!form.shopName || !form.city || !form.ownerName || !form.mobile || !form.password) {
+    const f = form;
+    if (!f.shopName || !f.city || !f.ownerName || !f.mobile || !f.password || !f.confirmPassword)
       return 'All fields are required.';
-    }
-    if (!/^0[0-9]{9}$/.test(form.mobile)) {
-      return 'Enter a valid Sri Lankan mobile number (e.g. 0771234567).';
-    }
-    if (form.password.length < 8) {
-      return 'Password must be at least 8 characters.';
-    }
-    if (form.password !== form.confirmPassword) {
-      return 'Passwords do not match.';
-    }
+    if (!/^0[0-9]{9}$/.test(f.mobile)) return 'Enter a valid mobile number (e.g. 0771234567).';
+    if (f.password.length < 8) return 'Password must be at least 8 characters.';
+    if (f.password !== f.confirmPassword) return 'Passwords do not match.';
     return null;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    const err = validate();
-    if (err) { setError(err); return; }
-
+    const err = validate(); if (err) { setError(err); return; }
     setLoading(true);
-    /* TODO: POST /auth/register/retailer when backend endpoint is ready */
-    await new Promise((r) => setTimeout(r, 1200));
-    setLoading(false);
-    setSuccess(true);
+    await new Promise(r => setTimeout(r, 1200)); /* TODO: POST /auth/register/retailer */
+    setLoading(false); setSuccess(true);
   };
 
   /* ── Success Screen ── */
-  if (success) {
-    return (
-      <div className="min-h-screen flex items-center justify-center px-4"
-           style={{ background: 'linear-gradient(135deg, #f5c518 0%, #d4a800 100%)' }}>
-        <div className="bg-white rounded-2xl shadow-2xl p-10 max-w-md w-full text-center">
-          <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4"
-               style={{ background: '#fefce8' }}>
-            <span className="text-4xl">🛍️</span>
+  if (success) return (
+    <div className="auth-shell">
+      <div className="auth-brand" style={{ justifyContent:'center', alignItems:'center', textAlign:'center' }}>
+        <div>
+          <div style={{ width:64, height:64, borderRadius:16,
+            background:'rgba(74,222,128,0.15)', border:'1px solid rgba(74,222,128,0.25)',
+            display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 20px' }}>
+            <Store size={28} color="var(--accent)" strokeWidth={1.5} />
           </div>
-          <h2 className="text-2xl font-bold text-slate-800 mb-2">Shop Registered!</h2>
-          <p className="text-slate-500 text-sm mb-1">
-            Welcome, <strong>{form.ownerName}</strong>!
+          <h2 style={{ color:'#fff', fontSize:22, fontWeight:800, marginBottom:10 }}>Shop is live!</h2>
+          <p style={{ color:'rgba(255,255,255,0.5)', fontSize:13.5, lineHeight:1.7 }}>
+            <strong style={{ color:'#fff' }}>{form.shopName}</strong><br />
+            in <strong style={{ color:'#fff' }}>{form.city}</strong> is now on UniLift.
           </p>
-          <p className="text-slate-500 text-sm mb-6">
-            <strong>{form.shopName}</strong> in <strong>{form.city}</strong> is now on UniLift.
-            Start posting part-time jobs today!
+        </div>
+      </div>
+      <div className="auth-form-panel">
+        <div className="auth-form-inner fade-up" style={{ textAlign:'center' }}>
+          <div style={{ width:72, height:72, borderRadius:18, background:'var(--accent-soft)',
+            border:'2px solid var(--accent-border)', display:'flex', alignItems:'center',
+            justifyContent:'center', margin:'0 auto 24px' }}>
+            <CheckCircle2 size={34} color="var(--primary)" strokeWidth={1.5} />
+          </div>
+          <h1 style={{ fontSize:22, fontWeight:800, color:'var(--text-main)', marginBottom:8 }}>
+            You're all set!
+          </h1>
+          <p style={{ fontSize:13.5, color:'var(--text-sub)', marginBottom:10, lineHeight:1.7 }}>
+            Welcome, <strong>{form.ownerName}</strong>.<br />
+            Start posting part-time jobs and connect with local students instantly.
           </p>
-          <button onClick={() => navigate('/login')}
-                  className="w-full py-3 rounded-xl font-bold text-slate-800 cursor-pointer
-                             hover:shadow-lg transition-all"
-                  style={{ background: 'linear-gradient(135deg, #f5c518, #d4a800)' }}>
-            Go to Login →
+          <div className="success-banner" style={{ marginBottom:24, textAlign:'left' }}>
+            <CheckCircle2 size={15} strokeWidth={2} color="var(--primary)" />
+            Your shop <strong>{form.shopName}</strong> is registered in {form.city}.
+          </div>
+          <button className="btn-primary" onClick={() => navigate('/login')}>
+            Go to Login <ArrowRight size={15} strokeWidth={2.5} />
           </button>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-14"
-         style={{ background: 'linear-gradient(160deg, #0f2557 0%, #1a3a7c 40%, #0f2557 100%)' }}>
+    <div className="auth-shell">
 
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden">
-
-        {/* ── Header — Yellow accent for retailer ── */}
-        <div className="px-8 pt-7 pb-6 relative overflow-hidden"
-             style={{ background: 'linear-gradient(135deg, #f5c518, #d4a800)' }}>
-
-          {/* Decorative circles */}
-          <div className="absolute -top-6 -right-6 w-28 h-28 rounded-full opacity-20"
-               style={{ background: '#0f2557' }}></div>
-          <div className="absolute -bottom-4 -left-4 w-20 h-20 rounded-full opacity-10"
-               style={{ background: '#0f2557' }}></div>
-
-          <div className="relative flex items-center gap-3 mb-3">
-            <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md"
-                 style={{ background: '#0f2557' }}>
-              <span className="text-xl">🏪</span>
+      {/* ── Left Brand Panel ─────────────── */}
+      <div className="auth-brand">
+        <div>
+          <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:52 }}>
+            <div style={{ width:38, height:38, borderRadius:10, background:'var(--accent)',
+              display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+              <span style={{ fontWeight:900, fontSize:17, color:'var(--primary)' }}>U</span>
             </div>
-            <div>
-              <h1 className="text-xl font-bold leading-tight" style={{ color: '#0f2557' }}>
-                Shop Registration
-              </h1>
-              <p className="text-xs font-medium opacity-70" style={{ color: '#0f2557' }}>
-                UniLift Retailer Portal
-              </p>
-            </div>
+            <span style={{ color:'#fff', fontWeight:700, fontSize:18, letterSpacing:'-0.02em' }}>UniLift</span>
           </div>
 
-          {/* Tagline pill */}
-          <div className="relative inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold"
-               style={{ background: '#0f2557', color: '#f5c518' }}>
-            <span>⚡</span>
-            Post part-time jobs and find local students instantly!
-          </div>
-        </div>
-
-        {/* ── Stats Strip ── */}
-        <div className="flex divide-x divide-gray-100 bg-amber-50 border-b border-amber-100">
-          {[['128K+', 'Students'], ['75%', 'SME Focus'], ['Free', 'to Post']].map(([num, label]) => (
-            <div key={label} className="flex-1 py-3 text-center">
-              <div className="text-sm font-bold" style={{ color: '#0f2557' }}>{num}</div>
-              <div className="text-xs text-slate-500">{label}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* ── Form ── */}
-        <form onSubmit={handleSubmit} className="px-8 py-6 space-y-4">
-
-          {/* Shop Name */}
-          <div>
-            <label className="block text-sm font-semibold text-slate-600 mb-1.5">
-              Shop / Business Name <span className="text-red-400">*</span>
-            </label>
-            <input name="shopName" value={form.shopName} onChange={handleChange}
-                   type="text" placeholder="e.g. Perera Grocery Store"
-                   className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm
-                              bg-slate-50 text-slate-800 outline-none placeholder-slate-400
-                              focus:border-amber-400 focus:ring-2 focus:ring-amber-100 focus:bg-white" />
-          </div>
-
-          {/* City */}
-          <div>
-            <label className="block text-sm font-semibold text-slate-600 mb-1.5">
-              City / Location <span className="text-red-400">*</span>
-            </label>
-            <select name="city" value={form.city} onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm
-                               bg-slate-50 text-slate-800 outline-none cursor-pointer
-                               focus:border-amber-400 focus:ring-2 focus:ring-amber-100 focus:bg-white">
-              <option value="">— Select your city —</option>
-              {SRI_LANKA_CITIES.map((city) => (
-                <option key={city} value={city}>{city}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Owner Name & Mobile — grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-semibold text-slate-600 mb-1.5">
-                Owner Name <span className="text-red-400">*</span>
-              </label>
-              <input name="ownerName" value={form.ownerName} onChange={handleChange}
-                     type="text" placeholder="Your full name"
-                     className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm
-                                bg-slate-50 text-slate-800 outline-none placeholder-slate-400
-                                focus:border-amber-400 focus:ring-2 focus:ring-amber-100 focus:bg-white" />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-slate-600 mb-1.5">
-                Mobile Number <span className="text-red-400">*</span>
-              </label>
-              <input name="mobile" value={form.mobile} onChange={handleChange}
-                     type="tel" placeholder="07X XXXXXXX"
-                     maxLength={10}
-                     className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm
-                                bg-slate-50 text-slate-800 outline-none placeholder-slate-400
-                                focus:border-amber-400 focus:ring-2 focus:ring-amber-100 focus:bg-white" />
-            </div>
-          </div>
-
-          {/* Password */}
-          <div>
-            <label className="block text-sm font-semibold text-slate-600 mb-1.5">
-              Password <span className="text-red-400">*</span>
-            </label>
-            <div className="relative">
-              <input name="password" value={form.password} onChange={handleChange}
-                     type={showPass ? 'text' : 'password'} placeholder="Min. 8 characters"
-                     className="w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 text-sm
-                                bg-slate-50 text-slate-800 outline-none placeholder-slate-400
-                                focus:border-amber-400 focus:ring-2 focus:ring-amber-100 focus:bg-white" />
-              <button type="button" onClick={() => setShowPass((p) => !p)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer">
-                {showPass ? '🙈' : '👁️'}
-              </button>
-            </div>
-          </div>
-
-          {/* Confirm Password */}
-          <div>
-            <label className="block text-sm font-semibold text-slate-600 mb-1.5">
-              Confirm Password <span className="text-red-400">*</span>
-            </label>
-            <input name="confirmPassword" value={form.confirmPassword} onChange={handleChange}
-                   type={showPass ? 'text' : 'password'} placeholder="Re-enter password"
-                   className="w-full px-4 py-3 rounded-xl border border-gray-200 text sm
-                              bg-slate-50 text-slate-800 outline-none placeholder-slate-400
-                              focus:border-amber-400 focus:ring-2 focus:ring-amber-100 focus:bg-white" />
-          </div>
-
-          {/* SMS opt-in checkbox */}
-          <label className="flex items-start gap-3 cursor-pointer group">
-            <input type="checkbox" name="agreeToSms" checked={form.agreeToSms}
-                   onChange={handleChange}
-                   className="mt-0.5 w-4 h-4 accent-amber-400 cursor-pointer" />
-            <span className="text-xs text-slate-500 leading-relaxed">
-              I agree to receive SMS notifications when a student applies for my job posts.
-            </span>
-          </label>
-
-          {/* Error */}
-          {error && (
-            <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-600
-                            text-sm px-4 py-3 rounded-xl">
-              <span>⚠️</span> {error}
-            </div>
-          )}
-
-          {/* Submit — Yellow accent CTA */}
-          <button type="submit" disabled={loading}
-                  className="w-full py-3.5 rounded-xl font-bold text-sm tracking-wide
-                             cursor-pointer disabled:opacity-60 active:scale-[0.98] shadow-md mt-1"
-                  style={{
-                    background: loading ? '#94a3b8' : 'linear-gradient(135deg, #f5c518, #d4a800)',
-                    color: '#0f2557',
-                  }}
-                  onMouseEnter={(e) => { if (!loading) e.currentTarget.style.boxShadow = '0 8px 24px rgba(245,197,24,0.45)'; }}
-                  onMouseLeave={(e) => { if (!loading) e.currentTarget.style.boxShadow = 'none'; }}>
-            {loading ? '⏳ Registering Shop...' : '🏪 Register My Shop — It\'s Free!'}
-          </button>
-
-          <p className="text-center text-sm text-slate-500">
-            Already have an account?{' '}
-            <Link to="/login" className="font-semibold hover:underline" style={{ color: '#0f2557' }}>
-              Sign In
-            </Link>
+          <h2 style={{ color:'#fff', fontSize:26, fontWeight:800, lineHeight:1.25,
+            letterSpacing:'-0.03em', marginBottom:14 }}>
+            Find student helpers<br />for your shop — fast.
+          </h2>
+          <p style={{ color:'rgba(255,255,255,0.50)', fontSize:13.5, lineHeight:1.75, marginBottom:44 }}>
+            Post part-time and one-day job openings. Nearby university students will apply within minutes.
           </p>
-        </form>
+
+          {/* Perks */}
+          <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
+            {PERKS.map(({ Icon, text }) => (
+              <div key={text} style={{ display:'flex', alignItems:'center', gap:12 }}>
+                <div style={{ width:34, height:34, borderRadius:9, flexShrink:0,
+                  background:'rgba(74,222,128,0.12)', border:'1px solid rgba(74,222,128,0.2)',
+                  display:'flex', alignItems:'center', justifyContent:'center' }}>
+                  <Icon size={16} color="var(--accent)" strokeWidth={2} />
+                </div>
+                <span style={{ color:'rgba(255,255,255,0.65)', fontSize:13 }}>{text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <Link to="/login" style={{ display:'inline-flex', alignItems:'center', gap:6,
+          color:'rgba(255,255,255,0.45)', fontSize:12, textDecoration:'none', marginTop:24 }}
+          onMouseEnter={e => e.currentTarget.style.color='rgba(255,255,255,0.8)'}
+          onMouseLeave={e => e.currentTarget.style.color='rgba(255,255,255,0.45)'}>
+          <ArrowLeft size={13} strokeWidth={2} /> Back to login
+        </Link>
+      </div>
+
+      {/* ── Right Form Panel ─────────────── */}
+      <div className="auth-form-panel">
+        <div className="auth-form-inner fade-up">
+
+          <div style={{ marginBottom:28 }}>
+            <h1 style={{ fontSize:22, fontWeight:800, color:'var(--text-main)',
+              letterSpacing:'-0.03em', marginBottom:4 }}>
+              Register your shop
+            </h1>
+            <p style={{ fontSize:13.5, color:'var(--text-sub)' }}>
+              Free to join — start hiring local students today.
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit} style={{ display:'flex', flexDirection:'column', gap:15 }}>
+
+            {/* Shop Name */}
+            <div>
+              <label className="field-label">Shop / Business Name</label>
+              <div className="input-icon-wrap">
+                <span className="icon-left"><Store size={15} strokeWidth={2} /></span>
+                <input className="input-field has-icon-left" name="shopName" type="text"
+                  value={form.shopName} onChange={handleChange}
+                  placeholder="e.g. Perera Grocery Store" />
+              </div>
+            </div>
+
+            {/* City */}
+            <div>
+              <label className="field-label">City / Location</label>
+              <div className="input-icon-wrap">
+                <span className="icon-left"><MapPin size={15} strokeWidth={2} /></span>
+                <select className="select-field" name="city"
+                  value={form.city} onChange={handleChange}
+                  style={{ paddingLeft:38 }}>
+                  <option value="">Select your city…</option>
+                  {CITIES.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+            </div>
+
+            {/* Owner & Mobile — 2 col */}
+            <div className="field-row">
+              <div>
+                <label className="field-label">Owner Name</label>
+                <div className="input-icon-wrap">
+                  <span className="icon-left"><UserCircle size={15} strokeWidth={2} /></span>
+                  <input className="input-field has-icon-left" name="ownerName" type="text"
+                    value={form.ownerName} onChange={handleChange} placeholder="Your name" />
+                </div>
+              </div>
+              <div>
+                <label className="field-label">Mobile Number</label>
+                <div className="input-icon-wrap">
+                  <span className="icon-left"><Phone size={15} strokeWidth={2} /></span>
+                  <input className="input-field has-icon-left" name="mobile" type="tel"
+                    value={form.mobile} onChange={handleChange}
+                    placeholder="07X XXXXXXX" maxLength={10} />
+                </div>
+              </div>
+            </div>
+
+            {/* Password & Confirm — 2 col */}
+            <div className="field-row">
+              <div>
+                <label className="field-label">Password</label>
+                <div className="input-icon-wrap">
+                  <span className="icon-left"><Lock size={15} strokeWidth={2} /></span>
+                  <input className="input-field has-icon-left" name="password"
+                    type={showPass ? 'text' : 'password'}
+                    value={form.password} onChange={handleChange}
+                    placeholder="Min 8 chars" style={{ paddingRight:38 }} />
+                  <button type="button" className="icon-right" onClick={() => setShowPass(p => !p)}>
+                    {showPass ? <EyeOff size={15} /> : <Eye size={15} />}
+                  </button>
+                </div>
+              </div>
+              <div>
+                <label className="field-label">Confirm Password</label>
+                <div className="input-icon-wrap">
+                  <span className="icon-left"><Lock size={15} strokeWidth={2} /></span>
+                  <input className="input-field has-icon-left" name="confirmPassword"
+                    type={showPass ? 'text' : 'password'}
+                    value={form.confirmPassword} onChange={handleChange} placeholder="Re-enter" />
+                </div>
+              </div>
+            </div>
+
+            {error && <div className="error-banner"><span>⚠</span>{error}</div>}
+
+            {/* CTA — accent green for retailers */}
+            <button className="btn-accent" type="submit" disabled={loading} style={{ marginTop:6 }}>
+              {loading ? 'Registering shop…' : (<>Register My Shop <ArrowRight size={15} strokeWidth={2.5} /></>)}
+            </button>
+
+            <p style={{ textAlign:'center', fontSize:13, color:'var(--text-sub)' }}>
+              Already have an account?{' '}
+              <Link to="/login" style={{ color:'var(--primary-light)', fontWeight:600, textDecoration:'none' }}>
+                Sign in
+              </Link>
+            </p>
+          </form>
+        </div>
       </div>
     </div>
   );
