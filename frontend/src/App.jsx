@@ -2,8 +2,9 @@
 // App.jsx — UniLift Route Configuration
 // BrowserRouter is already wrapped in main.jsx
 // ============================================================
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import MessageButton from './Components/MessageButton.jsx';
+import LandingPage from './pages/LandingPage';
 
 // ── Auth & Onboarding pages (hass branch) ──────────────────
 import Login            from './pages/Login';
@@ -26,8 +27,8 @@ export default function App() {
   return (
     <>
       <Routes>
-        {/* Default redirect */}
-        <Route path="/"  element={<Navigate to="/student/home" replace />} />
+        {/* Landing page */}
+        <Route path="/"  element={<LandingPage />} />
 
         {/* ── Auth routes ── */}
         <Route path="/login"              element={<Login />} />
