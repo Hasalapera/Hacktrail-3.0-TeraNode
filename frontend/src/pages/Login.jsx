@@ -21,6 +21,12 @@ const ROLES = [
   },
 ];
 
+const FEATURES = [
+  ['Internships & Corporate Projects', 'Match with top companies by skill & degree'],
+  ['Part-Time & Flexible Jobs',        'Find nearby gigs posted by local retailers'],
+  ['Freelance Marketplace',            'Earn from design, dev, video editing & more'],
+];
+
 const EyeIcon = ({ open }) => (
   <svg
     width="19"
@@ -263,6 +269,7 @@ export default function Login() {
       setLoading(false);
     }
   };
+
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
