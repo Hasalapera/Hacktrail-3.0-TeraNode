@@ -6,7 +6,10 @@ export default function FormField({ label, required, children }) {
   return (
 
     <label className="flex flex-col gap-1 text-sm font-medium text-text-sub">
-      {label}
+      <span>
+        {label}
+        {required && <span className="ml-1 text-red-500">*</span>}
+      </span>
 
       {children}
     </label>

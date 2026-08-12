@@ -79,11 +79,9 @@ export default function Footer() {
           <div className="flex gap-4">
             {["Terms", "Privacy", "Cookies"].map(item => (
               <a
-
-                key={social.label}
-                href={social.href}
+                key={item}
+                href="#"
                 className="text-xs text-white/55 transition hover:text-accent"
-
               >
                 {item}
               </a>
