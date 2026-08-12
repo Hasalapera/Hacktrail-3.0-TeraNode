@@ -1,243 +1,261 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  Building2, Layers, UserCircle, Mail, Phone, Lock,
-  Eye, EyeOff, ChevronDown, CheckCircle2, ArrowLeft, ArrowRight,
-} from 'lucide-react';
 
 const INDUSTRIES = [
-  'Information Technology', 'Finance & Banking', 'Engineering',
-  'Healthcare & Pharma', 'Education', 'Marketing & Media',
-  'Manufacturing', 'Logistics & Supply Chain', 'Retail & E-commerce', 'Other',
+  'Information Technology',
+  'Finance & Banking',
+  'Engineering',
+  'Healthcare',
+  'Education',
+  'Marketing & Media',
+  'Manufacturing',
+  'Logistics & Supply Chain',
+  'Retail & E-commerce',
+  'Other',
 ];
 
 export default function CompanyRegister() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({
-    companyName:'', industry:'', hrName:'', email:'', phone:'', password:'', confirmPassword:'',
-  });
-  const [showPass, setShowPass]   = useState(false);
-  const [loading, setLoading]     = useState(false);
-  const [error, setError]         = useState('');
-  const [success, setSuccess]     = useState(false);
 
-  const handleChange = e => { setError(''); setForm(p => ({ ...p, [e.target.name]: e.target.value })); };
+  const [form, setForm] = useState({
+    companyName:   '',
+    industry:      '',
+    hrContactName: '',
+    email:         '',
+    contactNumber: '',
+    password:      '',
+    confirmPassword: '',
+  });
+
+  const [showPass, setShowPass]     = useState(false);
+  const [loading, setLoading]       = useState(false);
+  const [error, setError]           = useState('');
+  const [success, setSuccess]       = useState(false);
+
+  const handleChange = (e) => {
+    setError('');
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
   const validate = () => {
-    const f = form;
-    if (!f.companyName || !f.industry || !f.hrName || !f.email || !f.phone || !f.password || !f.confirmPassword)
+    if (!form.companyName || !form.industry || !form.hrContactName ||
+        !form.email || !form.contactNumber || !form.password || !form.confirmPassword) {
       return 'All fields are required.';
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email)) return 'Enter a valid corporate email.';
-    if (f.password.length < 8) return 'Password must be at least 8 characters.';
-    if (f.password !== f.confirmPassword) return 'Passwords do not match.';
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      return 'Please enter a valid corporate email address.';
+    }
+    if (form.password.length < 8) {
+      return 'Password must be at least 8 characters.';
+    }
+    if (form.password !== form.confirmPassword) {
+      return 'Passwords do not match.';
+    }
     return null;
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const err = validate(); if (err) { setError(err); return; }
+    const err = validate();
+    if (err) { setError(err); return; }
+
     setLoading(true);
-    await new Promise(r => setTimeout(r, 1200)); /* TODO: POST /auth/register/company */
-    setLoading(false); setSuccess(true);
+    /* TODO: POST /auth/register/company when backend endpoint is ready */
+    await new Promise((r) => setTimeout(r, 1200)); // simulate API call
+    setLoading(false);
+    setSuccess(true);
   };
 
-  /* ── Success ── */
-  if (success) return (
-    <div className="auth-shell">
-      <div className="auth-brand" style={{ justifyContent:'center', alignItems:'center', textAlign:'center' }}>
-        <div>
-          <div style={{ width:64, height:64, borderRadius:16, background:'rgba(74,222,128,0.15)',
-            border:'1px solid rgba(74,222,128,0.25)', display:'flex', alignItems:'center',
-            justifyContent:'center', margin:'0 auto 20px' }}>
-            <CheckCircle2 size={30} color="var(--accent)" strokeWidth={1.5} />
+  /* ── Success Screen ── */
+  if (success) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4"
+           style={{ background: 'linear-gradient(135deg, #0f2557 0%, #1a3a7c 100%)' }}>
+        <div className="bg-white rounded-2xl shadow-2xl p-10 max-w-md w-full text-center">
+          <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4"
+               style={{ background: '#f0fdf4' }}>
+            <span className="text-4xl">✅</span>
           </div>
-          <h2 style={{ color:'#fff', fontSize:22, fontWeight:800, marginBottom:10 }}>You're registered!</h2>
-          <p style={{ color:'rgba(255,255,255,0.5)', fontSize:13.5, lineHeight:1.7 }}>
-            We'll review <strong style={{ color:'#fff' }}>{form.companyName}</strong> and<br />
-            notify you at <strong style={{ color:'#fff' }}>{form.email}</strong>.
+          <h2 className="text-2xl font-bold text-slate-800 mb-2">Company Registered!</h2>
+          <p className="text-slate-500 text-sm mb-6">
+            Your company profile is under review. We'll notify you at <strong>{form.email}</strong>.
           </p>
-        </div>
-      </div>
-      <div className="auth-form-panel">
-        <div className="auth-form-inner fade-up" style={{ textAlign:'center' }}>
-          <div style={{ width:72, height:72, borderRadius:18, background:'var(--accent-soft)',
-            border:'2px solid var(--accent-border)', display:'flex', alignItems:'center',
-            justifyContent:'center', margin:'0 auto 24px' }}>
-            <CheckCircle2 size={34} color="var(--primary)" strokeWidth={1.5} />
-          </div>
-          <h1 style={{ fontSize:22, fontWeight:800, color:'var(--text-main)', marginBottom:8 }}>
-            Application Submitted
-          </h1>
-          <p style={{ fontSize:13.5, color:'var(--text-sub)', marginBottom:32, lineHeight:1.7 }}>
-            Your company profile is under review.<br />
-            Check your inbox at <strong>{form.email}</strong>.
-          </p>
-          <button className="btn-primary" onClick={() => navigate('/login')}>
-            Go to Login <ArrowRight size={15} strokeWidth={2.5} />
+          <button onClick={() => navigate('/login')}
+                  className="w-full py-3 rounded-xl font-bold text-white cursor-pointer"
+                  style={{ background: 'linear-gradient(135deg, #0f2557, #1a3a7c)' }}>
+            Go to Login
           </button>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 
   return (
-    <div className="auth-shell">
+    <div className="min-h-screen flex items-center justify-center px-4 py-14"
+         style={{ background: 'linear-gradient(135deg, #0f2557 0%, #1a3a7c 100%)' }}>
 
-      {/* ── Left Brand Panel ─────────────── */}
-      <div className="auth-brand">
-        <div>
-          <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:52 }}>
-            <div style={{ width:38, height:38, borderRadius:10, background:'var(--accent)',
-              display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-              <span style={{ fontWeight:900, fontSize:17, color:'var(--primary)' }}>U</span>
+      <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden">
+
+        {/* ── Header ── */}
+        <div className="px-8 pt-8 pb-6"
+             style={{ background: 'linear-gradient(135deg, #0f2557, #1a3a7c)' }}>
+          <div className="flex items-center gap-3 mb-1">
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                 style={{ background: '#f5c518' }}>
+              <span className="text-lg font-black" style={{ color: '#0f2557' }}>U</span>
             </div>
-            <span style={{ color:'#fff', fontWeight:700, fontSize:18, letterSpacing:'-0.02em' }}>UniLift</span>
+            <div>
+              <h1 className="text-xl font-bold text-white leading-tight">Company Registration</h1>
+              <p className="text-blue-200 text-xs">UniLift Corporate Portal</p>
+            </div>
+          </div>
+          <p className="text-blue-100 text-sm mt-4 leading-relaxed">
+            Join UniLift to access Sri Lanka's largest pool of university talent. Post internships and projects instantly.
+          </p>
+        </div>
+
+        {/* ── Progress indicator ── */}
+        <div className="flex items-center px-8 py-3 bg-blue-50 border-b border-blue-100">
+          <span className="text-xs font-semibold text-blue-600">Step 1 of 1 — Company Details</span>
+          <div className="ml-auto flex gap-1">
+            <span className="w-2 h-2 rounded-full" style={{ background: '#0f2557' }}></span>
+            <span className="w-2 h-2 rounded-full bg-gray-300"></span>
+            <span className="w-2 h-2 rounded-full bg-gray-300"></span>
+          </div>
+        </div>
+
+        {/* ── Form ── */}
+        <form onSubmit={handleSubmit} className="px-8 py-7 space-y-4">
+
+          {/* Company Name */}
+          <div>
+            <label className="block text-sm font-semibold text-slate-600 mb-1.5">
+              Company Name <span className="text-red-400">*</span>
+            </label>
+            <input name="companyName" value={form.companyName} onChange={handleChange}
+                   type="text" placeholder="e.g. ABC Technologies (Pvt) Ltd"
+                   className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm
+                              bg-slate-50 text-slate-800 outline-none placeholder-slate-400
+                              focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:bg-white" />
           </div>
 
-          <h2 style={{ color:'#fff', fontSize:26, fontWeight:800, lineHeight:1.25,
-            letterSpacing:'-0.03em', marginBottom:14 }}>
-            Access Sri Lanka's<br />top student talent.
-          </h2>
-          <p style={{ color:'rgba(255,255,255,0.50)', fontSize:13.5, lineHeight:1.75, marginBottom:44 }}>
-            Post internships, projects, and vacancies. Our AI matching engine delivers the right profiles — instantly.
+          {/* Industry */}
+          <div>
+            <label className="block text-sm font-semibold text-slate-600 mb-1.5">
+              Industry Category <span className="text-red-400">*</span>
+            </label>
+            <select name="industry" value={form.industry} onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm
+                               bg-slate-50 text-slate-800 outline-none
+                               focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:bg-white cursor-pointer">
+              <option value="">— Select Industry —</option>
+              {INDUSTRIES.map((ind) => (
+                <option key={ind} value={ind}>{ind}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* HR Contact Name & Email — 2 column grid on md+ */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-semibold text-slate-600 mb-1.5">
+                HR Contact Name <span className="text-red-400">*</span>
+              </label>
+              <input name="hrContactName" value={form.hrContactName} onChange={handleChange}
+                     type="text" placeholder="Full name"
+                     className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm
+                                bg-slate-50 text-slate-800 outline-none placeholder-slate-400
+                                focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:bg-white" />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-slate-600 mb-1.5">
+                Contact Number <span className="text-red-400">*</span>
+              </label>
+              <input name="contactNumber" value={form.contactNumber} onChange={handleChange}
+                     type="tel" placeholder="07X XXXXXXX"
+                     className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm
+                                bg-slate-50 text-slate-800 outline-none placeholder-slate-400
+                                focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:bg-white" />
+            </div>
+          </div>
+
+          {/* Corporate Email */}
+          <div>
+            <label className="block text-sm font-semibold text-slate-600 mb-1.5">
+              Official Corporate Email <span className="text-red-400">*</span>
+            </label>
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm">✉️</span>
+              <input name="email" value={form.email} onChange={handleChange}
+                     type="email" placeholder="hr@yourcompany.com"
+                     className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 text-sm
+                                bg-slate-50 text-slate-800 outline-none placeholder-slate-400
+                                focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:bg-white" />
+            </div>
+          </div>
+
+          {/* Password & Confirm — grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-semibold text-slate-600 mb-1.5">
+                Password <span className="text-red-400">*</span>
+              </label>
+              <div className="relative">
+                <input name="password" value={form.password} onChange={handleChange}
+                       type={showPass ? 'text' : 'password'} placeholder="Min. 8 characters"
+                       className="w-full px-4 py-3 pr-10 rounded-xl border border-gray-200 text-sm
+                                  bg-slate-50 text-slate-800 outline-none placeholder-slate-400
+                                  focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:bg-white" />
+                <button type="button" onClick={() => setShowPass((p) => !p)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer">
+                  {showPass ? '🙈' : '👁️'}
+                </button>
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-slate-600 mb-1.5">
+                Confirm Password <span className="text-red-400">*</span>
+              </label>
+              <input name="confirmPassword" value={form.confirmPassword} onChange={handleChange}
+                     type={showPass ? 'text' : 'password'} placeholder="Re-enter password"
+                     className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm
+                                bg-slate-50 text-slate-800 outline-none placeholder-slate-400
+                                focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:bg-white" />
+            </div>
+          </div>
+
+          {/* Terms */}
+          <p className="text-xs text-slate-400 leading-relaxed">
+            By registering, you agree to UniLift's{' '}
+            <a href="#" className="underline" style={{ color: '#0f2557' }}>Terms of Service</a> and{' '}
+            <a href="#" className="underline" style={{ color: '#0f2557' }}>Privacy Policy</a>.
           </p>
 
-          <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
-            {[
-              ['128,000+', 'University students on the platform'],
-              ['AI Matching', 'Filter by degree, skill, and year'],
-              ['Zero middlemen', 'Contact students directly'],
-            ].map(([val, label]) => (
-              <div key={val} style={{ display:'flex', alignItems:'center', gap:12,
-                padding:'12px 14px', borderRadius:10,
-                background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.08)' }}>
-                <span style={{ fontSize:13, fontWeight:800, color:'var(--accent)', minWidth:90 }}>{val}</span>
-                <span style={{ fontSize:12.5, color:'rgba(255,255,255,0.5)' }}>{label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <Link to="/login" style={{ display:'inline-flex', alignItems:'center', gap:6,
-          color:'rgba(255,255,255,0.45)', fontSize:12, textDecoration:'none', marginTop:24 }}
-          onMouseEnter={e => e.currentTarget.style.color='rgba(255,255,255,0.8)'}
-          onMouseLeave={e => e.currentTarget.style.color='rgba(255,255,255,0.45)'}>
-          <ArrowLeft size={13} strokeWidth={2} /> Back to login
-        </Link>
-      </div>
-
-      {/* ── Right Form Panel ─────────────── */}
-      <div className="auth-form-panel">
-        <div className="auth-form-inner fade-up">
-
-          <div style={{ marginBottom:28 }}>
-            <h1 style={{ fontSize:22, fontWeight:800, color:'var(--text-main)',
-              letterSpacing:'-0.03em', marginBottom:4 }}>
-              Register your company
-            </h1>
-            <p style={{ fontSize:13.5, color:'var(--text-sub)' }}>
-              All fields are required to verify your business.
-            </p>
-          </div>
-
-          <form onSubmit={handleSubmit} style={{ display:'flex', flexDirection:'column', gap:15 }}>
-
-            {/* Company Name */}
-            <div>
-              <label className="field-label">Company Name</label>
-              <div className="input-icon-wrap">
-                <span className="icon-left"><Building2 size={15} strokeWidth={2} /></span>
-                <input className="input-field has-icon-left" name="companyName" type="text"
-                  value={form.companyName} onChange={handleChange}
-                  placeholder="e.g. ABC Technologies (Pvt) Ltd" />
-              </div>
+          {/* Error */}
+          {error && (
+            <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-600
+                            text-sm px-4 py-3 rounded-xl">
+              <span>⚠️</span> {error}
             </div>
+          )}
 
-            {/* Industry */}
-            <div>
-              <label className="field-label">Industry</label>
-              <div className="input-icon-wrap">
-                <span className="icon-left"><Layers size={15} strokeWidth={2} /></span>
-                <select className="select-field has-icon-left" name="industry"
-                  value={form.industry} onChange={handleChange}
-                  style={{ paddingLeft:38 }}>
-                  <option value="">Select industry…</option>
-                  {INDUSTRIES.map(i => <option key={i} value={i}>{i}</option>)}
-                </select>
-              </div>
-            </div>
+          {/* Submit */}
+          <button type="submit" disabled={loading}
+                  className="w-full py-3.5 rounded-xl font-bold text-white text-sm tracking-wide
+                             cursor-pointer disabled:opacity-60 active:scale-[0.98] mt-2"
+                  style={{ background: 'linear-gradient(135deg, #0f2557, #1a3a7c)' }}
+                  onMouseEnter={(e) => { if (!loading) e.currentTarget.style.background = 'linear-gradient(135deg, #091840, #0f2557)'; }}
+                  onMouseLeave={(e) => { if (!loading) e.currentTarget.style.background = 'linear-gradient(135deg, #0f2557, #1a3a7c)'; }}>
+            {loading ? '⏳ Registering Company...' : '🏛️ Register Company'}
+          </button>
 
-            {/* HR Name & Phone — 2 col */}
-            <div className="field-row">
-              <div>
-                <label className="field-label">HR Contact Name</label>
-                <div className="input-icon-wrap">
-                  <span className="icon-left"><UserCircle size={15} strokeWidth={2} /></span>
-                  <input className="input-field has-icon-left" name="hrName" type="text"
-                    value={form.hrName} onChange={handleChange} placeholder="Full name" />
-                </div>
-              </div>
-              <div>
-                <label className="field-label">Contact Number</label>
-                <div className="input-icon-wrap">
-                  <span className="icon-left"><Phone size={15} strokeWidth={2} /></span>
-                  <input className="input-field has-icon-left" name="phone" type="tel"
-                    value={form.phone} onChange={handleChange} placeholder="07X XXXXXXX" />
-                </div>
-              </div>
-            </div>
-
-            {/* Email */}
-            <div>
-              <label className="field-label">Corporate Email</label>
-              <div className="input-icon-wrap">
-                <span className="icon-left"><Mail size={15} strokeWidth={2} /></span>
-                <input className="input-field has-icon-left" name="email" type="email"
-                  value={form.email} onChange={handleChange} placeholder="hr@company.com" />
-              </div>
-            </div>
-
-            {/* Password & Confirm — 2 col */}
-            <div className="field-row">
-              <div>
-                <label className="field-label">Password</label>
-                <div className="input-icon-wrap">
-                  <span className="icon-left"><Lock size={15} strokeWidth={2} /></span>
-                  <input className="input-field has-icon-left" name="password"
-                    type={showPass ? 'text' : 'password'}
-                    value={form.password} onChange={handleChange}
-                    placeholder="Min 8 chars" style={{ paddingRight:38 }} />
-                  <button type="button" className="icon-right" onClick={() => setShowPass(p => !p)}>
-                    {showPass ? <EyeOff size={15} /> : <Eye size={15} />}
-                  </button>
-                </div>
-              </div>
-              <div>
-                <label className="field-label">Confirm Password</label>
-                <div className="input-icon-wrap">
-                  <span className="icon-left"><Lock size={15} strokeWidth={2} /></span>
-                  <input className="input-field has-icon-left" name="confirmPassword"
-                    type={showPass ? 'text' : 'password'}
-                    value={form.confirmPassword} onChange={handleChange}
-                    placeholder="Re-enter" />
-                </div>
-              </div>
-            </div>
-
-            {error && <div className="error-banner"><span>⚠</span>{error}</div>}
-
-            <button className="btn-primary" type="submit" disabled={loading} style={{ marginTop:6 }}>
-              {loading ? 'Registering…' : (<>Register Company <ArrowRight size={15} strokeWidth={2.5} /></>)}
-            </button>
-
-            <p style={{ textAlign:'center', fontSize:13, color:'var(--text-sub)' }}>
-              Already have an account?{' '}
-              <Link to="/login" style={{ color:'var(--primary-light)', fontWeight:600, textDecoration:'none' }}>
-                Sign in
-              </Link>
-            </p>
-          </form>
-        </div>
+          <p className="text-center text-sm text-slate-500">
+            Already registered?{' '}
+            <Link to="/login" className="font-semibold hover:underline" style={{ color: '#0f2557' }}>
+              Sign In
+            </Link>
+          </p>
+        </form>
       </div>
     </div>
   );
