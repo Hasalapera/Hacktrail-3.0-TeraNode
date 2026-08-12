@@ -288,6 +288,7 @@ export default function StudentHome() {
         categories={CATEGORIES}
         activeCategory={activeCategory}
         onSelectCategory={handleCategoryChange}
+        profileHref="/student/profile"
       />
 
       <FilterBar

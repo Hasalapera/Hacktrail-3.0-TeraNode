@@ -3,6 +3,7 @@
 // BrowserRouter is already wrapped in main.jsx
 // ============================================================
 import { Routes, Route, Navigate } from 'react-router-dom';
+import MessageButton from './Components/MessageButton.jsx';
 
 // ── Auth & Onboarding pages (hass branch) ──────────────────
 import Login            from './pages/Login';
@@ -16,35 +17,49 @@ import StudentHome         from './pages/StudentHome';
 import RetailJobPublisher  from './pages/RetailJobPublisher';
 import CompanyJobPublisher from './pages/CompanyJobPublisher';
 import FreelancerClient    from './pages/FreelancerClient';
+import RetailProfile       from './pages/RetailProfile';
+import CompanyProfile      from './pages/CompanyProfile';
+import FreelancerProfile   from './pages/FreelancerProfile';
+import StudentProfile      from './pages/StudentProfile';
 
 export default function App() {
   return (
-    <Routes>
-      {/* Default redirect */}
-      <Route path="/"  element={<Navigate to="/student/home" replace />} />
+    <>
+      <Routes>
+        {/* Default redirect */}
+        <Route path="/"  element={<Navigate to="/student/home" replace />} />
 
-      {/* ── Auth routes ── */}
-      <Route path="/login"              element={<Login />} />
-      <Route path="/register"           element={<Register />} />
-      <Route path="/register/company"   element={<CompanyRegister />} />
-      <Route path="/register/retailer"  element={<RetailerRegister />} />
+        {/* ── Auth routes ── */}
+        <Route path="/login"              element={<Login />} />
+        <Route path="/register"           element={<Register />} />
+        <Route path="/register/company"   element={<CompanyRegister />} />
+        <Route path="/register/retailer"  element={<RetailerRegister />} />
 
-      {/* ── Student routes (Rasara branch — add here as built) ── */}
-      <Route path="/student/home"       element={<StudentHome />} />
-      <Route path="/student/freelance"  element={<FreelancerClient />} />
+        {/* ── Student routes (Rasara branch — add here as built) ── */}
+        <Route path="/student/home"       element={<StudentHome />} />
+        <Route path="/student/freelance"  element={<FreelancerClient />} />
+        <Route path="/student/profile"    element={<StudentProfile />} />
 
-      {/* ── Publisher routes (Rasara branch — add here as built) ── */}
-      <Route path="/retail/jobs"        element={<RetailJobPublisher />} />
-      <Route path="/company/jobs"       element={<CompanyJobPublisher />} />
+        {/* ── Publisher routes (Rasara branch — add here as built) ── */}
+        <Route path="/retail/jobs"        element={<RetailJobPublisher />} />
+        <Route path="/company/jobs"       element={<CompanyJobPublisher />} />
 
-      {/* ── Placeholder routes (unlock as pages are built) ── */}
-      <Route path="/change-password"    element={<PlaceholderPage title="Change Password" />} />
-      <Route path="/complete-profile"   element={<PlaceholderPage title="Complete Your Profile" />} />
-      <Route path="/dashboard"          element={<PlaceholderPage title="Dashboard 🚀" />} />
+        {/* ── Publisher profile pages ── */}
+        <Route path="/retail/profile"     element={<RetailProfile />} />
+        <Route path="/company/profile"    element={<CompanyProfile />} />
+        <Route path="/freelancer/profile" element={<FreelancerProfile />} />
 
-      {/* 404 */}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        {/* ── Placeholder routes (unlock as pages are built) ── */}
+        <Route path="/change-password"    element={<PlaceholderPage title="Change Password" />} />
+        <Route path="/complete-profile"   element={<PlaceholderPage title="Complete Your Profile" />} />
+        <Route path="/dashboard"          element={<PlaceholderPage title="Dashboard 🚀" />} />
+
+        {/* 404 */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+
+      <MessageButton />
+    </>
   );
 }
 

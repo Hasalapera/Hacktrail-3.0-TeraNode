@@ -1,7 +1,7 @@
 import { MessageCircle } from "lucide-react";
 
 // ---------------------------------------------------------------------------
-// MessageButton: fixed, screen-centered launcher for the upcoming messenger
+// MessageButton: fixed bottom-right launcher for the upcoming messenger
 // service. Rendered once at the app level so it shows on every page.
 // ---------------------------------------------------------------------------
 export default function MessageButton() {

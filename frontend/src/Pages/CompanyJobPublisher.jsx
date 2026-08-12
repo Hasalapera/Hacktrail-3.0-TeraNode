@@ -85,7 +85,7 @@ export default function CompanyJobPublisher() {
 
   return (
     <div className="mx-auto flex min-h-screen max-w-6xl flex-col bg-white">
-      <PublisherNav title="Company Job Publisher" />
+      <PublisherNav title="Company Job Publisher" profileHref="/company/profile" />
 
       <main className="flex-1 px-6 py-8">
         <h1 className="text-2xl font-semibold text-gray-900">Post a Company Listing</h1>

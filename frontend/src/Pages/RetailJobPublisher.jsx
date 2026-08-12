@@ -86,7 +86,7 @@ export default function RetailJobPublisher() {
 
   return (
     <div className="mx-auto flex min-h-screen max-w-6xl flex-col bg-white">
-      <PublisherNav title="Retail Job Publisher" />
+      <PublisherNav title="Retail Job Publisher" profileHref="/retail/profile" />
 
       <main className="flex-1 px-6 py-8">
         <h1 className="text-2xl font-semibold text-gray-900">Post a Retail Job</h1>
