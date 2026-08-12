@@ -54,7 +54,7 @@ export default function ProfileMenu({ profileHref }) {
             ) : (
               <MenuItem>Profile</MenuItem>
             )}
-            <MenuItem>Post a job description</MenuItem>
+            {/* <MenuItem>Post a job description</MenuItem>
             <MenuItem>Your briefs</MenuItem>
             <MenuItem>Dashboard</MenuItem>
             <MenuItem accent>Refer a friend</MenuItem>
@@ -62,7 +62,7 @@ export default function ProfileMenu({ profileHref }) {
             <Divider />
 
             <MenuItem>Account settings</MenuItem>
-            <MenuItem>Billing and payments</MenuItem>
+            <MenuItem>Billing and payments</MenuItem> */}
 
             <Divider />
 
@@ -72,9 +72,9 @@ export default function ProfileMenu({ profileHref }) {
                 Web Name Pro
               </span>
             </div>
-            <MenuItem>Invite your teammates</MenuItem>
+            {/* <MenuItem>Invite your teammates</MenuItem>
             <MenuItem>Let us find your freelancer</MenuItem>
-            <MenuItem>Let us manage your project</MenuItem>
+            <MenuItem>Let us manage your project</MenuItem> */}
 
             <Divider />
 
@@ -85,8 +85,8 @@ export default function ProfileMenu({ profileHref }) {
               <Globe className="h-4 w-4" />
               English
             </button>
-            <MenuItem>US$ USD</MenuItem>
-            <MenuItem>Support</MenuItem>
+            {/* <MenuItem>US$ USD</MenuItem>
+            <MenuItem>Support</MenuItem> */}
 
             <Divider />
 

@@ -1,4 +1,3 @@
-import { LayoutGrid } from "lucide-react";
 import PublisherNav from "../Components/PublisherNav";
 import ProfilePage from "../Components/ProfilePage";
 import Footer from "../Components/Footer";
@@ -22,10 +21,10 @@ export default function CompanyProfile() {
           location="Colombo, Sri Lanka"
           languages="Speaks English"
           about={`Hello,\n\nWe're TeraNode Labs, a software company offering internships and short-term projects to university students. We care about mentorship as much as output — every intern is paired with an engineer and works on real, shipped features.\n\ncontact us: careers@teranodelabs.com\nThank you.`}
-          portfolioBlurb="Show students the projects and products they'd be working on."
-          introBlurb="Introduce your engineering team and company culture."
-          strength={9}
-          quickLinks={[{ icon: LayoutGrid, label: "Listings", to: "/company/jobs" }]}
+          showPortfolio={false}
+          showIntroVideo={false}
+          showStrength={false}
+          showQuickLinks={false}
           backHref="/company/jobs"
         />
       </main>
