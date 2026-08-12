@@ -1,6 +1,8 @@
 import { useState } from "react";
 import PublisherNav from "../Components/PublisherNav";
 import ProfileScreen from "../Components/ProfileScreen";
+import InfoScreen from "../Components/InfoScreen";
+import { MENU_SCREENS } from "../Components/menuScreens";
 import FormField from "../Components/FormField";
 import ListingCard from "../Components/ListingCard";
 import Footer from "../Components/Footer";
@@ -62,7 +64,7 @@ const EMPTY_FORM = {
 export default function CompanyJobPublisher() {
   const [listings, setListings] = useState(INITIAL_LISTINGS);
   const [form, setForm] = useState(EMPTY_FORM);
-  const [showProfile, setShowProfile] = useState(false);
+  const [activeScreen, setActiveScreen] = useState(null);
 
   function handleChange(field) {
     return (event) => setForm((prev) => ({ ...prev, [field]: event.target.value }));
@@ -89,15 +91,21 @@ export default function CompanyJobPublisher() {
 
   return (
     <div className="mx-auto flex min-h-screen max-w-6xl flex-col bg-white">
-      <PublisherNav title="Company Job Publisher" onProfileClick={() => setShowProfile(true)} />
+      <PublisherNav title="Company Job Publisher" onNavigate={setActiveScreen} />
 
       <main className="flex-1 px-6 py-8">
-        {showProfile ? (
+        {activeScreen === "profile" ? (
           <ProfileScreen
             heading="Company Profile"
             namePlaceholder="e.g. TeraNode Labs"
             categories={COMPANY_CATEGORIES}
-            onBack={() => setShowProfile(false)}
+            onBack={() => setActiveScreen(null)}
+          />
+        ) : activeScreen ? (
+          <InfoScreen
+            heading={MENU_SCREENS[activeScreen].heading}
+            description={MENU_SCREENS[activeScreen].description}
+            onBack={() => setActiveScreen(null)}
           />
         ) : (
           <>

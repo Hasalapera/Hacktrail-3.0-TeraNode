@@ -20,15 +20,19 @@ function Divider() {
 }
 
 // ---------------------------------------------------------------------------
-// ProfileMenu: profile icon + dropdown, shared across every page. Items are
-// placeholders (no handlers yet) until accounts/auth are wired up.
+// ProfileMenu: profile icon + dropdown, shared across every page. Every item
+// that leads somewhere calls onNavigate(key) — the parent page decides what
+// to show ("profile" -> ProfileScreen, everything else -> InfoScreen).
+// Language/currency toggles and "Sign out" have no page and stay inert.
 // ---------------------------------------------------------------------------
-export default function ProfileMenu({ onProfileClick }) {
+export default function ProfileMenu({ onNavigate }) {
   const [open, setOpen] = useState(false);
 
-  function handleProfileClick() {
-    setOpen(false);
-    onProfileClick?.();
+  function handleNavigate(key) {
+    return () => {
+      setOpen(false);
+      onNavigate?.(key);
+    };
   }
 
   return (
@@ -48,16 +52,18 @@ export default function ProfileMenu({ onProfileClick }) {
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
 
           <div className="absolute right-0 top-full z-50 mt-2 w-64 rounded-xl border border-gray-200 bg-white py-2 shadow-lg">
-            <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
-            <MenuItem>Post a job description</MenuItem>
-            <MenuItem>Your briefs</MenuItem>
-            <MenuItem>Dashboard</MenuItem>
-            <MenuItem accent>Refer a friend</MenuItem>
+            <MenuItem onClick={handleNavigate("profile")}>Profile</MenuItem>
+            <MenuItem onClick={handleNavigate("postJob")}>Post a job description</MenuItem>
+            <MenuItem onClick={handleNavigate("briefs")}>Your briefs</MenuItem>
+            <MenuItem onClick={handleNavigate("dashboard")}>Dashboard</MenuItem>
+            <MenuItem accent onClick={handleNavigate("refer")}>
+              Refer a friend
+            </MenuItem>
 
             <Divider />
 
-            <MenuItem>Account settings</MenuItem>
-            <MenuItem>Billing and payments</MenuItem>
+            <MenuItem onClick={handleNavigate("accountSettings")}>Account settings</MenuItem>
+            <MenuItem onClick={handleNavigate("billing")}>Billing and payments</MenuItem>
 
             <Divider />
 
@@ -67,9 +73,13 @@ export default function ProfileMenu({ onProfileClick }) {
                 Web Name Pro
               </span>
             </div>
-            <MenuItem>Invite your teammates</MenuItem>
-            <MenuItem>Let us find your freelancer</MenuItem>
-            <MenuItem>Let us manage your project</MenuItem>
+            <MenuItem onClick={handleNavigate("inviteTeam")}>Invite your teammates</MenuItem>
+            <MenuItem onClick={handleNavigate("findFreelancer")}>
+              Let us find your freelancer
+            </MenuItem>
+            <MenuItem onClick={handleNavigate("manageProject")}>
+              Let us manage your project
+            </MenuItem>
 
             <Divider />
 
@@ -81,7 +91,7 @@ export default function ProfileMenu({ onProfileClick }) {
               English
             </button>
             <MenuItem>US$ USD</MenuItem>
-            <MenuItem>Support</MenuItem>
+            <MenuItem onClick={handleNavigate("support")}>Support</MenuItem>
 
             <Divider />
 

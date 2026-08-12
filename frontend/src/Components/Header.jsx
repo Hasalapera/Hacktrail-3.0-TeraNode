@@ -3,7 +3,7 @@ import ProfileMenu from "./ProfileMenu";
 // ---------------------------------------------------------------------------
 // Header: logo + site name, category tabs (Retail Job/Company/Freelancer), profile icon
 // ---------------------------------------------------------------------------
-export default function Header({ categories, activeCategory, onSelectCategory }) {
+export default function Header({ categories, activeCategory, onSelectCategory, onNavigate }) {
   return (
     <header className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 px-6 py-4">
       <div className="flex items-center gap-2">
@@ -33,7 +33,7 @@ export default function Header({ categories, activeCategory, onSelectCategory })
         })}
       </nav>
 
-      <ProfileMenu />
+      <ProfileMenu onNavigate={onNavigate} />
     </header>
   );
 }

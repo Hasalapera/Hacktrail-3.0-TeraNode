@@ -4,7 +4,7 @@ import ProfileMenu from "./ProfileMenu";
 // PublisherNav: top bar shared by the three publisher pages — logo + title,
 // profile icon.
 // ---------------------------------------------------------------------------
-export default function PublisherNav({ title, onProfileClick }) {
+export default function PublisherNav({ title, onNavigate }) {
   return (
     <header className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 px-6 py-4">
       <div className="flex items-center gap-2">
@@ -17,7 +17,7 @@ export default function PublisherNav({ title, onProfileClick }) {
       <div className="flex items-center gap-4">
         {title && <span className="text-sm font-medium text-gray-500">{title}</span>}
 
-        <ProfileMenu onProfileClick={onProfileClick} />
+        <ProfileMenu onNavigate={onNavigate} />
       </div>
     </header>
   );
