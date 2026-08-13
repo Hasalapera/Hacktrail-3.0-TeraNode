@@ -57,10 +57,15 @@ export default function App() {
         <Route path="/company/profile"    element={<CompanyProfile />} />
         <Route path="/freelancer/profile" element={<FreelancerProfile />} />
 
+        {/* ── Dashboard & Admin routes ── */}
+        <Route path="/dashboard"          element={<Dashboard />} />
+        <Route path="/student/dashboard"  element={<StudentDashboard />} />
+        <Route path="/employer/dashboard" element={<EmployerDashboard />} />
+        <Route path="/management/user/add" element={<AddUser />} />
+
         {/* ── Placeholder routes (unlock as pages are built) ── */}
         <Route path="/change-password"    element={<PlaceholderPage title="Change Password" />} />
         <Route path="/complete-profile"   element={<PlaceholderPage title="Complete Your Profile" />} />
-        <Route path="/dashboard"          element={<PlaceholderPage title="Dashboard 🚀" />} />
 
         {/* 404 */}
         <Route path="*" element={<NotFound />} />

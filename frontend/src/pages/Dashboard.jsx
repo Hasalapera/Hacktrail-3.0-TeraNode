@@ -43,6 +43,7 @@ export default function Dashboard() {
   // location state එක වෙනස් වෙනකොට active tab එක update කරන්න
   useEffect(() => {
     if (location.state?.initialTab) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setActiveTab(location.state.initialTab);
     }
   }, [location.state]);

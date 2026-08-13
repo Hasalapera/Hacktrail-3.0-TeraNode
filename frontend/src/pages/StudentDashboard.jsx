@@ -29,6 +29,7 @@ export default function StudentDashboard() {
 
   useEffect(() => {
     if (activeTab === 'find-gigs') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchOpenJobs();
     }
   }, [activeTab]);
