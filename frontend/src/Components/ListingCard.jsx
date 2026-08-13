@@ -1,14 +1,17 @@
 
-import { Heart, MapPin, Play, Star, Video } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { MapPin, MessageCircle, Play, Star, Video } from "lucide-react";
 
 
 // ---------------------------------------------------------------------------
 // ListingCard: job listing card restyled with UniLift green palette.
 // ---------------------------------------------------------------------------
 export default function ListingCard({ listing }) {
+  const navigate = useNavigate();
   const {
     title,
     seller,
+    studentId,
     isAd,
     badge,
     badgeVariant = "pro",
@@ -21,6 +24,18 @@ export default function ListingCard({ listing }) {
     city,
   } = listing;
 
+  const openMessenger = (e) => {
+    e.stopPropagation();
+    // Deep-link straight into a chat with the freelancer when we know their id
+    const params = new URLSearchParams();
+    if (studentId) {
+      params.set("user", studentId);
+      params.set("name", encodeURIComponent(seller || ""));
+      params.set("role", "STUDENT");
+    }
+    navigate(`/messenger${params.toString() ? `?${params.toString()}` : ""}`);
+  };
+
   return (
     <button
       type="button"
@@ -29,12 +44,22 @@ export default function ListingCard({ listing }) {
     >
       {/* Thumbnail */}
       <div className={`relative aspect-video w-full ${image}`}>
-        {/* Favourite */}
+        {/* Message */}
         <span
-          className="absolute right-2.5 top-2.5 rounded-full p-1.5 text-white backdrop-blur-sm"
+          role="button"
+          tabIndex={0}
+          aria-label="Message seller"
+          onClick={openMessenger}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              openMessenger(e);
+            }
+          }}
+          className="absolute right-2.5 top-2.5 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-white backdrop-blur-sm transition hover:scale-110"
           style={{ background: "rgba(0,0,0,0.30)" }}
         >
-          <Heart className="h-4 w-4" />
+          <MessageCircle className="h-4 w-4" />
         </span>
         {/* Play */}
         <span

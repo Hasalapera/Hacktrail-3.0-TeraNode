@@ -30,6 +30,7 @@ import RetailProfile       from './pages/RetailProfile';
 import CompanyProfile      from './pages/CompanyProfile';
 import FreelancerProfile   from './pages/FreelancerProfile';
 import StudentProfile      from './pages/StudentProfile';
+import Messenger           from './pages/Messenger';
 
 export default function App() {
   return (
@@ -69,6 +70,11 @@ export default function App() {
           <Route path="/dashboard"          element={<Dashboard />} />
           <Route path="/management/user/add" element={<AddUser />} />
           <Route path="/admin/add-users" element={<AddUser />} />
+        </Route>
+
+        {/* ── Messenger (any authenticated role) ── */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/messenger" element={<Messenger />} />
         </Route>
 
         {/* ── Placeholder routes (unlock as pages are built) ── */}

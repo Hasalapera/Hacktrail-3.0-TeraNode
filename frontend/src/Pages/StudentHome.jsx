@@ -1,8 +1,11 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { MessageCircle } from "lucide-react";
 import Header from "../Components/Header";
 import ListingCard from "../Components/ListingCard";
 import Footer from "../Components/Footer";
+import api from "../api/axiosInstance";
 
 /**
  * StudentHome
@@ -30,7 +33,7 @@ function FilterBar({ filters, activeFilter, onSelect }) {
   if (filters.length === 0) return null;
 
   return (
-    <div className="flex flex-wrap gap-2 px-6 pt-4">
+    <div className="flex flex-wrap gap-2">
       {["All", ...filters].map((filter) => {
         const isActive = filter === activeFilter;
         return (
@@ -61,7 +64,10 @@ function ResultsList({ listings, activeFilter }) {
   const filtered =
     activeFilter === "All"
       ? listings
-      : listings.filter((listing) => listing.type === activeFilter);
+      : listings.filter(
+          (listing) =>
+            String(listing.type || "").toLowerCase() === activeFilter.toLowerCase()
+        );
 
   if (filtered.length === 0) {
     return (
@@ -100,6 +106,29 @@ const FILTERS_BY_CATEGORY = {
   company: ["Intern", "Project"],
   freelancer: ["Graphic Design", "Video Editing", "Typing"],
 };
+
+// Gradient thumbnails cycled through for real student gigs (no image uploads yet).
+const THUMBNAILS = [
+  "bg-gradient-to-br from-pink-700 via-rose-500 to-orange-400",
+  "bg-gradient-to-br from-emerald-700 via-emerald-500 to-lime-400",
+  "bg-gradient-to-br from-blue-700 via-blue-500 to-cyan-400",
+  "bg-gradient-to-br from-slate-800 via-slate-600 to-gray-400",
+  "bg-gradient-to-br from-purple-700 via-fuchsia-500 to-pink-500",
+];
+
+// Map an approved Gig (from the API) into the ListingCard shape.
+const mapGigToListing = (gig, index) => ({
+  title: gig.title,
+  type: gig.category,
+  seller: gig.student?.name || "Student",
+  studentId: gig.student?.id,
+  isAd: false,
+  badge: gig.student?.isOpenToWork ? "Open to Work" : "",
+  rating: 0,
+  reviews: String(gig.orders || 0),
+  price: Number(gig.price) || 0,
+  image: THUMBNAILS[index % THUMBNAILS.length],
+});
 
 // Sample listings per category. Swap for real data once the backend/API is
 // wired up — shape stays { title, type, seller, isAd, badge, rating, reviews,
@@ -277,10 +306,41 @@ export default function StudentHome() {
   const [activeCategory, setActiveCategory] = useState("job");
   const [activeFilter, setActiveFilter] = useState("All");
 
+  // Freelancer tab loads real students' approved gigs from the API
+  const [freelancerGigs, setFreelancerGigs] = useState([]);
+  const [freelancerLoading, setFreelancerLoading] = useState(false);
+  const [freelancerError, setFreelancerError] = useState("");
+
+  const fetchFreelancerGigs = async () => {
+    setFreelancerLoading(true);
+    setFreelancerError("");
+    try {
+      const res = await api.get("/gigs");
+      setFreelancerGigs(res.data?.data || []);
+    } catch (err) {
+      setFreelancerError("Could not load freelancers. Please try again.");
+      console.error("Failed to load freelancer gigs:", err);
+    } finally {
+      setFreelancerLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeCategory === "freelancer") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      fetchFreelancerGigs();
+    }
+  }, [activeCategory]);
+
   const handleCategoryChange = (cat) => {
     setActiveCategory(cat);
     setActiveFilter("All");
   };
+
+  const isFreelancer = activeCategory === "freelancer";
+  const listings = isFreelancer
+    ? freelancerGigs.map(mapGigToListing)
+    : LISTINGS_BY_CATEGORY[activeCategory] || [];
 
   return (
     <div className="mx-auto flex min-h-screen max-w-6xl flex-col bg-white">
@@ -291,17 +351,31 @@ export default function StudentHome() {
         profileHref="/student/profile"
       />
 
-      <FilterBar
-        filters={FILTERS_BY_CATEGORY[activeCategory] || []}
-        activeFilter={activeFilter}
-        onSelect={setActiveFilter}
-      />
+      <div className="flex flex-wrap items-center justify-between gap-4 px-6 pt-4">
+        <FilterBar
+          filters={FILTERS_BY_CATEGORY[activeCategory] || []}
+          activeFilter={activeFilter}
+          onSelect={setActiveFilter}
+        />
+        <Link
+          to="/messenger"
+          className="flex items-center gap-1.5 rounded-full border border-primary bg-primary px-4 py-1.5 text-sm font-medium text-white transition hover:bg-primary-mid"
+        >
+          <MessageCircle className="h-4 w-4" />
+          Messages
+        </Link>
+      </div>
 
       <main className="flex-1">
-        <ResultsList
-          listings={LISTINGS_BY_CATEGORY[activeCategory] || []}
-          activeFilter={activeFilter}
-        />
+        {isFreelancer && freelancerLoading ? (
+          <p className="px-6 py-10 text-center text-sm text-text-muted">
+            Loading freelancers...
+          </p>
+        ) : isFreelancer && freelancerError ? (
+          <p className="px-6 py-10 text-center text-sm text-red-500">{freelancerError}</p>
+        ) : (
+          <ResultsList listings={listings} activeFilter={activeFilter} />
+        )}
       </main>
 
       <Footer />

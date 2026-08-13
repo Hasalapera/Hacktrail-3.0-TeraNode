@@ -1,4 +1,5 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { MessageCircle } from 'lucide-react';
 import { useAuth } from '../pages/context/authContext';
 
 export default function PortalLayout({ roleTitle, tabs, activeTab, onTabChange, children }) {
@@ -39,6 +40,14 @@ export default function PortalLayout({ roleTitle, tabs, activeTab, onTabChange, 
                 <span>{tab.label}</span>
               </button>
             ))}
+
+            <Link
+              to="/messenger"
+              className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold text-gray-600 transition-colors hover:bg-slate-100 hover:text-gray-900"
+            >
+              <MessageCircle className="h-4 w-4" />
+              <span>Messages</span>
+            </Link>
           </nav>
         </div>
 
@@ -63,12 +72,21 @@ export default function PortalLayout({ roleTitle, tabs, activeTab, onTabChange, 
             <span className="text-xs font-bold uppercase tracking-wider text-[#1A3268]">{roleTitle} Portal</span>
             <h1 className="text-xl font-extrabold text-gray-900">UniTasker</h1>
           </div>
-          <button
-            onClick={handleLogout}
-            className="rounded-lg bg-red-50 px-3 py-1.5 text-xs font-bold text-red-600"
-          >
-            Logout
-          </button>
+          <div className="flex items-center gap-3">
+            <Link
+              to="/messenger"
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500 transition-colors hover:text-slate-900"
+              aria-label="Messages"
+            >
+              <MessageCircle className="h-4 w-4" />
+            </Link>
+            <button
+              onClick={handleLogout}
+              className="rounded-lg bg-red-50 px-3 py-1.5 text-xs font-bold text-red-600"
+            >
+              Logout
+            </button>
+          </div>
         </header>
 
         {/* Mobile / Tablet Tab Bar */}
