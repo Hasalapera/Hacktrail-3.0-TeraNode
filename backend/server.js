@@ -10,6 +10,7 @@ const jobRoutes = require('./routes/jobRoutes'); // Import job routes
 const { sequelize } = require('./models'); // Sequelize instance eka models walin import kirima
 const authRoutes = require('./routes/authRoutes'); // Auth routes import kirima
 const adminRoutes = require('./routes/adminRoutes'); // Admin routes import kirima
+const studentRoutes = require('./routes/studentRoutes'); // Student routes import kirima
 
 // .env file eke thiyena variables load karanna
 dotenv.config();
@@ -37,6 +38,9 @@ app.use('/api/auth', authRoutes);
 
 // Admin API Routes (POST /api/admin/students/single, POST /api/admin/students/bulk)
 app.use('/api/admin', adminRoutes);
+
+// Student Gigs API Routes
+app.use('/api/student', studentRoutes);
 
 // Job API Routes (POST /api/jobs, GET /api/jobs, etc.)
 app.use('/api/jobs', jobRoutes);

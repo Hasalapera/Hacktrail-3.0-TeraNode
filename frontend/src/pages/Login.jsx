@@ -261,10 +261,10 @@ export default function Login() {
       // Role-based redirect: STUDENT kenek nam student home ekata, anith ayata dashboard ekata
       if (res.data.user.role === 'STUDENT') {
         navigate('/student-home');
-      } else if (res.data.user.role === 'ADMIN' || res.data.user.role === 'EMPLOYER') {
-        if (res.data.user.role === 'EMPLOYER') {
-          navigate('/employer/dashboard'); // Redirect employers to their specific dashboard
-        } else navigate('/dashboard'); // Admins go to the admin dashboard
+      } else if (res.data.user.role === 'EMPLOYER') {
+        navigate('/employer-dashboard');
+      } else if (res.data.user.role === 'ADMIN') {
+        navigate('/dashboard');
       } else {
         navigate('/dashboard');
       }

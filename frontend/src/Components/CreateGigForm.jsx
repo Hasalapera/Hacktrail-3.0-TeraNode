@@ -18,18 +18,27 @@ const SUBCATEGORIES_BY_CATEGORY = {
  * On submit, hands the entered fields back to the caller (GigsScreen adds
  * it as a new Draft gig); no backend yet.
  */
-export default function CreateGigForm({ onSaveAndContinue, onCancel }) {
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("");
-  const [subcategory, setSubcategory] = useState("");
-  const [tags, setTags] = useState("");
-  const [price, setPrice] = useState("");
+export default function CreateGigForm({ onSaveAndContinue, onCancel, initialData }) {
+  const [title, setTitle] = useState(initialData?.title || "");
+  const [category, setCategory] = useState(initialData?.category || "");
+  const [subcategory, setSubcategory] = useState(initialData?.subcategory || "");
+  const [tags, setTags] = useState(Array.isArray(initialData?.tags) ? initialData.tags.join(", ") : (initialData?.tags || ""));
+  const [price, setPrice] = useState(initialData?.price || "");
+  const [description, setDescription] = useState(initialData?.description || "");
 
   const subcategories = SUBCATEGORIES_BY_CATEGORY[category] ?? [];
 
   function handleSubmit(event) {
     event.preventDefault();
-    onSaveAndContinue?.({ title, category, subcategory, tags, price: Number(price) || 0 });
+    onSaveAndContinue?.({
+      id: initialData?.id,
+      title,
+      category,
+      subcategory,
+      tags,
+      price: Number(price) || 0,
+      description
+    });
   }
 
   return (
@@ -139,6 +148,25 @@ export default function CreateGigForm({ onSaveAndContinue, onCancel }) {
                 className="w-full rounded-lg border border-border px-3 py-2.5 text-sm text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
               />
               <p className="mt-1 text-xs text-text-muted">5 tags maximum. Use letters and numbers only.</p>
+            </div>
+          </div>
+
+          {/* Description */}
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-[220px_1fr]">
+            <div>
+              <h3 className="mb-1 text-sm font-bold text-text-main">Description</h3>
+              <p className="text-xs leading-relaxed text-text-sub">
+                Provide a detailed description of your services. Explain what you offer and why clients should choose you.
+              </p>
+            </div>
+            <div>
+              <textarea
+                rows={4}
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
+                placeholder="I will design high quality logos for your startup..."
+                className="w-full rounded-lg border border-border p-4 text-base text-text-main outline-none focus:border-primary-light focus:ring-1 focus:ring-primary-light"
+              />
             </div>
           </div>
 

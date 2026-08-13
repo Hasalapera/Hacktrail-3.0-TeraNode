@@ -18,8 +18,8 @@ export default function ProtectedRoute({ allowedRole }) {
 
   if (allowedRole && user.role !== allowedRole) {
     if (user.role === 'ADMIN') return <Navigate to="/dashboard" replace />;
-    if (user.role === 'EMPLOYER') return <Navigate to="/employer/dashboard" replace />;
-    if (user.role === 'STUDENT') return <Navigate to="/student/dashboard" replace />;
+    if (user.role === 'EMPLOYER') return <Navigate to="/employer-dashboard" replace />;
+    if (user.role === 'STUDENT') return <Navigate to="/student-home" replace />;
     return <Navigate to="/login" replace />;
   }
 

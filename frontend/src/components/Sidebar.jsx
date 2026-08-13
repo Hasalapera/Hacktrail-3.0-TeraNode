@@ -34,16 +34,29 @@ export default function Sidebar({ activeTab, onTabChange, user, onLogout }) {
             </button>
             {/* "Students" tab එකට අදාළව "Add Student" link එක මෙතනින් එකතු වෙනවා */}
             {tab.id === 'students' && (
-              <Link
-                to="/admin/add-users"
-                className={`block rounded-md py-1.5 pl-12 pr-4 text-xs transition-colors ${
-                  location.pathname === '/admin/add-users'
-                    ? 'font-semibold text-white bg-white/5'
-                    : 'text-white/60 hover:text-white hover:bg-white/5'
-                }`}
-              >
-                Add Student
-              </Link>
+              <>
+                <Link
+                  to="/admin/add-users"
+                  className={`block rounded-md py-1.5 pl-12 pr-4 text-xs transition-colors ${
+                    location.pathname === '/admin/add-users'
+                      ? 'font-semibold text-white bg-white/5'
+                      : 'text-white/60 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  Add Student
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => onTabChange('gigs')}
+                  className={`w-full text-left block rounded-md py-1.5 pl-12 pr-4 text-xs transition-colors ${
+                    activeTab === 'gigs'
+                      ? 'font-semibold text-white bg-white/5'
+                      : 'text-white/60 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  Pending Gigs
+                </button>
+              </>
             )}
           </Fragment>
         ))}

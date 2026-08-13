@@ -72,19 +72,26 @@ const login = async (req, res) => {
       return res.status(400).json({ message: 'email or university_id, and password are required' });
     }
 
-    // Mokadda identifier eka kiyala balala e anuva where clause eka hadanna
-    // Eka parata email ekak ho university_id ekak witharai check karanne
+    const identifier = (email || university_id || '').trim();
     const whereClause = {};
-    if (email) {
-      whereClause.email = email;
+    if (identifier.includes('@')) {
+      whereClause.email = identifier;
     } else {
-      whereClause.university_id = university_id;
+      whereClause.university_id = identifier;
     }
+
+    console.log('--- LOGIN DEBUG ---');
+    console.log('Received payload:', { email, university_id, password: '***' });
+    console.log('Derived identifier:', identifier);
+    console.log('DB Query whereClause:', whereClause);
 
     const user = await User.findOne({ where: whereClause });
     if (!user) {
+      console.log('User not found in DB!');
       return res.status(401).json({ message: 'Invalid credentials' });
     }
+
+    console.log('User found:', { id: user.id, email: user.email, role: user.role });
 
     // Password eka match wena eka bcrypt compare karala check kirima
     const isMatch = await bcrypt.compare(password, user.password);
