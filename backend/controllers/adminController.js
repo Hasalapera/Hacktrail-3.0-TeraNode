@@ -119,4 +119,101 @@ const bulkAddStudents = async (req, res) => {
   }
 };
 
-module.exports = { addSingleStudent, bulkAddStudents };
+// Pending and recent employer accounts list karanna (companies + retailers)
+const listEmployerApprovals = async (req, res) => {
+  try {
+    const employers = await User.findAll({
+      where: { role: 'EMPLOYER' },
+      attributes: [
+        'id',
+        'name',
+        'email',
+        'phoneNumber',
+        'companyName',
+        'industry',
+        'hrContactName',
+        'shopName',
+        'businessType',
+        'serviceType',
+        'location',
+        'ownerName',
+        'employerType',
+        'approvalStatus',
+        'approvedAt',
+        'createdAt',
+      ],
+      order: [['createdAt', 'DESC']],
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: employers,
+    });
+  } catch (error) {
+    console.error('listEmployerApprovals error:', error);
+    return res.status(500).json({ message: 'Server error while loading employer approvals' });
+  }
+};
+
+const approveEmployer = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findByPk(id);
+    if (!user || user.role !== 'EMPLOYER') {
+      return res.status(404).json({ message: 'Employer account not found' });
+    }
+
+    user.approvalStatus = 'APPROVED';
+    user.approvedAt = new Date();
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: 'Employer approved successfully',
+      data: {
+        id: user.id,
+        approvalStatus: user.approvalStatus,
+        approvedAt: user.approvedAt,
+      },
+    });
+  } catch (error) {
+    console.error('approveEmployer error:', error);
+    return res.status(500).json({ message: 'Server error while approving employer' });
+  }
+};
+
+const rejectEmployer = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findByPk(id);
+    if (!user || user.role !== 'EMPLOYER') {
+      return res.status(404).json({ message: 'Employer account not found' });
+    }
+
+    user.approvalStatus = 'REJECTED';
+    user.approvedAt = null;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: 'Employer rejected successfully',
+      data: {
+        id: user.id,
+        approvalStatus: user.approvalStatus,
+      },
+    });
+  } catch (error) {
+    console.error('rejectEmployer error:', error);
+    return res.status(500).json({ message: 'Server error while rejecting employer' });
+  }
+};
+
+module.exports = {
+  addSingleStudent,
+  bulkAddStudents,
+  listEmployerApprovals,
+  approveEmployer,
+  rejectEmployer,
+};

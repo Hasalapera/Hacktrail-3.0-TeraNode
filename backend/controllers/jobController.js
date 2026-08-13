@@ -53,7 +53,7 @@ const getAllJobs = async (req, res, next) => {
         {
           model: User,
           as: 'employer',
-          attributes: ['id', 'name', 'email'],
+          attributes: ['id', 'name', 'email', 'employerType', 'companyName', 'shopName', 'industry', 'businessType'],
         },
       ],
       order: [['createdAt', 'DESC']],

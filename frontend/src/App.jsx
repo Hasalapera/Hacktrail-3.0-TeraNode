@@ -17,6 +17,7 @@ import StudentDashboard from './pages/StudentDashboard';
 import EmployerDashboard from './pages/EmployerDashboard';
 
 import StudentHome from './pages/StudentHome';
+import StudentJobDetail from './pages/StudentJobDetail';
 import CompanyRegister from './pages/CompanyRegister';
 import RetailerRegister from './pages/RetailerRegister';
 import NotFound from './pages/NotFound';
@@ -46,6 +47,7 @@ export default function App() {
 
         {/* ── Student routes (Rasara branch — add here as built) ── */}
         <Route path="/student/home" element={<ProtectedRoute allowedRole="STUDENT"><StudentHome /></ProtectedRoute>} />
+        <Route path="/student/jobs/:id" element={<ProtectedRoute allowedRole="STUDENT"><StudentJobDetail /></ProtectedRoute>} />
         <Route path="/student/freelance" element={<ProtectedRoute allowedRole="STUDENT"><FreelancerClient /></ProtectedRoute>} />
         <Route path="/student/profile" element={<ProtectedRoute allowedRole="STUDENT"><StudentProfile /></ProtectedRoute>} />
 

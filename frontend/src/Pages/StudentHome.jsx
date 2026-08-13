@@ -1,8 +1,9 @@
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Header from "../Components/Header";
 import ListingCard from "../Components/ListingCard";
 import Footer from "../Components/Footer";
+import api from "../api/axiosInstance";
 
 /**
  * StudentHome
@@ -57,7 +58,23 @@ function FilterBar({ filters, activeFilter, onSelect }) {
 // ---------------------------------------------------------------------------
 // ResultsList: listings for the active category, narrowed by activeFilter
 // ---------------------------------------------------------------------------
-function ResultsList({ listings, activeFilter }) {
+function ResultsList({ listings, activeFilter, loading, error }) {
+  if (loading) {
+    return (
+      <p className="px-6 py-8 text-center text-sm text-text-muted">
+        Loading latest listings...
+      </p>
+    );
+  }
+
+  if (error) {
+    return (
+      <p className="px-6 py-8 text-center text-sm text-red-600">
+        {error}
+      </p>
+    );
+  }
+
   const filtered =
     activeFilter === "All"
       ? listings
@@ -74,7 +91,11 @@ function ResultsList({ listings, activeFilter }) {
   return (
     <div className="grid grid-cols-1 gap-4 px-6 py-4 sm:grid-cols-2 lg:grid-cols-3">
       {filtered.map((listing) => (
-        <ListingCard key={listing.title} listing={listing} />
+        <ListingCard
+          key={listing.id || `${listing.title}-${listing.seller}`}
+          listing={listing}
+          isStudentView={true}
+        />
       ))}
     </div>
   );
@@ -101,93 +122,7 @@ const FILTERS_BY_CATEGORY = {
   freelancer: ["Graphic Design", "Video Editing", "Typing"],
 };
 
-// Sample listings per category. Swap for real data once the backend/API is
-// wired up — shape stays { title, type, seller, isAd, badge, rating, reviews,
-// price, image } where `type` matches a filter and `image` is a Tailwind
-// gradient class standing in for a real thumbnail URL.
 const LISTINGS_BY_CATEGORY = {
-  job: [
-    {
-      title: "Retail Sales Associate — weekend and evening shifts",
-      type: "Part-time",
-      seller: "Odel Fashion",
-      isAd: true,
-      badge: "Vetted Pro",
-      rating: 4.7,
-      reviews: "212",
-      price: 1500,
-      image: "bg-gradient-to-br from-pink-700 via-rose-500 to-orange-400",
-    },
-    {
-      title: "Cashier needed for a busy campus-area supermarket",
-      type: "Part-time",
-      seller: "Cargills Food City",
-      isAd: false,
-      badge: "",
-      rating: 4.5,
-      reviews: "89",
-      price: 1200,
-      image: "bg-gradient-to-br from-emerald-700 via-emerald-500 to-lime-400",
-    },
-    {
-      title: "Store Team Member — full-time, flexible scheduling",
-      type: "Full-time",
-      seller: "Keells Super",
-      isAd: true,
-      badge: "Vetted Pro",
-      rating: 4.8,
-      reviews: "456",
-      price: 1800,
-      image: "bg-gradient-to-br from-blue-700 via-blue-500 to-cyan-400",
-    },
-    {
-      title: "Stock & Inventory Assistant for a electronics retail chain",
-      type: "Full-time",
-      seller: "Softlogic Retail",
-      isAd: false,
-      badge: "Top Rated",
-      badgeVariant: "topRated",
-      rating: 4.9,
-      reviews: "173",
-      price: 1700,
-      image: "bg-gradient-to-br from-slate-800 via-slate-600 to-gray-400",
-    },
-  ],
-  company: [
-    {
-      title: "Software Engineering Intern — 6 month placement",
-      type: "Intern",
-      seller: "TeraNode Labs",
-      isAd: true,
-      badge: "Vetted Pro",
-      rating: 4.8,
-      reviews: "312",
-      price: 0,
-      image: "bg-gradient-to-br from-purple-700 via-fuchsia-500 to-pink-500",
-    },
-    {
-      title: "Marketing Intern for a campus ambassador program",
-      type: "Intern",
-      seller: "BrightWave Co.",
-      isAd: false,
-      badge: "",
-      rating: 4.6,
-      reviews: "97",
-      price: 0,
-      image: "bg-gradient-to-br from-amber-600 via-orange-500 to-rose-500",
-    },
-    {
-      title: "Campus App Redesign — short-term project",
-      type: "Project",
-      seller: "PixelForge Studio",
-      isAd: false,
-      badge: "Vetted Pro",
-      rating: 4.9,
-      reviews: "540",
-      price: 45000,
-      image: "bg-gradient-to-br from-cyan-700 via-teal-500 to-lime-500",
-    },
-  ],
   freelancer: [
     {
       title: "I will design a handcrafted 3d style logo with a premium finish",
@@ -273,9 +208,102 @@ const LISTINGS_BY_CATEGORY = {
     },
   ],
 };
+
+const THUMBNAILS = [
+  "bg-gradient-to-br from-pink-700 via-rose-500 to-orange-400",
+  "bg-gradient-to-br from-emerald-700 via-emerald-500 to-lime-400",
+  "bg-gradient-to-br from-blue-700 via-blue-500 to-cyan-400",
+  "bg-gradient-to-br from-purple-700 via-fuchsia-500 to-pink-500",
+  "bg-gradient-to-br from-amber-600 via-orange-500 to-rose-500",
+  "bg-gradient-to-br from-cyan-700 via-teal-500 to-lime-500",
+];
+
+const companyTypeFromDescription = (description = "") => {
+  const match = description.match(/Listing type:\s*(Intern|Project)/i);
+  if (!match) return "Project";
+  return match[1].charAt(0).toUpperCase() + match[1].slice(1).toLowerCase();
+};
+
 export default function StudentHome() {
   const [activeCategory, setActiveCategory] = useState("job");
   const [activeFilter, setActiveFilter] = useState("All");
+  const [jobListings, setJobListings] = useState([]);
+  const [companyListings, setCompanyListings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let isActive = true;
+
+    const fetchOpenJobs = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const res = await api.get('/jobs');
+        const jobs = res.data?.data || [];
+
+        const retail = [];
+        const company = [];
+
+        jobs.forEach((job, index) => {
+          const employer = job.employer || {};
+          const employerType = employer.employerType || (employer.shopName ? 'RETAILER' : 'COMPANY');
+
+          const base = {
+            id: job.id,
+            title: job.title,
+            seller:
+              employerType === 'RETAILER'
+                ? employer.shopName || employer.name || job.category || 'Retail Business'
+                : employer.companyName || employer.name || job.category || 'Company',
+            city: job.city || 'Sri Lanka',
+            isAd: false,
+            badge: '',
+            rating: 0,
+            reviews: 'New',
+            price: Number(job.amount) || 0,
+            image: THUMBNAILS[index % THUMBNAILS.length],
+            jobPath: `/student/jobs/${job.id}`,
+            posterPath: `/student/jobs/${job.id}?view=poster`,
+          };
+
+          if (employerType === 'RETAILER') {
+            retail.push({
+              ...base,
+              type: job.paymentType === 'DAILY_WAGE' ? 'Full-time' : 'Part-time',
+            });
+          } else {
+            company.push({
+              ...base,
+              type: companyTypeFromDescription(job.description),
+            });
+          }
+        });
+
+        if (!isActive) return;
+        setJobListings(retail);
+        setCompanyListings(company);
+      } catch (fetchError) {
+        if (!isActive) return;
+        setError(fetchError.response?.data?.message || 'Unable to load job previews right now.');
+      } finally {
+        if (isActive) setLoading(false);
+      }
+    };
+
+    fetchOpenJobs();
+
+    return () => {
+      isActive = false;
+    };
+  }, []);
+
+  const listingsByCategory = useMemo(() => ({
+    job: jobListings,
+    company: companyListings,
+    freelancer: LISTINGS_BY_CATEGORY.freelancer,
+  }), [jobListings, companyListings]);
 
   const handleCategoryChange = (cat) => {
     setActiveCategory(cat);
@@ -299,8 +327,10 @@ export default function StudentHome() {
 
       <main className="flex-1">
         <ResultsList
-          listings={LISTINGS_BY_CATEGORY[activeCategory] || []}
+          listings={listingsByCategory[activeCategory] || []}
           activeFilter={activeFilter}
+          loading={loading && activeCategory !== 'freelancer'}
+          error={activeCategory !== 'freelancer' ? error : ''}
         />
       </main>
 

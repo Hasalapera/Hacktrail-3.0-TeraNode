@@ -11,6 +11,18 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  companyName: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  industry: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  hrContactName: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   shopName: {
     type: DataTypes.STRING,
     allowNull: true,
@@ -43,6 +55,19 @@ const User = sequelize.define('User', {
   role: {
     type: DataTypes.ENUM('STUDENT', 'EMPLOYER', 'ADMIN'),
     allowNull: false,
+  },
+  employerType: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  approvalStatus: {
+    type: DataTypes.ENUM('PENDING', 'APPROVED', 'REJECTED'),
+    allowNull: false,
+    defaultValue: 'APPROVED',
+  },
+  approvedAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
   },
   university_id: {
     // e.g., 'TG/2022/1357' - Only for students (username widiyata use wena nisa unique)

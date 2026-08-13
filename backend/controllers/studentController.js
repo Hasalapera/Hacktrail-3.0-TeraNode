@@ -65,6 +65,33 @@ const updateProfile = async (req, res) => {
   }
 };
 
+// Employer eken student profile eka balanna (job apply karapasse)
+// GET /api/students/:id/profile - Employer role witharai
+const getStudentProfile = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Only EMPLOYER or ADMIN can view a student profile
+    if (req.user.role !== 'EMPLOYER' && req.user.role !== 'ADMIN') {
+      return res.status(403).json({ message: 'Access denied. Employers only.' });
+    }
+
+    const student = await User.findByPk(id, {
+      attributes: ['id', 'name', 'username', 'email', 'phoneNumber', 'university_id', 'isOpenToWork', 'skills'],
+    });
+
+    if (!student || student.role === undefined) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    res.json({ user: student });
+  } catch (error) {
+    console.error('getStudentProfile error:', error);
+    res.status(500).json({ message: 'Server error fetching student profile' });
+  }
+};
+
 module.exports = {
-  updateProfile
+  updateProfile,
+  getStudentProfile,
 };

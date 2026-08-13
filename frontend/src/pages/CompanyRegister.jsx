@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../Components/Logo';
+import api from '../api/axiosInstance';
 
 const INDUSTRIES = [
   'Information Technology',
@@ -60,11 +61,25 @@ export default function CompanyRegister() {
     e.preventDefault();
     const err = validate();
     if (err) { setError(err); return; }
+
     setLoading(true);
-    /* TODO: POST /auth/register/company when backend endpoint is ready */
-    await new Promise((r) => setTimeout(r, 1200));
-    setLoading(false);
-    setSuccess(true);
+
+    try {
+      await api.post('/auth/register/company', {
+        companyName: form.companyName.trim(),
+        industry: form.industry,
+        hrContactName: form.hrContactName.trim(),
+        email: form.email.trim(),
+        contactNumber: form.contactNumber.trim(),
+        password: form.password,
+      });
+
+      setSuccess(true);
+    } catch (submitError) {
+      setError(submitError.response?.data?.message || 'Unable to register company right now.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   /* ── Success Screen ── */

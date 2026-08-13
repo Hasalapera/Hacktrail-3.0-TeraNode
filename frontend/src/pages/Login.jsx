@@ -201,7 +201,9 @@ export default function Login() {
     }
 
     if (user.role === 'EMPLOYER') {
-      const isRetailer = Boolean(user.shopName || user.businessType || user.location);
+      const isRetailer = user.employerType
+        ? user.employerType === 'RETAILER'
+        : Boolean(user.shopName || user.businessType || user.location);
       navigate(isRetailer ? '/retail/jobs' : '/company/jobs', { replace: true });
       return;
     }
@@ -316,7 +318,9 @@ export default function Login() {
       } else if (res.data.user.role === 'ADMIN') {
         navigate('/dashboard');
       } else if (res.data.user.role === 'EMPLOYER') {
-        const isRetailer = Boolean(res.data.user.shopName || res.data.user.businessType || res.data.user.location);
+        const isRetailer = res.data.user.employerType
+          ? res.data.user.employerType === 'RETAILER'
+          : Boolean(res.data.user.shopName || res.data.user.businessType || res.data.user.location);
         navigate(isRetailer ? '/retail/jobs' : '/company/jobs');
       } else {
         navigate('/dashboard');

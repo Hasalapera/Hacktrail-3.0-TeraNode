@@ -26,6 +26,11 @@ export default function EmployerDashboard() {
   const [gigsError, setGigsError] = useState('');
   const [gigsSuccess, setGigsSuccess] = useState('');
 
+  // Student profile modal state
+  const [viewingStudent, setViewingStudent] = useState(null); // { id, name, ... }
+  const [studentProfileLoading, setStudentProfileLoading] = useState(false);
+  const [studentProfileError, setStudentProfileError] = useState('');
+
   // Chat Modal state (Phase 4 integration)
   const [activeJobForChat, setActiveJobForChat] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -107,6 +112,22 @@ export default function EmployerDashboard() {
         setGigsError('');
         setGigsSuccess('');
       }, 5000);
+    }
+  };
+
+  // Student profile eka load karanna - job assign wela thiyana student eka balanna
+  const openStudentProfile = async (studentId) => {
+    setStudentProfileLoading(true);
+    setStudentProfileError('');
+    setViewingStudent(null);
+    try {
+      const res = await api.get(`/students/${studentId}/profile`);
+      setViewingStudent(res.data.user);
+    } catch (err) {
+      setStudentProfileError(err.response?.data?.message || 'Unable to load student profile.');
+      setViewingStudent({ _error: true });
+    } finally {
+      setStudentProfileLoading(false);
     }
   };
 
@@ -295,6 +316,14 @@ export default function EmployerDashboard() {
                         </button>
                       )}
                       {job.freelancer && (
+                        <button
+                          onClick={() => openStudentProfile(job.freelancer.id)}
+                          className="rounded-lg border border-[#0D1F4C] px-4 py-2 text-xs font-bold text-[#0D1F4C] hover:bg-[#0D1F4C] hover:text-white transition-colors"
+                        >
+                          View Profile
+                        </button>
+                      )}
+                      {job.freelancer && (
                         <button onClick={() => openChat(job)} className="rounded-lg bg-[#0D1F4C] px-4 py-2 text-xs font-bold text-white hover:bg-[#1A3268] transition-colors">
                           Messages
                         </button>
@@ -307,6 +336,85 @@ export default function EmployerDashboard() {
           </div>
         )}
       </div>
+
+      {/* Student Profile Modal */}
+      {(viewingStudent || studentProfileLoading) && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm">
+          <div className="relative w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl">
+            {/* Header strip */}
+            <div className="flex items-center justify-between bg-gradient-to-r from-[#071633] to-[#1A3268] px-6 py-5">
+              <div>
+                <h3 className="text-base font-bold text-white">Applicant Profile</h3>
+                <p className="text-xs text-white/50">Student details from UniLift</p>
+              </div>
+              <button
+                onClick={() => { setViewingStudent(null); setStudentProfileError(''); }}
+                className="rounded-full p-1.5 text-white/60 hover:bg-white/10 hover:text-white transition"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="p-6">
+              {studentProfileLoading ? (
+                <div className="flex flex-col items-center gap-3 py-10">
+                  <span className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-[#1A3268]" />
+                  <p className="text-sm text-slate-400">Loading profile…</p>
+                </div>
+              ) : studentProfileError ? (
+                <p className="py-8 text-center text-sm text-red-600">{studentProfileError}</p>
+              ) : viewingStudent?._error ? (
+                <p className="py-8 text-center text-sm text-red-600">Failed to load profile.</p>
+              ) : viewingStudent ? (
+                <div className="flex flex-col gap-5">
+                  {/* Avatar + name */}
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-700 via-indigo-500 to-sky-500 text-2xl font-bold text-white">
+                      {viewingStudent.name?.charAt(0) || 'S'}
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-extrabold text-slate-900">{viewingStudent.name}</h4>
+                      {viewingStudent.username && (
+                        <p className="text-sm text-slate-400">@{viewingStudent.username}</p>
+                      )}
+                      {viewingStudent.isOpenToWork && (
+                        <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-700">
+                          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                          Open to Work
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <hr className="border-slate-100" />
+
+                  {/* Details grid */}
+                  <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                    <ProfileDetail label="University ID" value={viewingStudent.university_id} />
+                    <ProfileDetail label="Phone" value={viewingStudent.phoneNumber} />
+                    <ProfileDetail label="Email" value={viewingStudent.email} span />
+                  </div>
+
+                  {/* Skills */}
+                  {viewingStudent.skills?.length > 0 && (
+                    <div>
+                      <p className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-400">Skills</p>
+                      <div className="flex flex-wrap gap-2">
+                        {viewingStudent.skills.map((skill, i) => (
+                          <span key={i} className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-600">
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Chat Modal (Phase 4) */}
       {activeJobForChat && (
@@ -362,5 +470,15 @@ export default function EmployerDashboard() {
         </div>
       )}
     </PortalLayout>
+  );
+}
+
+// Small helper: one row inside the student profile modal
+function ProfileDetail({ label, value, span = false }) {
+  return (
+    <div className={span ? 'col-span-2' : ''}>
+      <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">{label}</p>
+      <p className="mt-0.5 text-sm font-semibold text-slate-800 break-all">{value || '—'}</p>
+    </div>
   );
 }
