@@ -1,7 +1,7 @@
 // Auth routes eka define karanna (Express 5 Router)
 const express = require('express');
 
-const { register, login, changeFirstPassword, me, updateProfile, registerCompany } = require('../controllers/authController');
+const { register, login, changeFirstPassword, me, updateProfile, registerCompany, registerRetailer } = require('../controllers/authController');
 const { authenticate } = require('../middlewares/authMiddleware');
 
 const router = express.Router();

@@ -88,6 +88,9 @@ const getStudentProfile = async (req, res) => {
   } catch (error) {
     console.error('getStudentProfile error:', error);
     res.status(500).json({ message: 'Server error fetching student profile' });
+  }
+};
+
 // Student Controller - managing student gigs
 const { Gig } = require('../models');
 

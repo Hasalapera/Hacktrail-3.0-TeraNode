@@ -280,7 +280,6 @@ const login = async (req, res) => {
         location: user.location,
         languages: user.languages,
         username: user.username,
-          buildUserResponse(user),
       },
     });
   } catch (error) {
@@ -338,7 +337,6 @@ const changeFirstPassword = async (req, res) => {
         location: user.location,
         languages: user.languages,
         username: user.username,
-          buildUserResponse(user)
       },
     });
   } catch (error) {
@@ -370,7 +368,6 @@ const me = async (req, res) => {
         location: user.location,
         languages: user.languages,
         username: user.username,
-          buildUserResponse(user),
       },
     });
   } catch (error) {
@@ -417,4 +414,4 @@ const updateProfile = async (req, res) => {
   }
 };
 
-module.exports = { register, login, changeFirstPassword, me, updateProfile, registerCompany };
+module.exports = { register, login, changeFirstPassword, me, updateProfile, registerCompany, registerRetailer };

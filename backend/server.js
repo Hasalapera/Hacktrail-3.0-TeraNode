@@ -42,14 +42,13 @@ app.use('/api/auth', authRoutes);
 // Admin API Routes (POST /api/admin/students/single, POST /api/admin/students/bulk)
 app.use('/api/admin', adminRoutes);
 
-// Student Gigs API Routes
+// Student Gigs API Routes (GET/POST /api/student/gigs, etc.)
 app.use('/api/student', studentRoutes);
 
 // Job API Routes (POST /api/jobs, GET /api/jobs, etc.)
 app.use('/api/jobs', jobRoutes);
 
-// Student API Routes
-const studentRoutes = require('./routes/studentRoutes');
+// Student Profile API Routes (PUT /api/students/profile, GET /api/students/:id/profile)
 app.use('/api/students', studentRoutes);
 // Chat API Routes (GET /api/chat/users, /api/chat/conversations, POST /api/chat/messages)
 app.use('/api/chat', authenticate, chatRoutes);

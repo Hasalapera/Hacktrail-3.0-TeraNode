@@ -1,6 +1,6 @@
 
 
-import { useEffect, useState, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { MessageCircle } from "lucide-react";
 import Header from "../Components/Header";
@@ -151,106 +151,9 @@ const mapGigToListing = (gig, index) => ({
   image: THUMBNAILS[index % THUMBNAILS.length],
 });
 
-// Sample listings per category. Swap for real data once the backend/API is
-// wired up — shape stays { title, type, seller, isAd, badge, rating, reviews,
-// price, image } where `type` matches a filter and `image` is a Tailwind
-// gradient class standing in for a real thumbnail URL.
-const LISTINGS_BY_CATEGORY = {
-  freelancer: [
-    {
-      title: "I will design a handcrafted 3d style logo with a premium finish",
-      type: "Graphic Design",
-      seller: "Kassou",
-      isAd: true,
-      badge: "Vetted Pro",
-      rating: 5.0,
-      reviews: "1k+",
-      price: 35000,
-      image: "bg-gradient-to-br from-stone-700 via-stone-500 to-green-600",
-    },
-    {
-      title: "I will design a modern minimalistic monogram logo for your brand",
-      type: "Graphic Design",
-      seller: "Unipen",
-      isAd: true,
-      badge: "Vetted Pro",
-      rating: 4.8,
-      reviews: "31",
-      price: 20000,
-      offersVideo: true,
-      image: "bg-gradient-to-br from-neutral-900 via-neutral-800 to-black",
-    },
-    {
-      title: "I will design a creative minimalist logo",
-      type: "Graphic Design",
-      seller: "Alpa",
-      isAd: true,
-      badge: "Vetted Pro",
-      rating: 4.9,
-      reviews: "1k+",
-      price: 14000,
-      offersVideo: true,
-      image: "bg-gradient-to-br from-gray-300 via-gray-200 to-gray-100",
-    },
-    {
-      title: "Our agency will design business logo designs with brand style guide",
-      type: "Graphic Design",
-      seller: "Illustra Sol",
-      isAd: true,
-      badge: "Top Rated",
-      badgeVariant: "topRated",
-      rating: 5.0,
-      reviews: "18",
-      price: 30000,
-      offersVideo: true,
-      image: "bg-gradient-to-br from-slate-900 via-blue-700 to-blue-500",
-    },
-    {
-      title: "I will design a modern minimal custom logo for your business",
-      type: "Graphic Design",
-      seller: "Bhavik C",
-      isAd: true,
-      badge: "Vetted Pro",
-      rating: 4.9,
-      reviews: "113",
-      price: 16000,
-      offersVideo: true,
-      image: "bg-gradient-to-br from-blue-700 via-blue-500 to-cyan-400",
-    },
-    {
-      title: "I will edit a punchy highlight reel for your next event",
-      type: "Video Editing",
-      seller: "Ravindu Silva",
-      isAd: false,
-      badge: "Vetted Pro",
-      rating: 4.9,
-      reviews: "634",
-      price: 15000,
-      image: "bg-gradient-to-br from-red-700 via-rose-500 to-orange-400",
-    },
-    {
-      title: "I will transcribe your lecture notes accurately and fast",
-      type: "Typing",
-      seller: "Anusha Jayasuriya",
-      isAd: false,
-      badge: "",
-      rating: 4.7,
-      reviews: "215",
-      price: 3000,
-      image: "bg-gradient-to-br from-blue-700 via-blue-500 to-indigo-400",
-    },
-  ],
-};
-
-const THUMBNAILS = [
-  "bg-gradient-to-br from-pink-700 via-rose-500 to-orange-400",
-  "bg-gradient-to-br from-emerald-700 via-emerald-500 to-lime-400",
-  "bg-gradient-to-br from-blue-700 via-blue-500 to-cyan-400",
-  "bg-gradient-to-br from-purple-700 via-fuchsia-500 to-pink-500",
-  "bg-gradient-to-br from-amber-600 via-orange-500 to-rose-500",
-  "bg-gradient-to-br from-cyan-700 via-teal-500 to-lime-500",
-];
-
+// Sample listings were replaced by live data:
+//  - job/company tabs fetch from GET /jobs (jobListings / companyListings)
+//  - freelancer tab fetches approved gigs from GET /gigs (freelancerGigs)
 const companyTypeFromDescription = (description = "") => {
   const match = description.match(/Listing type:\s*(Intern|Project)/i);
   if (!match) return "Project";
@@ -332,12 +235,6 @@ export default function StudentHome() {
     };
   }, []);
 
-  const listingsByCategory = useMemo(() => ({
-    job: jobListings,
-    company: companyListings,
-    freelancer: LISTINGS_BY_CATEGORY.freelancer,
-  }), [jobListings, companyListings]);
-
   // Freelancer tab loads real students' approved gigs from the API
   const [freelancerGigs, setFreelancerGigs] = useState([]);
   const [freelancerLoading, setFreelancerLoading] = useState(false);
@@ -372,7 +269,11 @@ export default function StudentHome() {
   const isFreelancer = activeCategory === "freelancer";
   const listings = isFreelancer
     ? freelancerGigs.map(mapGigToListing)
-    : LISTINGS_BY_CATEGORY[activeCategory] || [];
+    : activeCategory === "job"
+    ? jobListings
+    : activeCategory === "company"
+    ? companyListings
+    : [];
 
   return (
     <div className="mx-auto flex min-h-screen max-w-6xl flex-col bg-white">
@@ -383,18 +284,6 @@ export default function StudentHome() {
         profileHref="/student/profile"
       />
 
-      <FilterBar
-        filters={FILTERS_BY_CATEGORY[activeCategory] || []}
-        activeFilter={activeFilter}
-        onSelect={setActiveFilter}
-      />
-
-      <main className="flex-1">
-        <ResultsList
-          listings={listingsByCategory[activeCategory] || []}
-          activeFilter={activeFilter}
-          loading={loading && activeCategory !== 'freelancer'}
-          error={activeCategory !== 'freelancer' ? error : ''}
       <div className="flex flex-wrap items-center justify-between gap-4 px-6 pt-4">
         <FilterBar
           filters={FILTERS_BY_CATEGORY[activeCategory] || []}
@@ -411,14 +300,23 @@ export default function StudentHome() {
       </div>
 
       <main className="flex-1">
-        {isFreelancer && freelancerLoading ? (
-          <p className="px-6 py-10 text-center text-sm text-text-muted">
-            Loading freelancers...
-          </p>
-        ) : isFreelancer && freelancerError ? (
-          <p className="px-6 py-10 text-center text-sm text-red-500">{freelancerError}</p>
+        {isFreelancer ? (
+          freelancerLoading ? (
+            <p className="px-6 py-10 text-center text-sm text-text-muted">
+              Loading freelancers...
+            </p>
+          ) : freelancerError ? (
+            <p className="px-6 py-10 text-center text-sm text-red-500">{freelancerError}</p>
+          ) : (
+            <ResultsList listings={listings} activeFilter={activeFilter} />
+          )
         ) : (
-          <ResultsList listings={listings} activeFilter={activeFilter} />
+          <ResultsList
+            listings={listings}
+            activeFilter={activeFilter}
+            loading={loading}
+            error={error}
+          />
         )}
       </main>
 

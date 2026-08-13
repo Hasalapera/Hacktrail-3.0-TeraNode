@@ -207,6 +207,9 @@ const rejectEmployer = async (req, res) => {
   } catch (error) {
     console.error('rejectEmployer error:', error);
     return res.status(500).json({ message: 'Server error while rejecting employer' });
+  }
+};
+
 // Get all pending gigs
 const getPendingGigs = async (req, res, next) => {
   try {

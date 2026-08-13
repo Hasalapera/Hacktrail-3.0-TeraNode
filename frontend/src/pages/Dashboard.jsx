@@ -67,6 +67,9 @@ export default function Dashboard() {
       setEmployersError(error.response?.data?.message || `Failed to ${action} employer account.`);
     } finally {
       setActionLoadingId('');
+    }
+  };
+
   const [pendingGigs, setPendingGigs] = useState([]);
   const [gigsLoading, setGigsLoading] = useState(false);
   const [gigsError, setGigsError] = useState('');
@@ -114,6 +117,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (activeTab === 'employers') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       loadEmployerApprovals();
     }
   }, [activeTab]);

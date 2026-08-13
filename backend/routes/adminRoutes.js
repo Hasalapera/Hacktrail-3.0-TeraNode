@@ -7,8 +7,9 @@ const {
 	listEmployerApprovals,
 	approveEmployer,
 	rejectEmployer,
+	getPendingGigs,
+	updateGigStatus,
 } = require('../controllers/adminController'); // Import admin controller functions
-const { addSingleStudent, bulkAddStudents, getPendingGigs, updateGigStatus } = require('../controllers/adminController'); // Import admin controller functions
 const { authenticate } = require('../middlewares/authMiddleware');
 const { checkRole } = require('../middlewares/roleMiddleware'); // Import checkRole middleware
 

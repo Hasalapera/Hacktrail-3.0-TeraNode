@@ -1,8 +1,5 @@
-
-import { Heart, MapPin, Play, Star, Video } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import { MapPin, MessageCircle, Play, Star, Video } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 
 // ---------------------------------------------------------------------------
@@ -15,7 +12,6 @@ import { MapPin, MessageCircle, Play, Star, Video } from "lucide-react";
 //                   Students should NEVER see the publisher buttons.
 // ---------------------------------------------------------------------------
 export default function ListingCard({ listing, isStudentView = false }) {
-export default function ListingCard({ listing }) {
   const navigate = useNavigate();
   const {
     id,
@@ -49,11 +45,6 @@ export default function ListingCard({ listing }) {
     }
     navigate(`/messenger${params.toString() ? `?${params.toString()}` : ""}`);
   };
-
-  return (
-    <button
-      type="button"
-      className="flex w-full flex-col overflow-hidden rounded-xl border border-border bg-white text-left shadow-sm transition hover:border-primary-light hover:shadow-md"
 
   return (
     <div className="flex w-full flex-col overflow-hidden rounded-xl border border-border bg-white text-left shadow-sm transition hover:border-primary-light hover:shadow-md">

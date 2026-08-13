@@ -322,11 +322,6 @@ export default function Login() {
           ? res.data.user.employerType === 'RETAILER'
           : Boolean(res.data.user.shopName || res.data.user.businessType || res.data.user.location);
         navigate(isRetailer ? '/retail/jobs' : '/company/jobs');
-        navigate('/student-home');
-      } else if (res.data.user.role === 'EMPLOYER') {
-        navigate('/employer-dashboard');
-      } else if (res.data.user.role === 'ADMIN') {
-        navigate('/dashboard');
       } else {
         navigate('/dashboard');
       }

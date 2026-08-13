@@ -7,7 +7,6 @@ import { Routes, Route } from 'react-router-dom';
 import MessageButton from './Components/MessageButton.jsx';
 import ProtectedRoute from './Components/ProtectedRoute';
 import LandingPage from './pages/LandingPage';
-import ProtectedRoute from './Components/ProtectedRoute';
 
 // ── Auth & Onboarding pages (hass branch) ──────────────────
 import Login from './pages/Login';
