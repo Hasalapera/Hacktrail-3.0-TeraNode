@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Globe, UserCircle2 } from "lucide-react";
+import { useAuth } from "../pages/context/authContext";
 
-function MenuItem({ children, accent }) {
+function MenuItem({ children, accent, onClick }) {
   return (
     <button
       type="button"
+      onClick={onClick}
       className={`block w-full px-4 py-1.5 text-left text-sm transition hover:bg-surface ${
         accent ? "font-medium text-accent-dark" : "text-text-sub"
       }`}
@@ -25,6 +27,14 @@ function Divider() {
 // ---------------------------------------------------------------------------
 export default function ProfileMenu({ profileHref }) {
   const [open, setOpen] = useState(false);
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    logout();
+    setOpen(false);
+    navigate('/login', { replace: true });
+  };
 
   return (
     <div className="relative">
@@ -90,7 +100,7 @@ export default function ProfileMenu({ profileHref }) {
 
             <Divider />
 
-            <MenuItem>Sign out</MenuItem>
+            <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
           </div>
         </>
       )}

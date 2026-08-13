@@ -11,6 +11,38 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  companyName: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  industry: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  hrContactName: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  shopName: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  businessType: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  serviceType: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  location: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  ownerName: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -24,11 +56,33 @@ const User = sequelize.define('User', {
     type: DataTypes.ENUM('STUDENT', 'EMPLOYER', 'ADMIN'),
     allowNull: false,
   },
+  employerType: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  approvalStatus: {
+    type: DataTypes.ENUM('PENDING', 'APPROVED', 'REJECTED'),
+    allowNull: false,
+    defaultValue: 'APPROVED',
+  },
+  approvedAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
   university_id: {
     // e.g., 'TG/2022/1357' - Only for students (username widiyata use wena nisa unique)
     type: DataTypes.STRING,
     allowNull: true,
     unique: true,
+  },
+  username: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    unique: true,
+  },
+  phoneNumber: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
   isOpenToWork: {
     type: DataTypes.BOOLEAN,

@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PublisherNav from "../Components/PublisherNav";
 import FormField from "../Components/FormField";
 import ListingCard from "../Components/ListingCard";
 import Footer from "../Components/Footer";
+import api from "../api/axiosInstance";
 
 /**
  * CompanyJobPublisher
@@ -15,37 +16,10 @@ import Footer from "../Components/Footer";
 
 const LISTING_TYPES = ["Intern", "Project"];
 
-// Gradient thumbnails cycled through for newly posted listings — placeholder
-// for a real image upload once the backend exists.
 const THUMBNAILS = [
   "bg-gradient-to-br from-purple-700 via-fuchsia-500 to-pink-500",
   "bg-gradient-to-br from-amber-600 via-orange-500 to-rose-500",
   "bg-gradient-to-br from-cyan-700 via-teal-500 to-lime-500",
-];
-
-const INITIAL_LISTINGS = [
-  {
-    title: "Software Engineering Intern — 6 month placement",
-    type: "Intern",
-    seller: "TeraNode Labs",
-    isAd: true,
-    badge: "Vetted Pro",
-    rating: 4.8,
-    reviews: "312",
-    price: 0,
-    image: THUMBNAILS[0],
-  },
-  {
-    title: "Campus App Redesign — short-term project",
-    type: "Project",
-    seller: "PixelForge Studio",
-    isAd: false,
-    badge: "Vetted Pro",
-    rating: 4.9,
-    reviews: "540",
-    price: 45000,
-    image: THUMBNAILS[2],
-  },
 ];
 
 const EMPTY_FORM = {
@@ -57,30 +31,77 @@ const EMPTY_FORM = {
 };
 
 export default function CompanyJobPublisher() {
-  const [listings, setListings] = useState(INITIAL_LISTINGS);
+  const [listings, setListings] = useState([]);
   const [form, setForm] = useState(EMPTY_FORM);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+
+  const fetchMyJobs = async () => {
+    try {
+      const res = await api.get('/jobs/my-gigs');
+      const jobs = res.data?.data || [];
+
+      const mapped = jobs.map((job, index) => ({
+        title: job.title,
+        type: job.category || job.title,
+        seller: job.category || job.employer?.name || 'Company',
+        city: job.city || 'Colombo',
+        isAd: false,
+        badge: '',
+        rating: 0,
+        reviews: 'New',
+        price: Number(job.amount) || 0,
+        image: THUMBNAILS[index % THUMBNAILS.length],
+      }));
+
+      setListings(mapped);
+    } catch (fetchError) {
+      console.error('Failed to fetch company jobs:', fetchError);
+      setError('Unable to load your job listings right now.');
+    }
+  };
+
+  useEffect(() => {
+    fetchMyJobs();
+  }, []);
 
   function handleChange(field) {
     return (event) => setForm((prev) => ({ ...prev, [field]: event.target.value }));
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
+    setError('');
 
-    const newListing = {
-      title: form.title,
-      type: form.listingType,
-      seller: form.companyName,
-      isAd: false,
-      badge: "",
-      rating: 0,
-      reviews: "New",
-      price: Number(form.budget) || 0,
-      image: THUMBNAILS[listings.length % THUMBNAILS.length],
-    };
+    if (!form.companyName || !form.title || !form.budget) {
+      setError('Please fill in the required fields before posting the job.');
+      return;
+    }
 
-    setListings((prev) => [newListing, ...prev]);
-    setForm(EMPTY_FORM);
+    setLoading(true);
+
+    try {
+      const payload = {
+        title: form.title.trim(),
+        description: `${form.description || 'Company listing'}\nCompany: ${form.companyName}\nListing type: ${form.listingType}`,
+        category: form.companyName.trim(),
+        paymentType: 'TASK_BASED',
+        amount: Number(form.budget),
+        city: 'Colombo',
+      };
+
+      await api.post('/jobs', payload);
+      setForm(EMPTY_FORM);
+      setSubmitted(true);
+      setTimeout(() => setSubmitted(false), 3000);
+      await fetchMyJobs();
+    } catch (submitError) {
+      console.error('Failed to create company job:', submitError);
+      setError(submitError.response?.data?.message || 'Failed to save the job listing.');
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -156,11 +177,24 @@ export default function CompanyJobPublisher() {
               />
             </FormField>
 
+            {submitted && (
+              <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700">
+                ✅ Job posted successfully!
+              </div>
+            )}
+
+            {error && (
+              <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-700">
+                ⚠️ {error}
+              </div>
+            )}
+
             <button
               type="submit"
-              className="mt-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-white transition hover:bg-primary-mid"
+              disabled={loading}
+              className="mt-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-white transition hover:bg-primary-mid disabled:opacity-70"
             >
-              Post Company Listing
+              {loading ? "Saving job..." : "Post Company Listing"}
             </button>
           </form>
 
@@ -168,11 +202,17 @@ export default function CompanyJobPublisher() {
             <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-text-sub">
               Your posted listings
             </h2>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {listings.map((listing, index) => (
-                <ListingCard key={`${listing.title}-${index}`} listing={listing} />
-              ))}
-            </div>
+            {listings.length === 0 ? (
+              <div className="rounded-xl border border-dashed border-border bg-white px-6 py-12 text-center text-sm text-text-sub">
+                No listings yet. Post your first company role.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {listings.map((listing, index) => (
+                  <ListingCard key={`${listing.title}-${index}`} listing={listing} />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </main>

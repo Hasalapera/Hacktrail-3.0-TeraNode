@@ -9,6 +9,29 @@ const generateToken = (userId, role) => {
   return jwt.sign({ id: userId, role }, process.env.JWT_SECRET, { expiresIn: '7d' });
 };
 
+const buildUserResponse = (user) => ({
+  id: user.id,
+  name: user.name,
+  companyName: user.companyName,
+  industry: user.industry,
+  hrContactName: user.hrContactName,
+  shopName: user.shopName,
+  businessType: user.businessType,
+  serviceType: user.serviceType,
+  location: user.location,
+  ownerName: user.ownerName,
+  employerType: user.employerType,
+  approvalStatus: user.approvalStatus,
+  approvedAt: user.approvedAt,
+  email: user.email,
+  username: user.username,
+  phoneNumber: user.phoneNumber,
+  role: user.role,
+  university_id: user.university_id,
+  isOpenToWork: user.isOpenToWork,
+  skills: user.skills,
+});
+
 // Register user eka - EMPLOYER kenekuta witharai self-register karanna puluwan
 // (Students la self-register karanna ba - admin kenek add karanna one)
 const register = async (req, res) => {
@@ -36,9 +59,13 @@ const register = async (req, res) => {
 
     const user = await User.create({
       name,
+      companyName: name,
       email,
       password: hashedPassword,
       role: 'EMPLOYER',
+      employerType: 'COMPANY',
+      approvalStatus: 'PENDING',
+      approvedAt: null,
       isOpenToWork: false,
       skills: [],
     });
@@ -48,18 +75,137 @@ const register = async (req, res) => {
     res.status(201).json({
       message: 'Employer registered successfully',
       token,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        isOpenToWork: user.isOpenToWork,
-        skills: user.skills,
-      },
+      user: buildUserResponse(user),
     });
   } catch (error) {
     console.error('Register error:', error);
     res.status(500).json({ message: 'Server error during registration' });
+  }
+};
+
+const registerCompany = async (req, res) => {
+  try {
+    const {
+      companyName,
+      industry,
+      hrContactName,
+      email,
+      contactNumber,
+      password,
+    } = req.body;
+
+    if (!companyName || !industry || !hrContactName || !email || !contactNumber || !password) {
+      return res.status(400).json({
+        message: 'companyName, industry, hrContactName, email, contactNumber and password are required',
+      });
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ message: 'Please enter a valid email address.' });
+    }
+
+    if (password.length < 8) {
+      return res.status(400).json({ message: 'Password must be at least 8 characters.' });
+    }
+
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      return res.status(409).json({ message: 'Email already registered' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await User.create({
+      name: companyName,
+      companyName,
+      industry,
+      hrContactName,
+      email,
+      phoneNumber: contactNumber,
+      password: hashedPassword,
+      role: 'EMPLOYER',
+      employerType: 'COMPANY',
+      approvalStatus: 'PENDING',
+      approvedAt: null,
+      isOpenToWork: false,
+      skills: [],
+    });
+
+    const token = generateToken(user.id, user.role);
+
+    res.status(201).json({
+      message: 'Company registered successfully. Waiting for admin approval.',
+      token,
+      user: buildUserResponse(user),
+    });
+  } catch (error) {
+    console.error('Company registration error:', error);
+    res.status(500).json({ message: 'Server error during company registration' });
+  }
+};
+
+const registerRetailer = async (req, res) => {
+  try {
+    const {
+      shopName,
+      businessType,
+      serviceType,
+      location,
+      ownerName,
+      email,
+      phoneNumber,
+      password,
+    } = req.body;
+
+    if (!shopName || !businessType || !location || !ownerName || !email || !phoneNumber || !password) {
+      return res.status(400).json({
+        message: 'shopName, businessType, location, ownerName, email, phoneNumber and password are required',
+      });
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ message: 'Please enter a valid email address.' });
+    }
+
+    if (password.length < 8) {
+      return res.status(400).json({ message: 'Password must be at least 8 characters.' });
+    }
+
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      return res.status(409).json({ message: 'Email already registered' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await User.create({
+      name: ownerName,
+      shopName,
+      businessType,
+      serviceType: serviceType || businessType,
+      location,
+      ownerName,
+      email,
+      phoneNumber,
+      password: hashedPassword,
+      role: 'EMPLOYER',
+      employerType: 'RETAILER',
+      approvalStatus: 'PENDING',
+      approvedAt: null,
+      isOpenToWork: false,
+      skills: [],
+    });
+
+    const token = generateToken(user.id, user.role);
+
+    res.status(201).json({
+      message: 'Retailer registered successfully. Waiting for admin approval.',
+      token,
+      user: buildUserResponse(user),
+    });
+  } catch (error) {
+    console.error('Retailer registration error:', error);
+    res.status(500).json({ message: 'Server error during retailer registration' });
   }
 };
 
@@ -109,11 +255,19 @@ const login = async (req, res) => {
       });
     }
 
+    if (user.role === 'EMPLOYER' && user.approvalStatus !== 'APPROVED') {
+      return res.status(403).json({
+        message: 'Your account is waiting for admin approval.',
+        approvalStatus: user.approvalStatus,
+      });
+    }
+
     const token = generateToken(user.id, user.role);
 
     res.json({
       message: 'Login successful',
       token,
+
       user: {
         id: user.id,
         name: user.name,
@@ -126,6 +280,7 @@ const login = async (req, res) => {
         location: user.location,
         languages: user.languages,
         username: user.username,
+          buildUserResponse(user),
       },
     });
   } catch (error) {
@@ -170,6 +325,7 @@ const changeFirstPassword = async (req, res) => {
     res.json({
       message: 'Password changed successfully. You are now logged in.',
       token,
+
       user: {
         id: user.id,
         name: user.name,
@@ -182,6 +338,7 @@ const changeFirstPassword = async (req, res) => {
         location: user.location,
         languages: user.languages,
         username: user.username,
+          buildUserResponse(user)
       },
     });
   } catch (error) {
@@ -200,6 +357,7 @@ const me = async (req, res) => {
     }
 
     res.json({
+
       user: {
         id: user.id,
         name: user.name,
@@ -212,6 +370,7 @@ const me = async (req, res) => {
         location: user.location,
         languages: user.languages,
         username: user.username,
+          buildUserResponse(user),
       },
     });
   } catch (error) {
@@ -258,4 +417,4 @@ const updateProfile = async (req, res) => {
   }
 };
 
-module.exports = { register, login, changeFirstPassword, me, updateProfile };
+module.exports = { register, login, changeFirstPassword, me, updateProfile, registerCompany };

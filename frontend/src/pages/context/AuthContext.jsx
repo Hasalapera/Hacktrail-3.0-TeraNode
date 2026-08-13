@@ -44,6 +44,10 @@ export function AuthProvider({ children }) {
     setUser(userData);
   };
 
+  const updateUser = (userData) => {
+    setUser((currentUser) => ({ ...currentUser, ...userData }));
+  };
+
   // Logout - token eka remove karala user state eka clear karanna
   const logout = () => {
     localStorage.removeItem('token');
@@ -51,6 +55,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
+    <AuthContext.Provider value={{ user, loading, login, logout, updateUser }}>
     <AuthContext.Provider value={{ user, loading, login, logout, setUser }}>
       {children}
     </AuthContext.Provider>

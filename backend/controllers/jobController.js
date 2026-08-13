@@ -4,13 +4,13 @@ const { Job, User } = require('../models');
 // 1. Create Job (POST /api/jobs) - Employer witharai
 const createJob = async (req, res, next) => {
   try {
-    const { title, description, category, paymentType, amount } = req.body;
+    const { title, description, category, paymentType, amount, city } = req.body;
 
     // Aniwaryaya fields check karanna
-    if (!title || !description || !category || !paymentType || amount === undefined || amount === null) {
+    if (!title || !description || !category || !paymentType || amount === undefined || amount === null || !city) {
       return res.status(400).json({
         success: false,
-        message: 'title, description, category, paymentType, and amount are required.',
+        message: 'title, description, category, paymentType, amount, and city are required.',
       });
     }
 
@@ -29,6 +29,7 @@ const createJob = async (req, res, next) => {
       category,
       paymentType,
       amount,
+      city,
       status: 'OPEN',
       employerId: req.user.id,
     });
@@ -52,7 +53,7 @@ const getAllJobs = async (req, res, next) => {
         {
           model: User,
           as: 'employer',
-          attributes: ['id', 'name', 'email'],
+          attributes: ['id', 'name', 'email', 'employerType', 'companyName', 'shopName', 'industry', 'businessType'],
         },
       ],
       order: [['createdAt', 'DESC']],

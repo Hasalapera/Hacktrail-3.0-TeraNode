@@ -5,6 +5,7 @@
 // ============================================================
 import { Routes, Route } from 'react-router-dom';
 import MessageButton from './Components/MessageButton.jsx';
+import ProtectedRoute from './Components/ProtectedRoute';
 import LandingPage from './pages/LandingPage';
 import ProtectedRoute from './Components/ProtectedRoute';
 
@@ -17,6 +18,7 @@ import StudentDashboard from './pages/StudentDashboard';
 import EmployerDashboard from './pages/EmployerDashboard';
 
 import StudentHome from './pages/StudentHome';
+import StudentJobDetail from './pages/StudentJobDetail';
 import CompanyRegister from './pages/CompanyRegister';
 import RetailerRegister from './pages/RetailerRegister';
 import NotFound from './pages/NotFound';
@@ -45,6 +47,26 @@ export default function App() {
         <Route path="/register/company"   element={<CompanyRegister />} />
         <Route path="/register/retailer"  element={<RetailerRegister />} />
 
+        {/* ── Student routes (Rasara branch — add here as built) ── */}
+        <Route path="/student/home" element={<ProtectedRoute allowedRole="STUDENT"><StudentHome /></ProtectedRoute>} />
+        <Route path="/student/jobs/:id" element={<ProtectedRoute allowedRole="STUDENT"><StudentJobDetail /></ProtectedRoute>} />
+        <Route path="/student/freelance" element={<ProtectedRoute allowedRole="STUDENT"><FreelancerClient /></ProtectedRoute>} />
+        <Route path="/student/profile" element={<ProtectedRoute allowedRole="STUDENT"><StudentProfile /></ProtectedRoute>} />
+
+        {/* ── Publisher routes (Rasara branch — add here as built) ── */}
+        <Route path="/retail/jobs" element={<ProtectedRoute allowedRole="EMPLOYER"><RetailJobPublisher /></ProtectedRoute>} />
+        <Route path="/company/jobs" element={<ProtectedRoute allowedRole="EMPLOYER"><CompanyJobPublisher /></ProtectedRoute>} />
+
+        {/* ── Publisher profile pages ── */}
+        <Route path="/retail/profile" element={<ProtectedRoute allowedRole="EMPLOYER"><RetailProfile /></ProtectedRoute>} />
+        <Route path="/company/profile" element={<ProtectedRoute allowedRole="EMPLOYER"><CompanyProfile /></ProtectedRoute>} />
+        <Route path="/freelancer/profile" element={<ProtectedRoute allowedRole="STUDENT"><FreelancerProfile /></ProtectedRoute>} />
+
+        {/* ── Dashboard & Admin routes ── */}
+        <Route path="/dashboard" element={<ProtectedRoute allowedRole="ADMIN"><Dashboard /></ProtectedRoute>} />
+        <Route path="/student/dashboard" element={<ProtectedRoute allowedRole="STUDENT"><StudentDashboard /></ProtectedRoute>} />
+        <Route path="/employer/dashboard" element={<ProtectedRoute allowedRole="EMPLOYER"><EmployerDashboard /></ProtectedRoute>} />
+        <Route path="/management/user/add" element={<ProtectedRoute allowedRole="ADMIN"><AddUser /></ProtectedRoute>} />
         {/* ── Student routes (Protected for STUDENT) ── */}
         <Route element={<ProtectedRoute allowedRole="STUDENT" />}>
           <Route path="/student-home"       element={<StudentHome />} />

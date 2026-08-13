@@ -40,6 +40,33 @@ export default function Dashboard() {
   const location = useLocation();
   // වෙන route එකක ඉඳන් එනකොට state එකේ tab එකක් pass කරලා තිබ්බොත් ඒක ගන්න, නැත්නම් 'overview' default කරන්න
   const [activeTab, setActiveTab] = useState(location.state?.initialTab || 'overview');
+  const [employerAccounts, setEmployerAccounts] = useState([]);
+  const [employersLoading, setEmployersLoading] = useState(false);
+  const [employersError, setEmployersError] = useState('');
+  const [actionLoadingId, setActionLoadingId] = useState('');
+
+  const loadEmployerApprovals = async () => {
+    try {
+      setEmployersLoading(true);
+      setEmployersError('');
+      const res = await api.get('/admin/employers');
+      setEmployerAccounts(res.data?.data || []);
+    } catch (error) {
+      setEmployersError(error.response?.data?.message || 'Failed to load employer approvals.');
+    } finally {
+      setEmployersLoading(false);
+    }
+  };
+
+  const updateEmployerApproval = async (id, action) => {
+    try {
+      setActionLoadingId(id);
+      await api.put(`/admin/employers/${id}/${action}`);
+      await loadEmployerApprovals();
+    } catch (error) {
+      setEmployersError(error.response?.data?.message || `Failed to ${action} employer account.`);
+    } finally {
+      setActionLoadingId('');
   const [pendingGigs, setPendingGigs] = useState([]);
   const [gigsLoading, setGigsLoading] = useState(false);
   const [gigsError, setGigsError] = useState('');
@@ -84,6 +111,12 @@ export default function Dashboard() {
       setActiveTab(location.state.initialTab);
     }
   }, [location.state]);
+
+  useEffect(() => {
+    if (activeTab === 'employers') {
+      loadEmployerApprovals();
+    }
+  }, [activeTab]);
 
   const renderTabContent = () => {
     if (activeTab === 'students') {
@@ -139,6 +172,10 @@ export default function Dashboard() {
     }
 
     if (activeTab === 'employers') {
+      const pendingCount = employerAccounts.filter((item) => item.approvalStatus === 'PENDING').length;
+      const approvedCompanies = employerAccounts.filter((item) => item.employerType === 'COMPANY' && item.approvalStatus === 'APPROVED').length;
+      const approvedRetailers = employerAccounts.filter((item) => item.employerType === 'RETAILER' && item.approvalStatus === 'APPROVED').length;
+
       return (
         <section className="animate-[fade-in-up_0.35s_ease-in-out] rounded-xl bg-white p-6 shadow-sm">
           <div className="mb-5 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
@@ -146,19 +183,77 @@ export default function Dashboard() {
               <h2 className="mb-1 text-lg font-extrabold text-gray-900">Employer Accounts</h2>
               <p className="text-sm text-gray-500">Approve company and retailer profiles before they publish jobs.</p>
             </div>
-            <button className="w-full flex-shrink-0 rounded-lg bg-[#F5C518] px-4 py-2 text-xs font-bold text-[#0D1F4C] transition-all hover:brightness-95 sm:w-auto">Export List</button>
+            <button
+              type="button"
+              onClick={loadEmployerApprovals}
+              className="w-full flex-shrink-0 rounded-lg bg-[#F5C518] px-4 py-2 text-xs font-bold text-[#0D1F4C] transition-all hover:brightness-95 sm:w-auto"
+            >
+              Refresh
+            </button>
           </div>
+
+          {employersError && (
+            <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              {employersError}
+            </div>
+          )}
+
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="rounded-lg border border-slate-200 bg-slate-50 p-5">
               <span className="mb-1 block text-xs font-bold uppercase tracking-wider text-[#1A3268]">Companies</span>
-              <strong className="my-1 block text-2xl font-bold text-gray-900">84 verified</strong>
-              <p className="text-sm text-gray-500">12 new corporate accounts are waiting for document checks.</p>
+              <strong className="my-1 block text-2xl font-bold text-gray-900">{approvedCompanies} approved</strong>
+              <p className="text-sm text-gray-500">Pending queue: {pendingCount} accounts.</p>
             </div>
             <div className="rounded-lg border border-slate-200 bg-slate-50 p-5">
               <span className="mb-1 block text-xs font-bold uppercase tracking-wider text-[#1A3268]">Retailers</span>
-              <strong className="my-1 block text-2xl font-bold text-gray-900">44 verified</strong>
-              <p className="text-sm text-gray-500">Local business profiles are growing fastest around Colombo and Galle.</p>
+              <strong className="my-1 block text-2xl font-bold text-gray-900">{approvedRetailers} approved</strong>
+              <p className="text-sm text-gray-500">Approve/reject requests from this panel.</p>
             </div>
+          </div>
+
+          <div className="mt-5 overflow-hidden rounded-lg border border-slate-200">
+            {employersLoading ? (
+              <div className="bg-white px-4 py-6 text-sm text-gray-500">Loading employer approval queue...</div>
+            ) : employerAccounts.length === 0 ? (
+              <div className="bg-white px-4 py-6 text-sm text-gray-500">No employer accounts found.</div>
+            ) : (
+              employerAccounts.map((account) => {
+                const isPending = account.approvalStatus === 'PENDING';
+                const displayName = account.employerType === 'RETAILER'
+                  ? (account.shopName || account.name)
+                  : (account.companyName || account.name);
+                const typeText = account.employerType === 'RETAILER' ? 'Retailer' : 'Company';
+
+                return (
+                  <div key={account.id} className="grid grid-cols-1 gap-3 border-b border-slate-200 bg-white p-4 last:border-b-0 md:grid-cols-[1fr_auto] md:items-center">
+                    <div>
+                      <strong className="block text-sm font-semibold text-gray-900">{displayName}</strong>
+                      <span className="mt-0.5 block text-xs text-gray-500">{typeText} · {account.email}</span>
+                      <span className="mt-0.5 block text-xs text-gray-500">{account.phoneNumber || 'No phone number'}</span>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <StatusPill>{account.approvalStatus}</StatusPill>
+                      <button
+                        type="button"
+                        disabled={!isPending || actionLoadingId === account.id}
+                        onClick={() => updateEmployerApproval(account.id, 'approve')}
+                        className="rounded-md bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+                      >
+                        {actionLoadingId === account.id ? 'Updating...' : 'Approve'}
+                      </button>
+                      <button
+                        type="button"
+                        disabled={!isPending || actionLoadingId === account.id}
+                        onClick={() => updateEmployerApproval(account.id, 'reject')}
+                        className="rounded-md bg-red-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </div>
         </section>
       );

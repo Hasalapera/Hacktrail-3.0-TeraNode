@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import api from '../api/axiosInstance';
+import { useAuth } from './context/authContext';
 
 const SRI_LANKA_CITIES = [
   'Colombo', 'Kandy', 'Galle', 'Jaffna', 'Negombo', 'Anuradhapura',
@@ -10,13 +12,27 @@ const SRI_LANKA_CITIES = [
 
 
 
+const BUSINESS_TYPES = [
+  'Cafe',
+  'Retail Shop',
+  'Service Center',
+  'Restaurant',
+  'Boutique',
+  'Supermarket',
+  'Other',
+];
+
 export default function RetailerRegister() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [form, setForm] = useState({
     shopName:        '',
+    businessType:    '',
+    serviceType:     '',
     city:            '',
     ownerName:       '',
+    email:           '',
     mobile:          '',
     password:        '',
     confirmPassword: '',
@@ -35,8 +51,11 @@ export default function RetailerRegister() {
   };
 
   const validate = () => {
-    if (!form.shopName || !form.city || !form.ownerName || !form.mobile || !form.password) {
+    if (!form.shopName || !form.city || !form.ownerName || !form.email || !form.mobile || !form.password) {
       return 'All fields are required.';
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      return 'Enter a valid email address.';
     }
     if (!/^0[0-9]{9}$/.test(form.mobile)) {
       return 'Enter a valid Sri Lankan mobile number (e.g. 0771234567).';
@@ -54,11 +73,29 @@ export default function RetailerRegister() {
     e.preventDefault();
     const err = validate();
     if (err) { setError(err); return; }
+
     setLoading(true);
-    /* TODO: POST /auth/register/retailer when backend endpoint is ready */
-    await new Promise((r) => setTimeout(r, 1200));
-    setLoading(false);
-    setSuccess(true);
+    setError('');
+
+    try {
+      const res = await api.post('/auth/register/retailer', {
+        shopName: form.shopName.trim(),
+        businessType: form.businessType,
+        serviceType: form.serviceType.trim() || form.businessType,
+        location: form.city,
+        ownerName: form.ownerName.trim(),
+        email: form.email.trim().toLowerCase(),
+        phoneNumber: form.mobile.trim(),
+        password: form.password,
+      });
+
+      login(res.data.token, res.data.user);
+      setSuccess(true);
+    } catch (apiError) {
+      setError(apiError.response?.data?.message || 'Failed to create retailer account. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   /* ── Success Screen ── */
@@ -77,11 +114,11 @@ export default function RetailerRegister() {
             <strong>{form.shopName}</strong> in <strong>{form.city}</strong> is now on UniLift.
             Start posting part-time jobs today!
           </p>
-          <button onClick={() => navigate('/login')}
+          <button onClick={() => navigate('/retail/jobs')}
                   className="w-full py-3 rounded-xl font-bold text-text-main cursor-pointer
                              hover:shadow-lg transition-all
                              bg-gradient-to-br from-accent-dark to-primary-light">
-            Go to Login →
+            Go to Retail Dashboard →
           </button>
         </div>
       </div>
@@ -152,6 +189,32 @@ export default function RetailerRegister() {
                               focus:border-primary-light focus:ring-2 focus:ring-accent-border focus:bg-white" />
           </div>
 
+          <div>
+            <label className="block text-sm font-semibold text-text-sub mb-1.5">
+              Business Type <span className="text-red-400">*</span>
+            </label>
+            <select name="businessType" value={form.businessType} onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-xl border border-border text-sm
+                               bg-surface text-text-main outline-none cursor-pointer
+                               focus:border-primary-light focus:ring-2 focus:ring-accent-border focus:bg-white">
+              <option value="">— Select business type —</option>
+              {BUSINESS_TYPES.map((type) => (
+                <option key={type} value={type}>{type}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-text-sub mb-1.5">
+              Service Type
+            </label>
+            <input name="serviceType" value={form.serviceType} onChange={handleChange}
+                   type="text" placeholder="e.g. Coffee, groceries, repairs, delivery"
+                   className="w-full px-4 py-3 rounded-xl border border-border text-sm
+                              bg-surface text-text-main outline-none placeholder-text-muted
+                              focus:border-primary-light focus:ring-2 focus:ring-accent-border focus:bg-white" />
+          </div>
+
           {/* City */}
           <div>
             <label className="block text-sm font-semibold text-text-sub mb-1.5">
@@ -168,7 +231,7 @@ export default function RetailerRegister() {
             </select>
           </div>
 
-          {/* Owner Name & Mobile — grid */}
+          {/* Owner Name, Email & Mobile — grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-text-sub mb-1.5">
@@ -191,6 +254,17 @@ export default function RetailerRegister() {
                                 bg-surface text-text-main outline-none placeholder-text-muted
                                 focus:border-primary-light focus:ring-2 focus:ring-accent-border focus:bg-white" />
             </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-text-sub mb-1.5">
+              Email Address <span className="text-red-400">*</span>
+            </label>
+            <input name="email" value={form.email} onChange={handleChange}
+                   type="email" placeholder="shopowner@email.com"
+                   className="w-full px-4 py-3 rounded-xl border border-border text-sm
+                              bg-surface text-text-main outline-none placeholder-text-muted
+                              focus:border-primary-light focus:ring-2 focus:ring-accent-border focus:bg-white" />
           </div>
 
           {/* Password */}

@@ -48,6 +48,9 @@ app.use('/api/student', studentRoutes);
 // Job API Routes (POST /api/jobs, GET /api/jobs, etc.)
 app.use('/api/jobs', jobRoutes);
 
+// Student API Routes
+const studentRoutes = require('./routes/studentRoutes');
+app.use('/api/students', studentRoutes);
 // Chat API Routes (GET /api/chat/users, /api/chat/conversations, POST /api/chat/messages)
 app.use('/api/chat', authenticate, chatRoutes);
 
