@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import api from '../api/axiosInstance';
 import { useAuth } from './context/authContext';
@@ -190,7 +190,28 @@ const inputClassName =
 export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login } = useAuth();
+  const { login, user } = useAuth();
+
+  useEffect(() => {
+    if (!user) return;
+
+    if (user.role === 'STUDENT') {
+      navigate('/student/home', { replace: true });
+      return;
+    }
+
+    if (user.role === 'EMPLOYER') {
+      navigate('/company/jobs', { replace: true });
+      return;
+    }
+
+    if (user.role === 'ADMIN') {
+      navigate('/dashboard', { replace: true });
+      return;
+    }
+
+    navigate('/dashboard', { replace: true });
+  }, [user, navigate]);
 
   // Register eken redirect karama awa success message eka
   const successMessage = location.state?.message || '';
@@ -211,6 +232,18 @@ export default function Login() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [changingPw, setChangingPw] = useState(false);
   const [changePwError, setChangePwError] = useState('');
+
+  // Profile setup state
+  const [setupProfile, setSetupProfile] = useState(null);
+  const [setupForm, setSetupForm] = useState({
+    name: 'Student',
+    username: '',
+    phoneNumber: '',
+    university_id: '',
+    email: '',
+  });
+  const [settingUp, setSettingUp] = useState(false);
+  const [setupError, setSetupError] = useState('');
 
   const active = ROLES.find((r) => r.id === role);
 
@@ -255,16 +288,34 @@ export default function Login() {
         return;
       }
 
+      // SCENARIO C: Student has changed password but hasn't completed profile setup
+      if (
+        res.data.user.role === 'STUDENT' &&
+        (!res.data.user.username || !res.data.user.phoneNumber || (res.data.user.email && res.data.user.email.endsWith('@student.local')))
+      ) {
+        setSetupProfile({
+          token: res.data.token,
+          user: res.data.user,
+        });
+        setSetupForm(prev => ({
+          ...prev,
+          name: res.data.user.name || 'Student',
+          university_id: res.data.user.university_id || '',
+          email: res.data.user.email && !res.data.user.email.endsWith('@student.local') ? res.data.user.email : '',
+        }));
+        return;
+      }
+
       // SCENARIO A: Standard login - token eka save karala dashboard ekata yanna
       login(res.data.token, res.data.user);
       
       // Role-based redirect: STUDENT kenek nam student home ekata, anith ayata dashboard ekata
       if (res.data.user.role === 'STUDENT') {
-        navigate('/student-home');
+        navigate('/student/home');
       } else if (res.data.user.role === 'ADMIN' || res.data.user.role === 'EMPLOYER') {
         if (res.data.user.role === 'EMPLOYER') {
-          navigate('/employer/dashboard'); // Redirect employers to their specific dashboard
-        } else navigate('/dashboard'); // Admins go to the admin dashboard
+          navigate('/company/jobs');
+        } else navigate('/dashboard');
       } else {
         navigate('/dashboard');
       }
@@ -307,10 +358,18 @@ export default function Login() {
         newPassword,
       });
 
-      // Password eka change karala token eka labuna - login karala dashboard ekata yanna
-      login(res.data.token, res.data.user);
-      // Me flow eka student lata witharak nisa, student home ekata redirect karanna
-      navigate('/student-home');
+      // Password eka change karala token eka labuna - proceed to setup profile
+      setChangePw(null);
+      setSetupProfile({
+        token: res.data.token,
+        user: res.data.user,
+      });
+      setSetupForm(prev => ({
+        ...prev,
+        name: res.data.user.name || 'Student',
+        university_id: res.data.user.university_id || changePw?.university_id || '',
+        email: res.data.user.email && !res.data.user.email.endsWith('@student.local') ? res.data.user.email : '',
+      }));
     } catch (err) {
       setChangePwError(
         err.response?.data?.message ||
@@ -320,6 +379,169 @@ export default function Login() {
       setChangingPw(false);
     }
   };
+
+  /* ------------------------------------------------------------------------ */
+  /* Profile Setup View                                                       */
+  /* ------------------------------------------------------------------------ */
+
+  const handleSetupProfile = async (e) => {
+    e.preventDefault();
+
+    if (!setupForm.name || !setupForm.username || !setupForm.phoneNumber || !setupForm.university_id || !setupForm.email) {
+      setSetupError('All fields are required.');
+      return;
+    }
+
+    setSettingUp(true);
+    setSetupError('');
+
+    try {
+      const res = await api.put('/students/profile', setupForm, {
+        headers: { Authorization: `Bearer ${setupProfile.token}` }
+      });
+
+      login(setupProfile.token, res.data.user);
+      navigate('/student/home');
+    } catch (err) {
+      setSetupError(
+        err.response?.data?.message || 'Failed to complete profile setup. Please try again.'
+      );
+    } finally {
+      setSettingUp(false);
+    }
+  };
+
+  if (setupProfile) {
+    return (
+      <div className="min-h-screen bg-slate-50 lg:flex">
+        <BrandPanel />
+
+        <main className="flex min-h-screen flex-1 items-center justify-center px-5 py-10 sm:px-8 lg:px-12">
+          <div className="w-full max-w-[430px]">
+            {/* Mobile logo */}
+            <div className="mb-10 flex items-center gap-3 lg:hidden">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F5C518] text-lg font-black text-[#0D1F4C]">
+                U
+              </div>
+              <span className="text-xl font-extrabold tracking-tight text-[#0D1F4C]">
+                UniLift
+              </span>
+            </div>
+
+            {/* Header */}
+            <div className="mb-8">
+              <h1 className="mb-1 text-2xl font-extrabold tracking-tight text-slate-900">
+                Complete Your Profile
+              </h1>
+              <p className="text-sm text-slate-500">
+                Please provide your details to finish setting up your account.
+              </p>
+            </div>
+
+            {/* Form card */}
+            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+              <form onSubmit={handleSetupProfile} className="flex flex-col gap-5">
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Full Name
+                  </label>
+                  <input
+                    className={inputClassName}
+                    type="text"
+                    value={setupForm.name}
+                    onChange={(e) => setSetupForm({ ...setupForm, name: e.target.value })}
+                    placeholder="John Doe"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Username
+                  </label>
+                  <input
+                    className={inputClassName}
+                    type="text"
+                    value={setupForm.username}
+                    onChange={(e) => setSetupForm({ ...setupForm, username: e.target.value })}
+                    placeholder="johndoe123"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Phone Number
+                  </label>
+                  <input
+                    className={inputClassName}
+                    type="tel"
+                    value={setupForm.phoneNumber}
+                    onChange={(e) => setSetupForm({ ...setupForm, phoneNumber: e.target.value })}
+                    placeholder="0771234567"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                    University ID
+                  </label>
+                  <input
+                    className={inputClassName}
+                    type="text"
+                    value={setupForm.university_id}
+                    onChange={(e) => setSetupForm({ ...setupForm, university_id: e.target.value })}
+                    placeholder="TG/2022/1357"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                    University Email
+                  </label>
+                  <input
+                    className={inputClassName}
+                    type="email"
+                    value={setupForm.email}
+                    onChange={(e) => setSetupForm({ ...setupForm, email: e.target.value })}
+                    placeholder="john@student.uni.lk"
+                  />
+                </div>
+
+                {setupError && (
+                  <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3.5 text-sm text-red-700">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100 text-xs font-bold">
+                      !
+                    </span>
+                    <span className="leading-5">{setupError}</span>
+                  </div>
+                )}
+
+                <button
+                  className="mt-1 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#1A3268] to-[#0D1F4C] py-3.5 text-sm font-bold text-white shadow-lg shadow-[#0D1F4C]/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#0D1F4C]/25 active:translate-y-0 disabled:cursor-not-allowed disabled:translate-y-0 disabled:opacity-60"
+                  type="submit"
+                  disabled={settingUp}
+                >
+                  {settingUp ? (
+                    <>
+                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      Complete Setup
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
+
+            <p className="mt-8 text-center text-[11px] text-slate-400">
+              © 2025 UniLift · Empowering Sri Lankan Students
+            </p>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   /* ------------------------------------------------------------------------ */
   /* Change Password View                                                     */

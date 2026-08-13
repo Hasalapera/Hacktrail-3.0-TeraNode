@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../pages/context/authContext';
 
-export default function ProtectedRoute({ allowedRole }) {
+export default function ProtectedRoute({ allowedRole, children }) {
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -18,10 +18,10 @@ export default function ProtectedRoute({ allowedRole }) {
 
   if (allowedRole && user.role !== allowedRole) {
     if (user.role === 'ADMIN') return <Navigate to="/dashboard" replace />;
-    if (user.role === 'EMPLOYER') return <Navigate to="/employer/dashboard" replace />;
-    if (user.role === 'STUDENT') return <Navigate to="/student/dashboard" replace />;
+    if (user.role === 'EMPLOYER') return <Navigate to="/company/jobs" replace />;
+    if (user.role === 'STUDENT') return <Navigate to="/student/home" replace />;
     return <Navigate to="/login" replace />;
   }
 
-  return <Outlet />;
+  return children ?? <Outlet />;
 }

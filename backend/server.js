@@ -41,6 +41,10 @@ app.use('/api/admin', adminRoutes);
 // Job API Routes (POST /api/jobs, GET /api/jobs, etc.)
 app.use('/api/jobs', jobRoutes);
 
+// Student API Routes
+const studentRoutes = require('./routes/studentRoutes');
+app.use('/api/students', studentRoutes);
+
 // Server eka start kirimata pera DB connection eka check kirima
 sequelize.authenticate()
   .then(() => {

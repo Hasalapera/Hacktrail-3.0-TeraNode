@@ -30,6 +30,15 @@ const User = sequelize.define('User', {
     allowNull: true,
     unique: true,
   },
+  username: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    unique: true,
+  },
+  phoneNumber: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   isOpenToWork: {
     type: DataTypes.BOOLEAN,
     defaultValue: false, // Student profile eke toggle karanna puluwan
