@@ -63,6 +63,81 @@ const register = async (req, res) => {
   }
 };
 
+const registerRetailer = async (req, res) => {
+  try {
+    const {
+      shopName,
+      businessType,
+      serviceType,
+      location,
+      ownerName,
+      email,
+      phoneNumber,
+      password,
+    } = req.body;
+
+    if (!shopName || !businessType || !location || !ownerName || !email || !phoneNumber || !password) {
+      return res.status(400).json({
+        message: 'shopName, businessType, location, ownerName, email, phoneNumber and password are required',
+      });
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ message: 'Please enter a valid email address.' });
+    }
+
+    if (password.length < 8) {
+      return res.status(400).json({ message: 'Password must be at least 8 characters.' });
+    }
+
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      return res.status(409).json({ message: 'Email already registered' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await User.create({
+      name: ownerName,
+      shopName,
+      businessType,
+      serviceType: serviceType || businessType,
+      location,
+      ownerName,
+      email,
+      phoneNumber,
+      password: hashedPassword,
+      role: 'EMPLOYER',
+      isOpenToWork: false,
+      skills: [],
+    });
+
+    const token = generateToken(user.id, user.role);
+
+    res.status(201).json({
+      message: 'Retailer registered successfully',
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        shopName: user.shopName,
+        businessType: user.businessType,
+        serviceType: user.serviceType,
+        location: user.location,
+        ownerName: user.ownerName,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        role: user.role,
+        isOpenToWork: user.isOpenToWork,
+        skills: user.skills,
+      },
+    });
+  } catch (error) {
+    console.error('Retailer registration error:', error);
+    res.status(500).json({ message: 'Server error during retailer registration' });
+  }
+};
+
 // Login user eka - email EKATH university_id (student username) withara login karanna puluwan
 const login = async (req, res) => {
   try {
@@ -110,6 +185,11 @@ const login = async (req, res) => {
       user: {
         id: user.id,
         name: user.name,
+        shopName: user.shopName,
+        businessType: user.businessType,
+        serviceType: user.serviceType,
+        location: user.location,
+        ownerName: user.ownerName,
         email: user.email,
         username: user.username,
         phoneNumber: user.phoneNumber,
@@ -164,6 +244,11 @@ const changeFirstPassword = async (req, res) => {
       user: {
         id: user.id,
         name: user.name,
+        shopName: user.shopName,
+        businessType: user.businessType,
+        serviceType: user.serviceType,
+        location: user.location,
+        ownerName: user.ownerName,
         email: user.email,
         username: user.username,
         phoneNumber: user.phoneNumber,
@@ -192,6 +277,11 @@ const me = async (req, res) => {
       user: {
         id: user.id,
         name: user.name,
+        shopName: user.shopName,
+        businessType: user.businessType,
+        serviceType: user.serviceType,
+        location: user.location,
+        ownerName: user.ownerName,
         email: user.email,
         username: user.username,
         phoneNumber: user.phoneNumber,
@@ -207,4 +297,4 @@ const me = async (req, res) => {
   }
 };
 
-module.exports = { register, login, changeFirstPassword, me };
+module.exports = { register, registerRetailer, login, changeFirstPassword, me };

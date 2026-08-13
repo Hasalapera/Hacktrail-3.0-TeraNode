@@ -11,6 +11,26 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  shopName: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  businessType: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  serviceType: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  location: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  ownerName: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   email: {
     type: DataTypes.STRING,
     allowNull: false,

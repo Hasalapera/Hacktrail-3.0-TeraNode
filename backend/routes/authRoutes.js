@@ -1,12 +1,15 @@
 // Auth routes eka define karanna (Express 5 Router)
 const express = require('express');
-const { register, login, changeFirstPassword, me } = require('../controllers/authController');
+const { register, registerRetailer, login, changeFirstPassword, me } = require('../controllers/authController');
 const { authenticate } = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
 // POST /api/auth/register - Register employer user eka
 router.post('/register', register);
+
+// POST /api/auth/register/retailer - Register retailer/shop account
+router.post('/register/retailer', registerRetailer);
 
 // POST /api/auth/login - Login karala token eka ganna
 router.post('/login', login);

@@ -201,7 +201,8 @@ export default function Login() {
     }
 
     if (user.role === 'EMPLOYER') {
-      navigate('/company/jobs', { replace: true });
+      const isRetailer = Boolean(user.shopName || user.businessType || user.location);
+      navigate(isRetailer ? '/retail/jobs' : '/company/jobs', { replace: true });
       return;
     }
 
@@ -308,14 +309,15 @@ export default function Login() {
 
       // SCENARIO A: Standard login - token eka save karala dashboard ekata yanna
       login(res.data.token, res.data.user);
-      
+
       // Role-based redirect: STUDENT kenek nam student home ekata, anith ayata dashboard ekata
       if (res.data.user.role === 'STUDENT') {
         navigate('/student/home');
-      } else if (res.data.user.role === 'ADMIN' || res.data.user.role === 'EMPLOYER') {
-        if (res.data.user.role === 'EMPLOYER') {
-          navigate('/company/jobs');
-        } else navigate('/dashboard');
+      } else if (res.data.user.role === 'ADMIN') {
+        navigate('/dashboard');
+      } else if (res.data.user.role === 'EMPLOYER') {
+        const isRetailer = Boolean(res.data.user.shopName || res.data.user.businessType || res.data.user.location);
+        navigate(isRetailer ? '/retail/jobs' : '/company/jobs');
       } else {
         navigate('/dashboard');
       }
