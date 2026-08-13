@@ -1,9 +1,10 @@
-import { useState } from "react";
-import { Briefcase, Clock, DollarSign, FileText, Store, PlusCircle, LayoutGrid, ChevronDown } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Briefcase, PlusCircle, ChevronDown } from "lucide-react";
 import PublisherNav from "../Components/PublisherNav";
 import FormField from "../Components/FormField";
 import ListingCard from "../Components/ListingCard";
 import Footer from "../Components/Footer";
+import api from "../api/axiosInstance";
 
 /**
  * RetailJobPublisher
@@ -20,33 +21,6 @@ const THUMBNAILS = [
   "bg-gradient-to-br from-emerald-700 via-emerald-500 to-lime-400",
   "bg-gradient-to-br from-blue-700 via-blue-500 to-cyan-400",
   "bg-gradient-to-br from-slate-800 via-slate-600 to-gray-400",
-];
-
-const INITIAL_LISTINGS = [
-  {
-    title: "Retail Sales Associate — weekend and evening shifts",
-    type: "Part-time",
-    seller: "Odel Fashion",
-    city: "Colombo",
-    isAd: true,
-    badge: "Vetted Pro",
-    rating: 4.7,
-    reviews: "212",
-    price: 12,
-    image: THUMBNAILS[0],
-  },
-  {
-    title: "Cashier needed for a busy campus-area supermarket",
-    type: "Part-time",
-    seller: "Cargills Food City",
-    city: "Kandy",
-    isAd: false,
-    badge: "",
-    rating: 4.5,
-    reviews: "89",
-    price: 10,
-    image: THUMBNAILS[1],
-  },
 ];
 
 const EMPTY_FORM = {
@@ -82,107 +56,104 @@ function GreenInput({ as: Tag = "input", ...props }) {
 }
 
 export default function RetailJobPublisher() {
-  const [listings, setListings] = useState(INITIAL_LISTINGS);
-  const [form, setForm]         = useState(EMPTY_FORM);
+  const [listings, setListings] = useState([]);
+  const [form, setForm] = useState(EMPTY_FORM);
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const fetchMyJobs = async () => {
+    try {
+      const res = await api.get('/jobs/my-gigs');
+      const jobs = res.data?.data || [];
+
+      const mapped = jobs.map((job, index) => ({
+        title: job.title,
+        type: job.paymentType === 'DAILY_WAGE' ? 'Full-time' : 'Part-time',
+        seller: job.category || job.employer?.name || 'Business',
+        city: job.city || 'Colombo',
+        isAd: false,
+        badge: '',
+        rating: 0,
+        reviews: 'New',
+        price: Number(job.amount) || 0,
+        image: THUMBNAILS[index % THUMBNAILS.length],
+      }));
+
+      setListings(mapped);
+    } catch (fetchError) {
+      console.error('Failed to fetch jobs:', fetchError);
+      setError('Unable to load your job listings right now.');
+    }
+  };
+
+  useEffect(() => {
+    fetchMyJobs();
+  }, []);
 
   function handleChange(field) {
     return (event) => setForm((prev) => ({ ...prev, [field]: event.target.value }));
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
+    setError('');
 
-    const newListing = {
-      title:   form.title,
-      type:    form.employmentType,
-      seller:  form.businessName,
-      city:    form.city,
-      isAd:    false,
-      badge:   "",
-      rating:  0,
-      reviews: "New",
-      price:   Number(form.hourlyRate) || 0,
-      image:   THUMBNAILS[listings.length % THUMBNAILS.length],
-    };
+    if (!form.businessName || !form.title || !form.hourlyRate || !form.city) {
+      setError('Please fill in the required fields before posting the job.');
+      return;
+    }
 
-    setListings((prev) => [newListing, ...prev]);
-    setForm(EMPTY_FORM);
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 3000);
+    setLoading(true);
+
+    try {
+      const payload = {
+        title: form.title.trim(),
+        description: `${form.description || 'Retail position'}\nBusiness: ${form.businessName}\nEmployment type: ${form.employmentType}`,
+        category: form.businessName.trim(),
+        paymentType: form.employmentType === 'Full-time' ? 'DAILY_WAGE' : 'TASK_BASED',
+        amount: Number(form.hourlyRate),
+        city: form.city.trim(),
+      };
+
+      await api.post('/jobs', payload);
+      setForm(EMPTY_FORM);
+      setSubmitted(true);
+      setTimeout(() => setSubmitted(false), 3000);
+      await fetchMyJobs();
+    } catch (submitError) {
+      console.error('Failed to create job:', submitError);
+      setError(submitError.response?.data?.message || 'Failed to save the job listing.');
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
-    <div className="flex min-h-screen flex-col" style={{ background: "#F8FAFB" }}>
-      <PublisherNav title="Retail Job Publisher" />
 
-      <main className="flex-1 px-6 py-8 mx-auto w-full max-w-6xl">
+    <div className="mx-auto flex min-h-screen max-w-6xl flex-col bg-white">
+      <PublisherNav title="Retail Job Publisher" profileHref="/retail/profile" />
 
-        {/* ── Page header ── */}
-        <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
-          <div>
+      <main className="flex-1 px-6 py-8">
+        <h1 className="text-2xl font-semibold text-text-main">Post a Retail Job</h1>
+        <p className="mt-1 text-sm text-text-sub">
+          Reach students looking for part-time and full-time retail shifts.
+        </p>
+
+        <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[400px_1fr]">
+          {/* ── Form Card ── */}
+          <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm">
+            {/* Header */}
             <div
-              className="mb-2 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold"
-              style={{ background: "#F0FDF4", color: "#166534", border: "1px solid #BBF7D0" }}
+              className="flex items-center gap-3 px-6 py-5"
+              style={{ background: "linear-gradient(135deg, #0B4D2E 0%, #166534 100%)" }}
             >
-              <Store className="h-3.5 w-3.5" />
-              Retailer Dashboard
-            </div>
-            <h1 className="text-2xl font-extrabold tracking-tight" style={{ color: "#0F172A" }}>
-              Post a Retail Job
-            </h1>
-            <p className="mt-1 text-sm" style={{ color: "#475569" }}>
-              Reach students looking for part-time and full-time retail shifts near you.
-            </p>
-          </div>
-
-          {/* Stats chips */}
-          <div className="flex gap-3 flex-wrap">
-            {[
-              { label: "Active Listings", value: listings.length, icon: LayoutGrid },
-              { label: "Total Applicants", value: "—",            icon: Briefcase },
-            ].map(({ label, value, icon: Icon }) => (
-              <div
-                key={label}
-                className="flex items-center gap-2.5 rounded-xl px-4 py-3"
-                style={{ background: "#ffffff", border: "1.5px solid #E2E8F0", boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}
-              >
-                <div
-                  className="flex h-8 w-8 items-center justify-center rounded-lg"
-                  style={{ background: "#F0FDF4" }}
-                >
-                  <Icon className="h-4 w-4" style={{ color: "#166534" }} />
-                </div>
-                <div>
-                  <div className="text-base font-extrabold" style={{ color: "#0F172A" }}>{value}</div>
-                  <div className="text-[11px]" style={{ color: "#94A3B8" }}>{label}</div>
-                </div>
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ background: "rgba(74,222,128,0.15)" }}>
+                <PlusCircle className="h-5 w-5" style={{ color: "#4ADE80" }} />
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ── Two-column layout ── */}
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[400px_1fr]">
-
-          {/* ── Post Form ── */}
-          <div
-            className="rounded-2xl overflow-hidden"
-            style={{ background: "#ffffff", border: "1.5px solid #E2E8F0", boxShadow: "0 2px 12px rgba(0,0,0,0.06)" }}
-          >
-            {/* Form header */}
-            <div
-              className="px-6 py-5"
-              style={{ background: "linear-gradient(135deg, #0B4D2E 0%, #166534 100%)", borderBottom: "1px solid rgba(74,222,128,0.15)" }}
-            >
-              <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ background: "rgba(74,222,128,0.15)" }}>
-                  <PlusCircle className="h-5 w-5" style={{ color: "#4ADE80" }} />
-                </div>
-                <div>
-                  <h2 className="text-base font-bold text-white">New Job Listing</h2>
-                  <p className="text-xs" style={{ color: "rgba(187,247,208,0.60)" }}>Fill in the details below</p>
-                </div>
+              <div>
+                <h2 className="text-base font-bold text-white">New Job Listing</h2>
+                <p className="text-xs" style={{ color: "rgba(187,247,208,0.60)" }}>Fill in the details below</p>
               </div>
             </div>
 
@@ -266,9 +237,19 @@ export default function RetailJobPublisher() {
                 </div>
               )}
 
+              {error && (
+                <div
+                  className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold"
+                  style={{ background: "#FEF2F2", border: "1.5px solid #FECACA", color: "#B91C1C" }}
+                >
+                  ⚠️ {error}
+                </div>
+              )}
+
               <button
                 type="submit"
-                className="mt-1 w-full rounded-xl py-3.5 text-sm font-bold tracking-wide text-white transition-all duration-200 active:scale-[0.98]"
+                disabled={loading}
+                className="mt-1 w-full rounded-xl py-3.5 text-sm font-bold tracking-wide text-white transition-all duration-200 active:scale-[0.98] disabled:opacity-70"
                 style={{
                   background: "linear-gradient(135deg, #0B4D2E 0%, #166534 100%)",
                   boxShadow: "0 4px 16px rgba(11,77,46,0.28)",
@@ -276,25 +257,16 @@ export default function RetailJobPublisher() {
                 onMouseEnter={e => e.currentTarget.style.boxShadow = "0 6px 24px rgba(11,77,46,0.42)"}
                 onMouseLeave={e => e.currentTarget.style.boxShadow = "0 4px 16px rgba(11,77,46,0.28)"}
               >
-                🏪 Post Retail Job
+                {loading ? "⏳ Saving job..." : "🏪 Post Retail Job"}
               </button>
             </form>
           </div>
 
           {/* ── Listings panel ── */}
           <div>
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-sm font-bold uppercase tracking-widest" style={{ color: "#94A3B8" }}>
-                Your Posted Listings
-              </h2>
-              <span
-                className="rounded-full px-3 py-1 text-xs font-bold"
-                style={{ background: "#F0FDF4", color: "#166534", border: "1px solid #BBF7D0" }}
-              >
-                {listings.length} active
-              </span>
-            </div>
-
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-text-sub">
+              Your posted listings
+            </h2>
             {listings.length === 0 ? (
               <div
                 className="flex flex-col items-center justify-center rounded-2xl py-16 text-center"

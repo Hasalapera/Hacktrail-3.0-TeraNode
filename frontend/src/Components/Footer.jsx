@@ -1,3 +1,5 @@
+import Logo from "./Logo";
+
 /**
  * Footer — UniLift green palette restyle.
  * Self-contained — import and drop in at the bottom of any page.
@@ -18,24 +20,14 @@ const SOCIAL_LINKS = [
 
 export default function Footer() {
   return (
-    <footer
-      className="mt-auto"
-      style={{ background: "#0B4D2E", borderTop: "1px solid rgba(74,222,128,0.15)" }}
-    >
-      <div className="mx-auto grid max-w-5xl grid-cols-2 gap-8 px-6 py-10 sm:grid-cols-4">
-        {/* Brand column */}
+    <footer className="mt-auto border-t border-primary bg-primary text-white/70">
+      <div className="mx-auto grid max-w-4xl grid-cols-2 gap-8 px-6 py-10 sm:grid-cols-4">
         <div className="col-span-2 sm:col-span-1">
-          <div className="flex items-center gap-2.5">
-            <div
-              className="flex h-9 w-9 items-center justify-center rounded-xl text-sm font-extrabold shadow"
-              style={{ background: "#4ADE80", color: "#0B4D2E" }}
-            >
-              U
-            </div>
-            <span className="text-base font-bold text-white">UniLift</span>
-          </div>
-          <p className="mt-3 text-sm leading-relaxed" style={{ color: "rgba(187,247,208,0.55)" }}>
-            Connecting Sri Lankan students with internships, part-time jobs, and freelance opportunities.
+          <Logo iconClassName="h-8 w-8" textClassName="text-base" variant="light" />
+          <p className="mt-3 text-sm text-white/55">
+            Connecting students with internships, projects, and freelance
+            opportunities.
+
           </p>
           {/* Social links */}
           <div className="mt-5 flex gap-3">
@@ -65,10 +57,8 @@ export default function Footer() {
                 <li key={link}>
                   <a
                     href="#"
-                    className="text-sm transition-colors"
-                    style={{ color: "rgba(187,247,208,0.55)" }}
-                    onMouseEnter={e => e.currentTarget.style.color = "#4ADE80"}
-                    onMouseLeave={e => e.currentTarget.style.color = "rgba(187,247,208,0.55)"}
+                    className="text-sm text-white/55 transition hover:text-accent"
+
                   >
                     {link}
                   </a>
@@ -79,21 +69,20 @@ export default function Footer() {
         ))}
       </div>
 
-      {/* Legal bar */}
-      <div style={{ borderTop: "1px solid rgba(74,222,128,0.10)" }}>
-        <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-3 px-6 py-4 sm:flex-row">
-          <p className="text-xs" style={{ color: "rgba(187,247,208,0.35)" }}>
-            © {new Date().getFullYear()} UniLift. All rights reserved. · Empowering Sri Lankan Students
+
+      <div className="border-t border-white/10 px-6 py-4">
+        <div className="mx-auto flex max-w-4xl flex-col items-center justify-between gap-3 sm:flex-row">
+          <p className="text-xs text-white/45">
+            &copy; {new Date().getFullYear()} UniLift. All rights reserved.
+
           </p>
           <div className="flex gap-4">
             {["Terms", "Privacy", "Cookies"].map(item => (
               <a
+
                 key={item}
                 href="#"
-                className="text-xs transition-colors"
-                style={{ color: "rgba(187,247,208,0.35)" }}
-                onMouseEnter={e => e.currentTarget.style.color = "#4ADE80"}
-                onMouseLeave={e => e.currentTarget.style.color = "rgba(187,247,208,0.35)"}
+                className="text-xs text-white/55 transition hover:text-accent"
               >
                 {item}
               </a>

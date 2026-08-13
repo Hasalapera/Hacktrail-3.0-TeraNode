@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import api from '../api/axiosInstance';
 import { useAuth } from './context/authContext';
@@ -21,11 +21,7 @@ const ROLES = [
   },
 ];
 
-const FEATURES = [
-  { title: 'Internships & Corporate Projects', sub: 'Match with top companies by skill & degree', icon: '🎓' },
-  { title: 'Part-Time & Flexible Jobs', sub: 'Find nearby gigs posted by local retailers', icon: '🏪' },
-  { title: 'Freelance Marketplace', sub: 'Earn from design, dev, video editing & more', icon: '💼' },
-];
+
 
 const EyeIcon = ({ open }) => (
   <svg
@@ -194,7 +190,31 @@ const inputClassName =
 export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login } = useAuth();
+  const { login, user } = useAuth();
+
+  useEffect(() => {
+    if (!user) return;
+
+    if (user.role === 'STUDENT') {
+      navigate('/student/home', { replace: true });
+      return;
+    }
+
+    if (user.role === 'EMPLOYER') {
+      const isRetailer = user.employerType
+        ? user.employerType === 'RETAILER'
+        : Boolean(user.shopName || user.businessType || user.location);
+      navigate(isRetailer ? '/retail/jobs' : '/company/jobs', { replace: true });
+      return;
+    }
+
+    if (user.role === 'ADMIN') {
+      navigate('/dashboard', { replace: true });
+      return;
+    }
+
+    navigate('/dashboard', { replace: true });
+  }, [user, navigate]);
 
   // Register eken redirect karama awa success message eka
   const successMessage = location.state?.message || '';
@@ -215,6 +235,18 @@ export default function Login() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [changingPw, setChangingPw] = useState(false);
   const [changePwError, setChangePwError] = useState('');
+
+  // Profile setup state
+  const [setupProfile, setSetupProfile] = useState(null);
+  const [setupForm, setSetupForm] = useState({
+    name: 'Student',
+    username: '',
+    phoneNumber: '',
+    university_id: '',
+    email: '',
+  });
+  const [settingUp, setSettingUp] = useState(false);
+  const [setupError, setSetupError] = useState('');
 
   const active = ROLES.find((r) => r.id === role);
 
@@ -238,14 +270,16 @@ export default function Login() {
     setLoading(true);
     setError('');
 
+    const payload = { password: form.password };
+    if (role === 'student') {
+      payload.university_id = form.username;
+    } else {
+      // Admin, Company, and Retailer use email
+      payload.email = form.username;
+    }
+
     try {
-      // Employers la email eken, students la university index number eken login wena nisa
-      // dekama send karanawa - backend eke email OR university_id check wela
-      const res = await api.post('/auth/login', {
-        email: form.username,
-        university_id: form.username,
-        password: form.password,
-      });
+      const res = await api.post('/auth/login', payload);
 
       // SCENARIO B: Student first login - auto-generated password eka change karanna one
       if (res.data.requirePasswordChange) {
@@ -257,13 +291,49 @@ export default function Login() {
         return;
       }
 
+      // SCENARIO C: Student has changed password but hasn't completed profile setup
+      if (
+        res.data.user.role === 'STUDENT' &&
+        (!res.data.user.username || !res.data.user.phoneNumber || (res.data.user.email && res.data.user.email.endsWith('@student.local')))
+      ) {
+        setSetupProfile({
+          token: res.data.token,
+          user: res.data.user,
+        });
+        setSetupForm(prev => ({
+          ...prev,
+          name: res.data.user.name || 'Student',
+          university_id: res.data.user.university_id || '',
+          email: res.data.user.email && !res.data.user.email.endsWith('@student.local') ? res.data.user.email : '',
+        }));
+        return;
+      }
+
       // SCENARIO A: Standard login - token eka save karala dashboard ekata yanna
       login(res.data.token, res.data.user);
-      navigate('/dashboard');
+
+      // Role-based redirect: STUDENT kenek nam student home ekata, anith ayata dashboard ekata
+      if (res.data.user.role === 'STUDENT') {
+        navigate('/student/home');
+      } else if (res.data.user.role === 'ADMIN') {
+        navigate('/dashboard');
+      } else if (res.data.user.role === 'EMPLOYER') {
+        const isRetailer = res.data.user.employerType
+          ? res.data.user.employerType === 'RETAILER'
+          : Boolean(res.data.user.shopName || res.data.user.businessType || res.data.user.location);
+        navigate(isRetailer ? '/retail/jobs' : '/company/jobs');
+        navigate('/student-home');
+      } else if (res.data.user.role === 'EMPLOYER') {
+        navigate('/employer-dashboard');
+      } else if (res.data.user.role === 'ADMIN') {
+        navigate('/dashboard');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
       setError(
         err.response?.data?.message ||
-        'Unable to connect. Make sure the backend server is running.'
+          'Unable to connect. Make sure the backend server is running.'
       );
     } finally {
       setLoading(false);
@@ -299,18 +369,190 @@ export default function Login() {
         newPassword,
       });
 
-      // Password eka change karala token eka labuna - login karala dashboard ekata yanna
-      login(res.data.token, res.data.user);
-      navigate('/dashboard');
+      // Password eka change karala token eka labuna - proceed to setup profile
+      setChangePw(null);
+      setSetupProfile({
+        token: res.data.token,
+        user: res.data.user,
+      });
+      setSetupForm(prev => ({
+        ...prev,
+        name: res.data.user.name || 'Student',
+        university_id: res.data.user.university_id || changePw?.university_id || '',
+        email: res.data.user.email && !res.data.user.email.endsWith('@student.local') ? res.data.user.email : '',
+      }));
     } catch (err) {
       setChangePwError(
         err.response?.data?.message ||
-        'Failed to change password. Please try again.'
+          'Failed to change password. Please try again.'
       );
     } finally {
       setChangingPw(false);
     }
   };
+
+  /* ------------------------------------------------------------------------ */
+  /* Profile Setup View                                                       */
+  /* ------------------------------------------------------------------------ */
+
+  const handleSetupProfile = async (e) => {
+    e.preventDefault();
+
+    if (!setupForm.name || !setupForm.username || !setupForm.phoneNumber || !setupForm.university_id || !setupForm.email) {
+      setSetupError('All fields are required.');
+      return;
+    }
+
+    setSettingUp(true);
+    setSetupError('');
+
+    try {
+      const res = await api.put('/students/profile', setupForm, {
+        headers: { Authorization: `Bearer ${setupProfile.token}` }
+      });
+
+      login(setupProfile.token, res.data.user);
+      navigate('/student/home');
+    } catch (err) {
+      setSetupError(
+        err.response?.data?.message || 'Failed to complete profile setup. Please try again.'
+      );
+    } finally {
+      setSettingUp(false);
+    }
+  };
+
+  if (setupProfile) {
+    return (
+      <div className="min-h-screen bg-slate-50 lg:flex">
+        <BrandPanel />
+
+        <main className="flex min-h-screen flex-1 items-center justify-center px-5 py-10 sm:px-8 lg:px-12">
+          <div className="w-full max-w-[430px]">
+            {/* Mobile logo */}
+            <div className="mb-10 flex items-center gap-3 lg:hidden">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F5C518] text-lg font-black text-[#0D1F4C]">
+                U
+              </div>
+              <span className="text-xl font-extrabold tracking-tight text-[#0D1F4C]">
+                UniLift
+              </span>
+            </div>
+
+            {/* Header */}
+            <div className="mb-8">
+              <h1 className="mb-1 text-2xl font-extrabold tracking-tight text-slate-900">
+                Complete Your Profile
+              </h1>
+              <p className="text-sm text-slate-500">
+                Please provide your details to finish setting up your account.
+              </p>
+            </div>
+
+            {/* Form card */}
+            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+              <form onSubmit={handleSetupProfile} className="flex flex-col gap-5">
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Full Name
+                  </label>
+                  <input
+                    className={inputClassName}
+                    type="text"
+                    value={setupForm.name}
+                    onChange={(e) => setSetupForm({ ...setupForm, name: e.target.value })}
+                    placeholder="John Doe"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Username
+                  </label>
+                  <input
+                    className={inputClassName}
+                    type="text"
+                    value={setupForm.username}
+                    onChange={(e) => setSetupForm({ ...setupForm, username: e.target.value })}
+                    placeholder="johndoe123"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Phone Number
+                  </label>
+                  <input
+                    className={inputClassName}
+                    type="tel"
+                    value={setupForm.phoneNumber}
+                    onChange={(e) => setSetupForm({ ...setupForm, phoneNumber: e.target.value })}
+                    placeholder="0771234567"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                    University ID
+                  </label>
+                  <input
+                    className={inputClassName}
+                    type="text"
+                    value={setupForm.university_id}
+                    onChange={(e) => setSetupForm({ ...setupForm, university_id: e.target.value })}
+                    placeholder="TG/2022/1357"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                    University Email
+                  </label>
+                  <input
+                    className={inputClassName}
+                    type="email"
+                    value={setupForm.email}
+                    onChange={(e) => setSetupForm({ ...setupForm, email: e.target.value })}
+                    placeholder="john@student.uni.lk"
+                  />
+                </div>
+
+                {setupError && (
+                  <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3.5 text-sm text-red-700">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100 text-xs font-bold">
+                      !
+                    </span>
+                    <span className="leading-5">{setupError}</span>
+                  </div>
+                )}
+
+                <button
+                  className="mt-1 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#1A3268] to-[#0D1F4C] py-3.5 text-sm font-bold text-white shadow-lg shadow-[#0D1F4C]/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#0D1F4C]/25 active:translate-y-0 disabled:cursor-not-allowed disabled:translate-y-0 disabled:opacity-60"
+                  type="submit"
+                  disabled={settingUp}
+                >
+                  {settingUp ? (
+                    <>
+                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      Complete Setup
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
+
+            <p className="mt-8 text-center text-[11px] text-slate-400">
+              © 2025 UniLift · Empowering Sri Lankan Students
+            </p>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   /* ------------------------------------------------------------------------ */
   /* Change Password View                                                     */
@@ -336,29 +578,11 @@ export default function Login() {
 
             {/* Header */}
             <div className="mb-8">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0D1F4C]/5 text-[#0D1F4C]">
-                <svg
-                  width="22"
-                  height="22"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <rect x="3" y="11" width="18" height="10" rx="2" />
-                  <path d="M7 11V7a5 5 0 0110 0v4" />
-                </svg>
-              </div>
-
-              <h1 className="text-3xl font-extrabold tracking-[-0.03em] text-slate-900">
+              <h1 className="mb-1 text-2xl font-extrabold tracking-tight text-text-main">
                 Set a new password
               </h1>
-
-              <p className="mt-2 max-w-md text-sm leading-6 text-slate-500">
-                Welcome! You are logging in with an auto-generated password
-                for the first time.
+              <p className="text-sm text-text-sub">
+                Welcome! You are logging in with an auto-generated password for the first time.
               </p>
             </div>
 
@@ -374,31 +598,35 @@ export default function Login() {
                     University Index Number
                   </label>
 
-                  <input
-                    className="w-full cursor-not-allowed rounded-xl border border-slate-200 bg-slate-100 px-4 py-3.5 text-sm font-medium text-slate-500 outline-none"
-                    type="text"
-                    value={changePw.university_id}
-                    disabled
-                  />
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm font-medium text-slate-700">
+                    {changePw?.university_id || '—'}
+                  </div>
                 </div>
 
                 {/* New password */}
                 <div>
-                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                  <label className="mb-1.5 block text-[13px] font-semibold tracking-wide text-text-sub">
                     New Password
                   </label>
-
-                  <input
-                    className={inputClassName}
-                    type="password"
-                    value={newPassword}
-                    onChange={(e) => {
-                      setNewPassword(e.target.value);
-                      setChangePwError('');
-                    }}
-                    placeholder="Enter a new password"
-                    autoComplete="new-password"
-                  />
+                  <div className="relative">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0110 0v4" />
+                      </svg>
+                    </div>
+                    <input
+                      type={showPass ? 'text' : 'password'}
+                      value={newPassword}
+                      onChange={(e) => {
+                        setNewPassword(e.target.value);
+                        setChangePwError('');
+                      }}
+                      className="w-full rounded-[14px] border border-border bg-white px-4 py-3 pl-11 text-sm text-text-main outline-none transition focus:border-primary-mid focus:ring-[3px] focus:ring-primary-mid/10"
+                      placeholder="Enter a new password"
+                      autoComplete="new-password"
+                    />
+                  </div>
 
                   <p className="mt-2 text-[11px] text-slate-400">
                     Use at least 6 characters.
@@ -413,7 +641,7 @@ export default function Login() {
 
                   <input
                     className={inputClassName}
-                    type="password"
+                    type={showPass ? 'text' : 'password'}
                     value={confirmPassword}
                     onChange={(e) => {
                       setConfirmPassword(e.target.value);
@@ -540,10 +768,11 @@ export default function Login() {
                     password: '',
                   });
                 }}
-                className={`relative rounded-xl px-2 py-2.5 text-center text-xs font-bold transition-all duration-200 ${role === r.id
+                className={`relative rounded-xl px-2 py-2.5 text-center text-xs font-bold transition-all duration-200 ${
+                  role === r.id
                     ? 'bg-white text-[#0D1F4C] shadow-sm ring-1 ring-slate-200'
                     : 'text-slate-500 hover:bg-white/60 hover:text-slate-800'
-                  }`}
+                }`}
               >
                 {r.label}
 
@@ -732,7 +961,7 @@ export default function Login() {
           {/* Register options */}
           <div className="grid gap-3 sm:grid-cols-2">
             <Link
-              to="/register"
+              to="/register/company"
               className="group flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-left no-underline shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#1A3268]/30 hover:shadow-md"
             >
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#0D1F4C]/5 text-lg transition-transform duration-200 group-hover:scale-105">
@@ -751,7 +980,7 @@ export default function Login() {
             </Link>
 
             <Link
-              to="/register"
+              to="/register/retailer"
               className="group flex items-center gap-3 rounded-xl border border-amber-200 bg-amber-50/70 px-4 py-3.5 text-left no-underline shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-amber-300 hover:bg-amber-50 hover:shadow-md"
             >
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-lg transition-transform duration-200 group-hover:scale-105">

@@ -27,6 +27,10 @@ const Job = sequelize.define('Job', {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false,
   },
+  city: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   status: {
     type: DataTypes.ENUM('OPEN', 'IN_PROGRESS', 'COMPLETED'),
     defaultValue: 'OPEN',

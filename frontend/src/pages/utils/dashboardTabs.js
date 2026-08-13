@@ -3,6 +3,7 @@ const DASHBOARD_TABS = [
   { id: 'students', label: 'Students', icon: 'users' },
   { id: 'employers', label: 'Employers', icon: 'briefcase' },
   { id: 'jobs', label: 'Jobs', icon: 'clipboard' },
+  { id: 'gigs', label: 'Student Gigs', icon: 'clipboard' },
   { id: 'settings', label: 'Settings', icon: 'settings' },
 ];
 
