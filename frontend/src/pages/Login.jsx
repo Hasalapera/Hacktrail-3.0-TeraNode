@@ -345,29 +345,11 @@ export default function Login() {
 
             {/* Header */}
             <div className="mb-8">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0D1F4C]/5 text-[#0D1F4C]">
-                <svg
-                  width="22"
-                  height="22"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <rect x="3" y="11" width="18" height="10" rx="2" />
-                  <path d="M7 11V7a5 5 0 0110 0v4" />
-                </svg>
-              </div>
-
-              <h1 className="text-3xl font-extrabold tracking-[-0.03em] text-slate-900">
+              <h1 className="mb-1 text-2xl font-extrabold tracking-tight text-text-main">
                 Set a new password
               </h1>
-
-              <p className="mt-2 max-w-md text-sm leading-6 text-slate-500">
-                Welcome! You are logging in with an auto-generated password
-                for the first time.
+              <p className="text-sm text-text-sub">
+                Welcome! You are logging in with an auto-generated password for the first time.
               </p>
             </div>
 
@@ -383,31 +365,35 @@ export default function Login() {
                     University Index Number
                   </label>
 
-                  <input
-                    className="w-full cursor-not-allowed rounded-xl border border-slate-200 bg-slate-100 px-4 py-3.5 text-sm font-medium text-slate-500 outline-none"
-                    type="text"
-                    value={changePw.university_id}
-                    disabled
-                  />
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm font-medium text-slate-700">
+                    {changePw?.university_id || '—'}
+                  </div>
                 </div>
 
                 {/* New password */}
                 <div>
-                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                  <label className="mb-1.5 block text-[13px] font-semibold tracking-wide text-text-sub">
                     New Password
                   </label>
-
-                  <input
-                    className={inputClassName}
-                    type="password"
-                    value={newPassword}
-                    onChange={(e) => {
-                      setNewPassword(e.target.value);
-                      setChangePwError('');
-                    }}
-                    placeholder="Enter a new password"
-                    autoComplete="new-password"
-                  />
+                  <div className="relative">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0110 0v4" />
+                      </svg>
+                    </div>
+                    <input
+                      type={showPass ? 'text' : 'password'}
+                      value={newPassword}
+                      onChange={(e) => {
+                        setNewPassword(e.target.value);
+                        setChangePwError('');
+                      }}
+                      className="w-full rounded-[14px] border border-border bg-white px-4 py-3 pl-11 text-sm text-text-main outline-none transition focus:border-primary-mid focus:ring-[3px] focus:ring-primary-mid/10"
+                      placeholder="Enter a new password"
+                      autoComplete="new-password"
+                    />
+                  </div>
 
                   <p className="mt-2 text-[11px] text-slate-400">
                     Use at least 6 characters.
@@ -422,7 +408,7 @@ export default function Login() {
 
                   <input
                     className={inputClassName}
-                    type="password"
+                    type={showPass ? 'text' : 'password'}
                     value={confirmPassword}
                     onChange={(e) => {
                       setConfirmPassword(e.target.value);
