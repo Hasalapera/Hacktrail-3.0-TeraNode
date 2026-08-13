@@ -1,6 +1,6 @@
 // Auth routes eka define karanna (Express 5 Router)
 const express = require('express');
-const { register, login, changeFirstPassword, me } = require('../controllers/authController');
+const { register, login, changeFirstPassword, me, updateProfile } = require('../controllers/authController');
 const { authenticate } = require('../middlewares/authMiddleware');
 
 const router = express.Router();
@@ -16,5 +16,8 @@ router.post('/change-first-password', changeFirstPassword);
 
 // GET /api/auth/me - Logged-in user eke details ganna (token verify wela)
 router.get('/me', authenticate, me);
+
+// PUT /api/auth/profile - Logged-in user eke profile update karන්න
+router.put('/profile', authenticate, updateProfile);
 
 module.exports = router;

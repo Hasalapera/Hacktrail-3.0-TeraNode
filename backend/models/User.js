@@ -42,6 +42,22 @@ const User = sequelize.define('User', {
     // Auto-generated password eka dena nisa, first login ekedi change karanna oba
     type: DataTypes.BOOLEAN,
     defaultValue: false,
+  },
+  about: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+  location: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  languages: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  username: {
+    type: DataTypes.STRING,
+    allowNull: true,
   }
 });
 

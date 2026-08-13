@@ -122,6 +122,10 @@ const login = async (req, res) => {
         university_id: user.university_id,
         isOpenToWork: user.isOpenToWork,
         skills: user.skills,
+        about: user.about,
+        location: user.location,
+        languages: user.languages,
+        username: user.username,
       },
     });
   } catch (error) {
@@ -174,6 +178,10 @@ const changeFirstPassword = async (req, res) => {
         university_id: user.university_id,
         isOpenToWork: user.isOpenToWork,
         skills: user.skills,
+        about: user.about,
+        location: user.location,
+        languages: user.languages,
+        username: user.username,
       },
     });
   } catch (error) {
@@ -200,6 +208,10 @@ const me = async (req, res) => {
         university_id: user.university_id,
         isOpenToWork: user.isOpenToWork,
         skills: user.skills,
+        about: user.about,
+        location: user.location,
+        languages: user.languages,
+        username: user.username,
       },
     });
   } catch (error) {
@@ -208,4 +220,42 @@ const me = async (req, res) => {
   }
 };
 
-module.exports = { register, login, changeFirstPassword, me };
+const updateProfile = async (req, res) => {
+  try {
+    const { name, username, about, location, languages } = req.body;
+    const user = await User.findByPk(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (name !== undefined) user.name = name;
+    if (username !== undefined) user.username = username;
+    if (about !== undefined) user.about = about;
+    if (location !== undefined) user.location = location;
+    if (languages !== undefined) user.languages = languages;
+
+    await user.save();
+
+    res.json({
+      message: 'Profile updated successfully',
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        university_id: user.university_id,
+        isOpenToWork: user.isOpenToWork,
+        skills: user.skills,
+        about: user.about,
+        location: user.location,
+        languages: user.languages,
+        username: user.username,
+      }
+    });
+  } catch (error) {
+    console.error('Update profile error:', error);
+    res.status(500).json({ message: 'Server error during profile update' });
+  }
+};
+
+module.exports = { register, login, changeFirstPassword, me, updateProfile };
