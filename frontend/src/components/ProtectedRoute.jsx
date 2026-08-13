@@ -25,6 +25,8 @@ export default function ProtectedRoute({ allowedRole, children }) {
       return <Navigate to={isRetailer ? '/retail/jobs' : '/company/jobs'} replace />;
     }
     if (user.role === 'STUDENT') return <Navigate to="/student/home" replace />;
+    if (user.role === 'EMPLOYER') return <Navigate to="/employer-dashboard" replace />;
+    if (user.role === 'STUDENT') return <Navigate to="/student-home" replace />;
     return <Navigate to="/login" replace />;
   }
 

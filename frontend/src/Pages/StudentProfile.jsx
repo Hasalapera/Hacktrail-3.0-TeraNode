@@ -7,6 +7,8 @@ import GigsScreen from "../Components/GigsScreen";
 import Footer from "../Components/Footer";
 import api from "../api/axiosInstance";
 import { useAuth } from "./context/authContext";
+import { useAuth } from "./context/authContext";
+import api from "../api/axiosInstance";
 
 const CATEGORIES = [
   { key: "job", label: "Retail Job" },
@@ -32,6 +34,8 @@ const defaultProfile = {
 
 export default function StudentProfile() {
   const { user, updateUser } = useAuth();
+export default function StudentProfile() {
+  const { user, setUser } = useAuth();
   const [activeTab, setActiveTab] = useState("profile");
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -55,6 +59,18 @@ export default function StudentProfile() {
         `Hello,\n\nI'm a student looking for opportunities to build experience while studying. I'm reliable, eager to learn, and ready to contribute to part-time, internship, and freelance work.`,
     });
   }, [user]);
+
+  const handleSaveProfile = async (formData) => {
+    try {
+      const res = await api.put("/auth/profile", formData);
+      if (res.data && res.data.user) {
+        setUser(res.data.user);
+      }
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  };
 
   const tabSwitcher = (
     <div className="mb-6 flex gap-6 border-b border-border">
@@ -259,10 +275,28 @@ export default function StudentProfile() {
               </form>
             )}
           </div>
+
+          <ProfilePage
+            name={user?.name || "No Name"}
+            username={user?.username || user?.university_id || "username"}
+            avatarGradient="bg-gradient-to-br from-indigo-700 via-indigo-500 to-sky-500"
+            location={user?.location || "Colombo, Sri Lanka"}
+            languages={user?.languages || "Speaks English, Sinhala"}
+            about={user?.about || "Hello, tell us about yourself."}
+            showPortfolio={false}
+            showIntroVideo={false}
+            showStrength={false}
+            showQuickLinks={false}
+            backHref="/student-home"
+            extraNav={tabSwitcher}
+            isEditable={true}
+            onSaveProfile={handleSaveProfile}
+          />
+
         ) : (
           <div className="mx-auto max-w-6xl px-6 py-8">
             <Link
-              to="/student/home"
+              to="/student-home"
               className="mb-4 flex items-center gap-1.5 text-sm font-medium text-text-sub transition hover:text-primary"
             >
               <ArrowLeft className="h-4 w-4" />

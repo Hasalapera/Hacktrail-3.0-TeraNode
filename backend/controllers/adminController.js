@@ -1,7 +1,7 @@
 // Admin controller - student onboarding (admin keneku studentla add karana eka)
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
-const { User } = require('../models');
+const { User, Gig } = require('../models');
 
 // Ambiguous characters (0, O, 1, l, I) bharai eka wala nathi - random 8 char password eka hadanna
 const generatePassword = () => {
@@ -207,6 +207,61 @@ const rejectEmployer = async (req, res) => {
   } catch (error) {
     console.error('rejectEmployer error:', error);
     return res.status(500).json({ message: 'Server error while rejecting employer' });
+// Get all pending gigs
+const getPendingGigs = async (req, res, next) => {
+  try {
+    const gigs = await Gig.findAll({
+      where: { status: 'PENDING' },
+      include: [
+        {
+          model: User,
+          as: 'student',
+          attributes: ['id', 'name', 'email', 'university_id'],
+        },
+      ],
+      order: [['createdAt', 'ASC']],
+    });
+
+    res.status(200).json({
+      success: true,
+      data: gigs,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Approve or reject a gig
+const updateGigStatus = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!status || !['APPROVED', 'REJECTED'].includes(status.toUpperCase())) {
+      return res.status(400).json({
+        success: false,
+        message: 'Valid status (APPROVED or REJECTED) is required.',
+      });
+    }
+
+    const gig = await Gig.findByPk(id);
+    if (!gig) {
+      return res.status(404).json({
+        success: false,
+        message: 'Gig not found.',
+      });
+    }
+
+    gig.status = status.toUpperCase();
+    await gig.save();
+
+    res.status(200).json({
+      success: true,
+      message: `Gig status updated to ${gig.status} successfully`,
+      data: gig,
+    });
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -216,4 +271,6 @@ module.exports = {
   listEmployerApprovals,
   approveEmployer,
   rejectEmployer,
+  getPendingGigs,
+  updateGigStatus,
 };

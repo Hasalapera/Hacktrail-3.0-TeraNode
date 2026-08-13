@@ -1,72 +1,145 @@
-import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ChevronDown, Edit, Trash2, Pause, Play, AlertCircle } from "lucide-react";
 import CreateGigForm from "./CreateGigForm";
+import api from "../api/axiosInstance";
 
-const STATUS_TABS = ["Active", "Pending Approval", "Requires Modification", "Draft", "Denied", "Paused"];
+const STATUS_TABS = ["Active", "Pending Approval", "Requires Modification", "Draft", "Paused"];
 
-// Dummy gigs, keyed by status — only "Paused" starts with data; the rest
-// render an empty state until real gig data exists. New gigs created via
-// "Create a New Gig" land in "Draft".
-const INITIAL_GIGS_BY_STATUS = {
-  Paused: [
-    {
-      title: "do creative logo design design",
-      price: 6000,
-      impressions: 0,
-      clicks: 0,
-      orders: 0,
-      cancellations: "0%",
-      thumbnail: "bg-gradient-to-br from-amber-200 via-rose-200 to-slate-300",
-    },
-    {
-      title: "create unique and professional graphic designs",
-      price: 7500,
-      impressions: 0,
-      clicks: 0,
-      orders: 0,
-      cancellations: "0%",
-      thumbnail: "bg-gradient-to-br from-orange-700 via-red-700 to-neutral-900",
-    },
-  ],
-};
+const THUMBNAILS = [
+  "bg-gradient-to-br from-pink-700 via-rose-500 to-orange-400",
+  "bg-gradient-to-br from-emerald-700 via-emerald-500 to-lime-400",
+  "bg-gradient-to-br from-blue-700 via-blue-500 to-cyan-400",
+  "bg-gradient-to-br from-slate-800 via-slate-600 to-gray-400",
+];
 
-/**
- * GigsScreen
- * ----------
- * Fiverr-style "Gigs" seller dashboard — status tabs (Active, Draft,
- * Paused...), an "Accepting Custom Orders" toggle, and a table of gigs for
- * whichever status is selected. "Create a New Gig" swaps in CreateGigForm;
- * saving adds the new gig under "Draft". Dummy data only, no backend.
- */
 export default function GigsScreen() {
-  const [gigsByStatus, setGigsByStatus] = useState(INITIAL_GIGS_BY_STATUS);
-  const [activeStatus, setActiveStatus] = useState("Paused");
+  const [gigs, setGigs] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [activeStatus, setActiveStatus] = useState("Active");
   const [acceptingCustomOrders, setAcceptingCustomOrders] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
+  const [editingGig, setEditingGig] = useState(null);
 
-  const gigs = gigsByStatus[activeStatus] ?? [];
+  const fetchGigs = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await api.get("/student/gigs");
+      if (res.data && res.data.success) {
+        setGigs(res.data.data);
+      }
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.message || "Failed to load gigs.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  function handleSaveAndContinue({ title, price }) {
-    const newGig = {
-      title: title.trim() || "Untitled gig",
-      price: price || 0,
-      impressions: 0,
-      clicks: 0,
-      orders: 0,
-      cancellations: "0%",
-      thumbnail: "bg-gradient-to-br from-teal-600 via-cyan-600 to-blue-700",
-    };
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchGigs();
+  }, []);
 
-    setGigsByStatus((prev) => ({
-      ...prev,
-      Draft: [newGig, ...(prev.Draft ?? [])],
-    }));
-    setActiveStatus("Draft");
-    setIsCreating(false);
-  }
+  const getFilteredGigs = () => {
+    return gigs.filter((gig) => {
+      const status = gig.status ? gig.status.toUpperCase() : "PENDING";
+      if (activeStatus === "Active") return status === "APPROVED";
+      if (activeStatus === "Pending Approval") return status === "PENDING";
+      if (activeStatus === "Requires Modification") return status === "REJECTED";
+      if (activeStatus === "Draft") return status === "DRAFT";
+      if (activeStatus === "Paused") return status === "PAUSED";
+      return false;
+    });
+  };
+
+  const getCount = (statusTab) => {
+    return gigs.filter((gig) => {
+      const status = gig.status ? gig.status.toUpperCase() : "PENDING";
+      if (statusTab === "Active") return status === "APPROVED";
+      if (statusTab === "Pending Approval") return status === "PENDING";
+      if (statusTab === "Requires Modification") return status === "REJECTED";
+      if (statusTab === "Draft") return status === "DRAFT";
+      if (statusTab === "Paused") return status === "PAUSED";
+      return false;
+    }).length;
+  };
+
+  const handleSaveAndContinue = async (data) => {
+    try {
+      if (data.id) {
+        // Edit gig
+        await api.put(`/student/gigs/${data.id}`, {
+          title: data.title,
+          category: data.category,
+          subcategory: data.subcategory,
+          tags: data.tags,
+          price: data.price,
+          description: data.description,
+          status: "PENDING", // go back to pending on edit
+        });
+      } else {
+        // Create new gig
+        await api.post("/student/gigs", {
+          title: data.title,
+          category: data.category,
+          subcategory: data.subcategory,
+          tags: data.tags,
+          price: data.price,
+          description: data.description,
+          status: "PENDING",
+        });
+      }
+      setIsCreating(false);
+      setEditingGig(null);
+      fetchGigs();
+      setActiveStatus("Pending Approval");
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message || "Failed to save gig.");
+    }
+  };
+
+  const handleUpdateStatus = async (id, newStatus) => {
+    try {
+      await api.put(`/student/gigs/${id}`, { status: newStatus });
+      fetchGigs();
+      if (newStatus === "PENDING") {
+        setActiveStatus("Pending Approval");
+      } else if (newStatus === "PAUSED") {
+        setActiveStatus("Paused");
+      }
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message || "Failed to update status.");
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this gig?")) return;
+    try {
+      await api.delete(`/student/gigs/${id}`);
+      fetchGigs();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete gig.");
+    }
+  };
+
+  const filteredGigs = getFilteredGigs();
 
   if (isCreating) {
-    return <CreateGigForm onSaveAndContinue={handleSaveAndContinue} onCancel={() => setIsCreating(false)} />;
+    return (
+      <CreateGigForm
+        initialData={editingGig}
+        onSaveAndContinue={handleSaveAndContinue}
+        onCancel={() => {
+          setIsCreating(false);
+          setEditingGig(null);
+        }}
+      />
+    );
   }
 
   return (
@@ -98,7 +171,7 @@ export default function GigsScreen() {
         <nav className="flex flex-wrap gap-6">
           {STATUS_TABS.map((status) => {
             const isActive = status === activeStatus;
-            const count = gigsByStatus[status]?.length;
+            const count = getCount(status);
             return (
               <button
                 key={status}
@@ -123,12 +196,22 @@ export default function GigsScreen() {
 
         <button
           type="button"
-          onClick={() => setIsCreating(true)}
+          onClick={() => {
+            setEditingGig(null);
+            setIsCreating(true);
+          }}
           className="mb-2 rounded-md bg-primary px-4 py-2 text-xs font-bold uppercase tracking-wide text-white transition hover:bg-primary-mid"
         >
           Create a New Gig
         </button>
       </div>
+
+      {error && (
+        <div className="mt-4 flex items-center gap-2 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+          <AlertCircle className="h-4 w-4" />
+          <span>{error}</span>
+        </div>
+      )}
 
       <div className="mt-6 overflow-x-auto rounded-lg border border-border">
         <div className="flex items-center justify-between gap-4 border-b border-border px-5 py-3">
@@ -144,12 +227,16 @@ export default function GigsScreen() {
           </button>
         </div>
 
-        {gigs.length === 0 ? (
+        {loading ? (
+          <div className="flex items-center justify-center py-10">
+            <span className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+          </div>
+        ) : filteredGigs.length === 0 ? (
           <p className="px-5 py-10 text-center text-sm text-text-muted">
             No gigs in this status yet.
           </p>
         ) : (
-          <table className="w-full min-w-[640px] text-sm">
+          <table className="w-full min-w-[640px] text-sm text-text-main">
             <thead>
               <tr className="border-b border-border text-xs uppercase tracking-wide text-text-muted">
                 <th className="w-10 px-5 py-3">
@@ -161,36 +248,73 @@ export default function GigsScreen() {
                 <th className="px-2 py-3 text-right">Clicks</th>
                 <th className="px-2 py-3 text-right">Orders</th>
                 <th className="px-2 py-3 text-right">Cancellations</th>
-                <th className="w-10 px-2 py-3" />
+                <th className="w-24 px-2 py-3 text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {gigs.map((gig) => (
-                <tr key={gig.title} className="border-b border-border last:border-0">
-                  <td className="px-5 py-4">
-                    <input type="checkbox" />
-                  </td>
-                  <td className="px-2 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className={`h-12 w-16 shrink-0 rounded ${gig.thumbnail}`} />
-                      <span className="text-text-main">{gig.title}</span>
-                    </div>
-                  </td>
-                  <td className="px-2 py-4 text-right font-medium text-text-main">Rs. {gig.price.toLocaleString()}</td>
-                  <td className="px-2 py-4 text-right text-text-sub">{gig.impressions}</td>
-                  <td className="px-2 py-4 text-right text-text-sub">{gig.clicks}</td>
-                  <td className="px-2 py-4 text-right text-text-sub">{gig.orders}</td>
-                  <td className="px-2 py-4 text-right text-text-sub">{gig.cancellations}</td>
-                  <td className="px-2 py-4 text-right">
-                    <button
-                      type="button"
-                      className="rounded border border-border p-1 text-text-muted transition hover:bg-surface"
-                    >
-                      <ChevronDown className="h-3.5 w-3.5" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {filteredGigs.map((gig, idx) => {
+                const thumb = gig.thumbnail || THUMBNAILS[idx % THUMBNAILS.length];
+                return (
+                  <tr key={gig.id || idx} className="border-b border-border last:border-0 hover:bg-slate-50/50">
+                    <td className="px-5 py-4">
+                      <input type="checkbox" />
+                    </td>
+                    <td className="px-2 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className={`h-12 w-16 shrink-0 rounded ${thumb}`} />
+                        <span className="font-medium">{gig.title}</span>
+                      </div>
+                    </td>
+                    <td className="px-2 py-4 text-right font-medium">Rs. {Number(gig.price).toLocaleString()}</td>
+                    <td className="px-2 py-4 text-right text-text-sub">{gig.impressions || 0}</td>
+                    <td className="px-2 py-4 text-right text-text-sub">{gig.clicks || 0}</td>
+                    <td className="px-2 py-4 text-right text-text-sub">{gig.orders || 0}</td>
+                    <td className="px-2 py-4 text-right text-text-sub">{gig.cancellations || "0%"}</td>
+                    <td className="px-2 py-4 text-center">
+                      <div className="flex items-center justify-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setEditingGig(gig);
+                            setIsCreating(true);
+                          }}
+                          title="Edit Gig"
+                          className="rounded border border-border p-1.5 text-blue-600 hover:bg-blue-50 transition cursor-pointer"
+                        >
+                          <Edit className="h-3.5 w-3.5" />
+                        </button>
+                        {gig.status === "APPROVED" ? (
+                          <button
+                            type="button"
+                            onClick={() => handleUpdateStatus(gig.id, "PAUSED")}
+                            title="Pause Gig"
+                            className="rounded border border-border p-1.5 text-amber-600 hover:bg-amber-50 transition cursor-pointer"
+                          >
+                            <Pause className="h-3.5 w-3.5" />
+                          </button>
+                        ) : gig.status === "PAUSED" ? (
+                          <button
+                            type="button"
+                            onClick={() => handleUpdateStatus(gig.id, "PENDING")}
+                            title="Activate (requires approval)"
+                            className="rounded border border-border p-1.5 text-emerald-600 hover:bg-emerald-50 transition cursor-pointer"
+                          >
+                            <Play className="h-3.5 w-3.5" />
+                          </button>
+                        ) : null}
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(gig.id)}
+                          title="Delete Gig"
+                          className="rounded border border-border p-1.5 text-red-600 hover:bg-red-50 transition cursor-pointer"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         )}

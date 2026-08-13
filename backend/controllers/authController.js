@@ -218,19 +218,26 @@ const login = async (req, res) => {
       return res.status(400).json({ message: 'email or university_id, and password are required' });
     }
 
-    // Mokadda identifier eka kiyala balala e anuva where clause eka hadanna
-    // Eka parata email ekak ho university_id ekak witharai check karanne
+    const identifier = (email || university_id || '').trim();
     const whereClause = {};
-    if (email) {
-      whereClause.email = email;
+    if (identifier.includes('@')) {
+      whereClause.email = identifier;
     } else {
-      whereClause.university_id = university_id;
+      whereClause.university_id = identifier;
     }
+
+    console.log('--- LOGIN DEBUG ---');
+    console.log('Received payload:', { email, university_id, password: '***' });
+    console.log('Derived identifier:', identifier);
+    console.log('DB Query whereClause:', whereClause);
 
     const user = await User.findOne({ where: whereClause });
     if (!user) {
+      console.log('User not found in DB!');
       return res.status(401).json({ message: 'Invalid credentials' });
     }
+
+    console.log('User found:', { id: user.id, email: user.email, role: user.role });
 
     // Password eka match wena eka bcrypt compare karala check kirima
     const isMatch = await bcrypt.compare(password, user.password);
@@ -260,7 +267,21 @@ const login = async (req, res) => {
     res.json({
       message: 'Login successful',
       token,
-      user: buildUserResponse(user),
+
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        university_id: user.university_id,
+        isOpenToWork: user.isOpenToWork,
+        skills: user.skills,
+        about: user.about,
+        location: user.location,
+        languages: user.languages,
+        username: user.username,
+          buildUserResponse(user),
+      },
     });
   } catch (error) {
     console.error('Login error:', error);
@@ -304,7 +325,21 @@ const changeFirstPassword = async (req, res) => {
     res.json({
       message: 'Password changed successfully. You are now logged in.',
       token,
-      user: buildUserResponse(user),
+
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        university_id: user.university_id,
+        isOpenToWork: user.isOpenToWork,
+        skills: user.skills,
+        about: user.about,
+        location: user.location,
+        languages: user.languages,
+        username: user.username,
+          buildUserResponse(user)
+      },
     });
   } catch (error) {
     console.error('changeFirstPassword error:', error);
@@ -322,7 +357,21 @@ const me = async (req, res) => {
     }
 
     res.json({
-      user: buildUserResponse(user),
+
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        university_id: user.university_id,
+        isOpenToWork: user.isOpenToWork,
+        skills: user.skills,
+        about: user.about,
+        location: user.location,
+        languages: user.languages,
+        username: user.username,
+          buildUserResponse(user),
+      },
     });
   } catch (error) {
     console.error('Me error:', error);
@@ -330,4 +379,42 @@ const me = async (req, res) => {
   }
 };
 
-module.exports = { register, registerCompany, registerRetailer, login, changeFirstPassword, me };
+const updateProfile = async (req, res) => {
+  try {
+    const { name, username, about, location, languages } = req.body;
+    const user = await User.findByPk(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (name !== undefined) user.name = name;
+    if (username !== undefined) user.username = username;
+    if (about !== undefined) user.about = about;
+    if (location !== undefined) user.location = location;
+    if (languages !== undefined) user.languages = languages;
+
+    await user.save();
+
+    res.json({
+      message: 'Profile updated successfully',
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        university_id: user.university_id,
+        isOpenToWork: user.isOpenToWork,
+        skills: user.skills,
+        about: user.about,
+        location: user.location,
+        languages: user.languages,
+        username: user.username,
+      }
+    });
+  } catch (error) {
+    console.error('Update profile error:', error);
+    res.status(500).json({ message: 'Server error during profile update' });
+  }
+};
+
+module.exports = { register, login, changeFirstPassword, me, updateProfile, registerCompany };

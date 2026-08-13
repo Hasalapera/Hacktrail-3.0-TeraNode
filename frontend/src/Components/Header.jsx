@@ -1,5 +1,7 @@
 import Logo from "./Logo";
 import ProfileMenu from "./ProfileMenu";
+import { Link } from "react-router-dom";
+import { MessageCircle } from "lucide-react";
 
 // ---------------------------------------------------------------------------
 // Header: logo + site name, category tabs (Retail Job/Company/Freelancer), profile icon
@@ -29,7 +31,16 @@ export default function Header({ categories, activeCategory, onSelectCategory, p
         })}
       </nav>
 
-      <ProfileMenu profileHref={profileHref} />
+      <div className="flex items-center gap-4">
+        <Link
+          to="/messenger"
+          className="flex items-center gap-1.5 text-sm font-medium text-text-sub transition-colors hover:text-text-main"
+        >
+          <MessageCircle className="h-5 w-5" />
+          <span>Messages</span>
+        </Link>
+        <ProfileMenu profileHref={profileHref} />
+      </div>
     </header>
   );
 }

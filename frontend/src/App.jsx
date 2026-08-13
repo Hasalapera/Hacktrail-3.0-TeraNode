@@ -7,6 +7,7 @@ import { Routes, Route } from 'react-router-dom';
 import MessageButton from './Components/MessageButton.jsx';
 import ProtectedRoute from './Components/ProtectedRoute';
 import LandingPage from './pages/LandingPage';
+import ProtectedRoute from './Components/ProtectedRoute';
 
 // ── Auth & Onboarding pages (hass branch) ──────────────────
 import Login from './pages/Login';
@@ -31,6 +32,7 @@ import RetailProfile       from './pages/RetailProfile';
 import CompanyProfile      from './pages/CompanyProfile';
 import FreelancerProfile   from './pages/FreelancerProfile';
 import StudentProfile      from './pages/StudentProfile';
+import Messenger           from './pages/Messenger';
 
 export default function App() {
   return (
@@ -65,6 +67,37 @@ export default function App() {
         <Route path="/student/dashboard" element={<ProtectedRoute allowedRole="STUDENT"><StudentDashboard /></ProtectedRoute>} />
         <Route path="/employer/dashboard" element={<ProtectedRoute allowedRole="EMPLOYER"><EmployerDashboard /></ProtectedRoute>} />
         <Route path="/management/user/add" element={<ProtectedRoute allowedRole="ADMIN"><AddUser /></ProtectedRoute>} />
+        {/* ── Student routes (Protected for STUDENT) ── */}
+        <Route element={<ProtectedRoute allowedRole="STUDENT" />}>
+          <Route path="/student-home"       element={<StudentHome />} />
+          <Route path="/student/home"       element={<StudentHome />} />
+          <Route path="/student/freelance"  element={<FreelancerClient />} />
+          <Route path="/student/profile"    element={<StudentProfile />} />
+          <Route path="/student/dashboard"  element={<StudentDashboard />} />
+        </Route>
+
+        {/* ── Publisher & Employer routes (Protected for EMPLOYER) ── */}
+        <Route element={<ProtectedRoute allowedRole="EMPLOYER" />}>
+          <Route path="/retail/jobs"        element={<RetailJobPublisher />} />
+          <Route path="/company/jobs"       element={<CompanyJobPublisher />} />
+          <Route path="/retail/profile"     element={<RetailProfile />} />
+          <Route path="/company/profile"    element={<CompanyProfile />} />
+          <Route path="/freelancer/profile" element={<FreelancerProfile />} />
+          <Route path="/employer-dashboard" element={<EmployerDashboard />} />
+          <Route path="/employer/dashboard" element={<EmployerDashboard />} />
+        </Route>
+
+        {/* ── Dashboard & Admin routes (Protected for ADMIN) ── */}
+        <Route element={<ProtectedRoute allowedRole="ADMIN" />}>
+          <Route path="/dashboard"          element={<Dashboard />} />
+          <Route path="/management/user/add" element={<AddUser />} />
+          <Route path="/admin/add-users" element={<AddUser />} />
+        </Route>
+
+        {/* ── Messenger (any authenticated role) ── */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/messenger" element={<Messenger />} />
+        </Route>
 
         {/* ── Placeholder routes (unlock as pages are built) ── */}
         <Route path="/change-password"    element={<PlaceholderPage title="Change Password" />} />

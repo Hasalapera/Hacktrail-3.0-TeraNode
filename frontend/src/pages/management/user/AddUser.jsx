@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import api from '../../../api/axiosInstance';
 import Papa from 'papaparse';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import DashboardLayout from '../../../layout/DashboardLayout';
 
 // A small component to display generated credentials with a copy button
 const CredentialsDisplay = ({ credentials, onCopy }) => (
@@ -26,6 +27,7 @@ const CredentialsDisplay = ({ credentials, onCopy }) => (
 );
 
 export default function AddUser() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('single');
 
   // State for single student form
@@ -151,7 +153,11 @@ export default function AddUser() {
   };
 
   return (
-    <section className="w-full max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8 animate-fade-in-up">
+    <DashboardLayout
+      activeTab="students"
+      onTabChange={(tab) => navigate('/dashboard', { state: { initialTab: tab } })}
+    >
+      <section className="w-full max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8 animate-fade-in-up">
       {/* Header Section */}
       <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
@@ -372,5 +378,6 @@ export default function AddUser() {
         </div>
       </div>
     </section>
+    </DashboardLayout>
   );
 }

@@ -10,6 +10,10 @@ const jobRoutes = require('./routes/jobRoutes'); // Import job routes
 const { sequelize } = require('./models'); // Sequelize instance eka models walin import kirima
 const authRoutes = require('./routes/authRoutes'); // Auth routes import kirima
 const adminRoutes = require('./routes/adminRoutes'); // Admin routes import kirima
+const studentRoutes = require('./routes/studentRoutes'); // Student routes import kirima
+const chatRoutes = require('./routes/chatRoutes'); // Chat routes import kirima
+const gigRoutes = require('./routes/gigRoutes'); // Gig routes import kirima
+const { authenticate } = require('./middlewares/authMiddleware'); // JWT verify middleware eka
 
 // .env file eke thiyena variables load karanna
 dotenv.config();
@@ -38,12 +42,20 @@ app.use('/api/auth', authRoutes);
 // Admin API Routes (POST /api/admin/students/single, POST /api/admin/students/bulk)
 app.use('/api/admin', adminRoutes);
 
+// Student Gigs API Routes
+app.use('/api/student', studentRoutes);
+
 // Job API Routes (POST /api/jobs, GET /api/jobs, etc.)
 app.use('/api/jobs', jobRoutes);
 
 // Student API Routes
 const studentRoutes = require('./routes/studentRoutes');
 app.use('/api/students', studentRoutes);
+// Chat API Routes (GET /api/chat/users, /api/chat/conversations, POST /api/chat/messages)
+app.use('/api/chat', authenticate, chatRoutes);
+
+// Gig API Routes (GET /api/gigs - approved student gigs for the freelancer marketplace)
+app.use('/api/gigs', gigRoutes);
 
 // Server eka start kirimata pera DB connection eka check kirima
 sequelize.authenticate()

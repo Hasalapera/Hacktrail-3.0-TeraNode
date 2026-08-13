@@ -67,6 +67,40 @@ export default function Dashboard() {
       setEmployersError(error.response?.data?.message || `Failed to ${action} employer account.`);
     } finally {
       setActionLoadingId('');
+  const [pendingGigs, setPendingGigs] = useState([]);
+  const [gigsLoading, setGigsLoading] = useState(false);
+  const [gigsError, setGigsError] = useState('');
+
+  const fetchPendingGigs = async () => {
+    setGigsLoading(true);
+    setGigsError('');
+    try {
+      const res = await api.get('/admin/gigs/pending');
+      if (res.data && res.data.success) {
+        setPendingGigs(res.data.data);
+      }
+    } catch (err) {
+      console.error(err);
+      setGigsError('Failed to load pending gigs.');
+    } finally {
+      setGigsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'gigs') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      fetchPendingGigs();
+    }
+  }, [activeTab]);
+
+  const handleGigApproval = async (gigId, status) => {
+    try {
+      await api.put(`/admin/gigs/${gigId}/status`, { status });
+      fetchPendingGigs();
+    } catch (err) {
+      console.error(err);
+      alert('Failed to update gig status.');
     }
   };
 
@@ -243,6 +277,80 @@ export default function Dashboard() {
               </label>
             ))}
           </div>
+        </section>
+      );
+    }
+
+    if (activeTab === 'gigs') {
+      return (
+        <section className="animate-[fade-in-up_0.35s_ease-in-out] rounded-xl bg-white p-6 shadow-sm">
+          <div className="mb-5 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+            <div>
+              <h2 className="mb-1 text-lg font-extrabold text-gray-900">Student Gigs</h2>
+              <p className="text-sm text-gray-500">Approve or reject student gigs before they are published.</p>
+            </div>
+          </div>
+          {gigsError && (
+            <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600 border border-red-200">
+              {gigsError}
+            </div>
+          )}
+          {gigsLoading ? (
+            <div className="flex justify-center items-center py-8">
+              <span className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+            </div>
+          ) : pendingGigs.length === 0 ? (
+            <p className="py-8 text-center text-sm text-gray-500 border border-dashed border-slate-200 rounded-lg">No pending gigs to review.</p>
+          ) : (
+            <div className="overflow-hidden rounded-lg border border-slate-200">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-slate-50 text-xs font-bold uppercase tracking-wider text-gray-700 border-b border-slate-200">
+                  <tr>
+                    <th className="px-4 py-3">Student</th>
+                    <th className="px-4 py-3">Gig Title</th>
+                    <th className="px-4 py-3">Category</th>
+                    <th className="px-4 py-3 text-right">Price</th>
+                    <th className="px-4 py-3 text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200 bg-white">
+                  {pendingGigs.map(gig => (
+                    <tr key={gig.id} className="hover:bg-slate-50">
+                      <td className="px-4 py-4">
+                        <strong className="block text-sm font-semibold text-gray-900">{gig.student?.name || 'Unknown Student'}</strong>
+                        <span className="block text-xs text-gray-500">{gig.student?.university_id || gig.student?.email}</span>
+                      </td>
+                      <td className="px-4 py-4 text-gray-700 max-w-xs truncate" title={gig.title}>
+                        {gig.title}
+                      </td>
+                      <td className="px-4 py-4 text-gray-600">
+                        {gig.category} {gig.subcategory && <span className="text-xs text-gray-400">({gig.subcategory})</span>}
+                      </td>
+                      <td className="px-4 py-4 text-right font-medium text-gray-900">
+                        Rs. {Number(gig.price).toLocaleString()}
+                      </td>
+                      <td className="px-4 py-4">
+                        <div className="flex justify-center gap-2">
+                          <button
+                            onClick={() => handleGigApproval(gig.id, 'APPROVED')}
+                            className="rounded bg-green-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-green-700 transition cursor-pointer"
+                          >
+                            Approve
+                          </button>
+                          <button
+                            onClick={() => handleGigApproval(gig.id, 'REJECTED')}
+                            className="rounded bg-red-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-red-700 transition cursor-pointer"
+                          >
+                            Reject
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </section>
       );
     }
